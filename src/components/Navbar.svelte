@@ -31,7 +31,7 @@
     <div class="flex items-center justify-between h-20">
       <!-- Logo -->
       <button
-        on:click={() => scrollToSection('hero')}
+        on:click={() => window.location.href = '/'}
         class="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform"
       >
         Abrorilhuda.me
@@ -43,6 +43,7 @@
         <button on:click={() => scrollToSection('projects')} class="nav-link">Projects</button>
         <button on:click={() => scrollToSection('experience')} class="nav-link">Experience</button>
         <button on:click={() => scrollToSection('contact')} class="nav-link">Contact</button>
+        <button on:click={() => window.location.href = "/blog"} class="nav-link">Blog</button>
         
         <!-- Dark Mode Toggle -->
         <button
@@ -89,6 +90,7 @@
         <button on:click={() => scrollToSection('projects')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Projects</button>
         <button on:click={() => scrollToSection('experience')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Experience</button>
         <button on:click={() => scrollToSection('contact')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</button>
+        <button on:click={() => window.location.href = "/blog"} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Blog</button>
         <button on:click={toggleDarkMode} class="flex items-center gap-2 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
           <span>Dark Mode</span>
           <div class="w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative transition-colors">

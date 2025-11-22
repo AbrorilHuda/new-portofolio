@@ -1,14 +1,13 @@
-<script>
-  import { onMount } from 'svelte';
-  import Navbar from '../components/Navbar.svelte';
-  import Hero from '../components/Hero.svelte';
-  import About from '../components/About.svelte';
-  import Projects from '../components/Projects.svelte';
-  import Experience from '../components/Experience.svelte';
-  import Contact from '../components/Contact.svelte';
-  import Footer from '../components/Footer.svelte';
+<script lang="ts">
+	import favicon from '$lib/assets/favicon.ico';
+	import { onMount } from 'svelte';
+	import "../../app.css";
+	import Navbar from '../../components/Navbar.svelte';
+	import Footer from '../../components/Footer.svelte';
 
-  let darkMode = false;
+	let { children } = $props();
+
+	let darkMode = $state(false);
 
   onMount(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -46,12 +45,12 @@
   }
 </script>
 
+<svelte:head>
+	<link rel="icon" href={favicon} />
+</svelte:head>
+
 <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
   <Navbar {darkMode} {toggleDarkMode} />
-  <Hero />
-  <About />
-  <Projects />
-  <Experience />
-  <Contact />
+	{@render children()}
   <Footer />
 </div>
