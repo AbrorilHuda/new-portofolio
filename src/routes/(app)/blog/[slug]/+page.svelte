@@ -11,7 +11,7 @@
 
   $: canonicalUrl = `${siteUrl}/blog/${data.blog.slug}`;
   $: metaDescription = data.blog.excerpt || data.blog.content.substring(0, 160).replace(/[#*_\[\]]/g, '');
-  $: metaImage = data.blog.cover_image || `${siteUrl}/og-default-image.jpg`;
+  $: metaImage = data.blog.cover_image || `${siteUrl}/og-default-image.png`;
 
 
   function formatDate(date: string) {
