@@ -1,41 +1,18 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { page } from '$app/stores';
-  import { supabase, type Blog } from '$lib/supabase/supabase';
-  import { marked } from 'marked';
-  import DOMPurify from 'dompurify';
+  import type {  Blog } from '$lib/supabase/supabase';
+  import type { PageData } from '../$types';
 
-  let blog: Blog | null = null;
-  let loading = true;
-  let htmlContent = '';
+  export let data: PageData & {
+    blog: Blog
+    htmlContent: string
+  };
 
-  let siteUrl = 'https://yourdomain.com';
-  let canonicalUrl = '';
-  let metaDescription = '';
-  let metaImage = '';
+  let siteUrl = 'https://abrorilhuda.me';
 
-  onMount(async () => {
-    const slug = $page.params.slug;
-    
-    const { data, error } = await supabase
-      .from('blogs')
-      .select('*')
-      .eq('slug', slug)
-      .eq('published', true)
-      .single();
+  $: canonicalUrl = `${siteUrl}/blog/${data.blog.slug}`;
+  $: metaDescription = data.blog.excerpt || data.blog.content.substring(0, 160).replace(/[#*_\[\]]/g, '');
+  $: metaImage = data.blog.cover_image || `${siteUrl}/og-default-image.jpg`;
 
-    if (data) {
-      blog = data;
-      const rawHtml = await marked(blog!.content);
-      htmlContent = DOMPurify.sanitize(rawHtml);
-
-      canonicalUrl = `${siteUrl}/blog/${blog!.slug}`;
-      metaDescription = blog!.excerpt || blog!.content.substring(0, 160).replace(/[#*_\[\]]/g, '');
-      metaImage = blog!.cover_image || `${siteUrl}/og-default-image.png`;
-    }
-    
-    loading = false;
-  });
 
   function formatDate(date: string) {
     return new Date(date).toLocaleDateString('id-ID', {
@@ -50,36 +27,35 @@
 </script>
 
 <svelte:head>
-  {#if blog}
     <!-- Primary Meta Tags -->
-    <title>{blog.title}</title>
-    <meta name="title" content={blog.title} />
+    <title>{data.blog.title}</title>
+    <meta name="title" content={data.blog.title} />
     <meta name="description" content={metaDescription} />
-    <meta name="author" content={blog.author} />
+    <meta name="author" content={data.blog.author} />
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={blog.title} />
+    <meta property="og:title" content={data.blog.title} />
     <meta property="og:description" content={metaDescription} />
     <meta property="og:image" content={metaImage} />
     <meta property="og:site_name" content="AbrorilHuda.me" />
-    <meta property="article:published_time" content={formatDateISO(blog.created_at)} />
-    <meta property="article:modified_time" content={formatDateISO(blog.updated_at)} />
-    <meta property="article:author" content={blog.author} />
+    <meta property="article:published_time" content={formatDateISO(data.blog.created_at)} />
+    <meta property="article:modified_time" content={formatDateISO(data.blog.updated_at)} />
+    <meta property="article:author" content={data.blog.author} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalUrl} />
-    <meta name="twitter:title" content={blog.title} />
+    <meta name="twitter:title" content={data.blog.title} />
     <meta name="twitter:description" content={metaDescription} />
     <meta name="twitter:image" content={metaImage} />
     <meta name="twitter:creator" content="@abror_dc" />
 
     <!-- Additional SEO -->
     <meta name="robots" content="index, follow" />
-    <meta name="keywords" content="blog, artikel, {blog.title}" />
+    <meta name="keywords" content="blog, artikel, {data.blog.title}" />
 
     <!-- Schema.org JSON-LD for Article -->
     {@html `
@@ -87,12 +63,12 @@
       {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
-        "headline": "${blog.title}",
+        "headline": "${data.blog.title}",
         "description": "${metaDescription.replace(/"/g, '\\"')}",
         "image": "${metaImage}",
         "author": {
           "@type": "Person",
-          "name": "${blog.author}"
+          "name": "${data.blog.author}"
         },
         "publisher": {
           "@type": "Abrorilhuda",
@@ -102,157 +78,114 @@
             "url": "${siteUrl}/logo.png"
           }
         },
-        "datePublished": "${formatDateISO(blog.created_at)}",
-        "dateModified": "${formatDateISO(blog.updated_at)}",
+        "datePublished": "${formatDateISO(data.blog.created_at)}",
+        "dateModified": "${formatDateISO(data.blog.updated_at)}",
         "mainEntityOfPage": {
           "@type": "WebPage",
           "@id": "${canonicalUrl}"
         }
       }
-      <\/script>
+      </script>
     `}
-  {:else}
-    <title>Loading... | Blog</title>
-    <meta name="robots" content="noindex" />
-  {/if}
 </svelte:head>
 
-<div class="container mx-auto px-4 py-20 max-w-4xl">
-  {#if loading}
-    <div class="animate-pulse">
-      <div class="h-8 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
-      <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/4 mb-8"></div>
-      <div class="h-64 bg-gray-300 dark:bg-gray-700 rounded mb-8"></div>
-      <div class="space-y-3">
-        {#each Array(5) as _}
-          <div class="h-4 bg-gray-300 dark:bg-gray-700 rounded"></div>
-        {/each}
-      </div>
-    </div>
-  {:else if !blog}
-    <div class="text-center py-16">
-      <h1 class="text-3xl font-bold mb-4">Artikel Tidak Ditemukan</h1>
-      <p class="text-gray-600 dark:text-gray-400 mb-8">Artikel yang Anda cari tidak ada atau belum dipublikasikan.</p>
-      <a href="/blog" class="text-blue-600 hover:underline">← Kembali ke Blog</a>
-    </div>
-  {:else}
-    <article>
-      <!-- Back button -->
-      <a href="/blog" class="inline-flex items-center text-blue-600 hover:underline mb-8">
-        ← Kembali ke Blog
-      </a>
+<div class="container mx-auto px-4 py-16 max-w-4xl">
+  <article itemscope itemtype="https://schema.org/BlogPosting">
+    <a href="/blog" class="inline-flex items-center text-blue-600 hover:underline mb-8">
+      ← Kembali ke Blog
+    </a>
 
-      <!-- Cover Image -->
-      {#if blog.cover_image}
-        <img 
-          src={blog.cover_image} 
-          alt={blog.title}
-          class="w-full h-64 md:h-96 object-cover rounded-lg mb-8"
-        />
+    <!-- Cover Image -->
+    {#if data.blog.cover_image}
+      <img 
+        src={data.blog.cover_image} 
+        alt={data.blog.title}
+        itemprop="image"
+        class="w-full h-64 md:h-96 object-cover rounded-lg mb-8"
+      />
+    {/if}
+
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 itemprop="headline" class="text-4xl md:text-5xl font-bold mb-4">{data.blog.title}</h1>
+      
+      <div class="flex items-center gap-4 text-gray-600 dark:text-gray-400">
+        <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+          <span itemprop="name">{data.blog.author}</span>
+        </span>
+        <span>•</span>
+        <time itemprop="datePublished" datetime={formatDateISO(data.blog.created_at)}>
+          {formatDate(data.blog.created_at)}
+        </time>
+      </div>
+
+      {#if data.blog.excerpt}
+        <p itemprop="description" class="text-xl text-gray-600 dark:text-gray-400 mt-4">
+          {data.blog.excerpt}
+        </p>
       {/if}
+    </header>
 
-      <!-- Header -->
-      <header class="mb-8">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">{blog.title}</h1>
-        
-        <div class="flex items-center gap-4 text-gray-600 dark:text-gray-400">
-          <span>{blog.author}</span>
-          <span>•</span>
-          <time datetime={blog.created_at}>{formatDate(blog.created_at)}</time>
-        </div>
-      </header>
+    <!-- Content - Pre-rendered dari server! -->
+    <div itemprop="articleBody" class="prose prose-lg dark:prose-invert max-w-none">
+      {@html data.htmlContent}
+    </div>
 
-      <!-- Content -->
-      <div class="prose prose-lg dark:prose-invert max-w-none">
-        {@html htmlContent}
+    <!-- Share Buttons -->
+    <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold mb-4">Bagikan Artikel</h3>
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="https://twitter.com/intent/tweet?url={encodeURIComponent(canonicalUrl)}&text={encodeURIComponent(data.blog.title)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-500 flex items-center gap-2"
+        >
+          🐦 Twitter
+        </a>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u={encodeURIComponent(canonicalUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        >
+          📘 Facebook
+        </a>
+        <a
+          href="https://www.linkedin.com/sharing/share-offsite/?url={encodeURIComponent(canonicalUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 flex items-center gap-2"
+        >
+          💼 LinkedIn
+        </a>
+        <a
+          href="https://wa.me/?text={encodeURIComponent(data.blog.title + ' ' + canonicalUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2"
+        >
+          💬 WhatsApp
+        </a>
       </div>
-    </article>
-  {/if}
+    </div>
+  </article>
 </div>
 
 <style>
-  :global(.prose) {
-    color: inherit;
-  }
-  
-  :global(.prose h1) {
-    font-size: 2.25rem;
-    font-weight: 700;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  :global(.prose h2) {
-    font-size: 1.875rem;
-    font-weight: 700;
-    margin-top: 1.75rem;
-    margin-bottom: 0.875rem;
-  }
-  
-  :global(.prose h3) {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
-  
-  :global(.prose p) {
-    margin-bottom: 1.25rem;
-    line-height: 1.75;
-  }
-  
-  :global(.prose a) {
-    color: #3b82f6;
-    text-decoration: underline;
-  }
-  
-  :global(.prose a:hover) {
-    color: #2563eb;
-  }
-  
-  :global(.prose ul, .prose ol) {
-    margin-bottom: 1.25rem;
-    padding-left: 1.5rem;
-  }
-  
-  :global(.prose li) {
-    margin-bottom: 0.5rem;
-  }
-  
-  :global(.prose code) {
-    background-color: #f3f4f6;
-    padding: 0.125rem 0.375rem;
-    border-radius: 0.25rem;
-    font-size: 0.875em;
-  }
-  
-  :global(.dark .prose code) {
-    background-color: #374151;
-  }
-  
-  :global(.prose pre) {
-    background-color: #1f2937;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    margin-bottom: 1.25rem;
-  }
-  
-  :global(.prose pre code) {
-    background-color: transparent;
-    padding: 0;
-    color: #e5e7eb;
-  }
-  
-  :global(.prose blockquote) {
-    border-left: 4px solid #3b82f6;
-    padding-left: 1rem;
-    font-style: italic;
-    margin: 1.5rem 0;
-  }
-  
-  :global(.prose img) {
-    border-radius: 0.5rem;
-    margin: 1.5rem 0;
-  }
+  :global(.prose) { color: inherit; }
+  :global(.prose h1) { font-size: 2.25rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; }
+  :global(.prose h2) { font-size: 1.875rem; font-weight: 700; margin-top: 1.75rem; margin-bottom: 0.875rem; }
+  :global(.prose h3) { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  :global(.prose p) { margin-bottom: 1.25rem; line-height: 1.75; }
+  :global(.prose a) { color: #3b82f6; text-decoration: underline; }
+  :global(.prose a:hover) { color: #2563eb; }
+  :global(.prose ul, .prose ol) { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+  :global(.prose li) { margin-bottom: 0.5rem; }
+  :global(.prose code) { background-color: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+  :global(.dark .prose code) { background-color: #374151; }
+  :global(.prose pre) { background-color: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.25rem; }
+  :global(.prose pre code) { background-color: transparent; padding: 0; color: #e5e7eb; }
+  :global(.prose blockquote) { border-left: 4px solid #3b82f6; padding-left: 1rem; font-style: italic; margin: 1.5rem 0; }
+  :global(.prose img) { border-radius: 0.5rem; margin: 1.5rem 0; }
 </style>
