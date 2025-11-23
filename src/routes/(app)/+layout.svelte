@@ -1,7 +1,5 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.ico';
 	import { onMount } from 'svelte';
-	import "../../app.css";
 	import Navbar from '../../components/Navbar.svelte';
 	import Footer from '../../components/Footer.svelte';
 
@@ -44,10 +42,6 @@
     }
   }
 </script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
 
 <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
   <Navbar {darkMode} {toggleDarkMode} />

@@ -1,20 +1,21 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { supabase } from '$lib/supabase';
+  import { enhance } from '$app/forms';
+  import type { ActionData } from './$types';
   import { marked } from 'marked';
   import DOMPurify from 'dompurify';
 
-  let title = '';
-  let slug = '';
-  let content = '';
-  let excerpt = '';
-  let coverImage = '';
-  let author = 'Abrordc';
+  export let form: ActionData;
+
+  let title = form?.title || '';
+  let slug = form?.slug || '';
+  let content = form?.content || '';
+  let excerpt = form?.excerpt || '';
+  let coverImage = form?.coverImage || '';
+  let author = form?.author || 'Abrordc';
   let published = false;
-  let loading = false;
-  let error = '';
   let previewMode = false;
   let previewHtml = '';
+
   const contentPlaceholder = `# Heading 1
 
 Tulis konten artikel dengan Markdown...
@@ -46,47 +47,6 @@ ${'```'}`;
     }
   }
 
-  async function handleSubmit() {
-    error = '';
-    
-    if (!title || !slug || !content) {
-      error = 'Judul, slug, dan konten wajib diisi';
-      return;
-    }
-
-    loading = true;
-
-    // console.log(supabase.auth.getUser().then(res => console.log(res)))
-    const { data, error: insertError } = await supabase
-      .from('blogs')
-      .insert([
-        {
-          title,
-          slug,
-          content,
-          excerpt,
-          cover_image: coverImage || null,
-          author,
-          published
-        }
-      ])
-      .select()
-      .single();
-
-      // console.log("datas: ", data)
-    if (insertError) {
-      if (insertError.code === '23505') {
-        error = 'Slug sudah digunakan, gunakan slug yang berbeda';
-      } else {
-        error = 'Gagal menyimpan artikel ' + insertError.message;
-      }
-      loading = false;
-      return;
-    }
-
-    goto('/admin/blogs');
-  }
-
   $: if (title && !slug) generateSlug();
 </script>
 
@@ -101,9 +61,9 @@ ${'```'}`;
     </a>
   </div>
 
-  {#if error}
+  {#if form?.error}
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-      {error}
+      {form.error}
     </div>
   {/if}
 
@@ -111,12 +71,14 @@ ${'```'}`;
     <div class="border-b border-gray-200 dark:border-gray-700">
       <div class="flex">
         <button 
+          type="button"
           class="px-6 py-3 font-medium {!previewMode ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}"
           on:click={() => previewMode = false}
         >
           Edit
         </button>
         <button 
+          type="button"
           class="px-6 py-3 font-medium {previewMode ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-600'}"
           on:click={() => { previewMode = true; updatePreview(); }}
         >
@@ -127,13 +89,15 @@ ${'```'}`;
 
     <div class="p-6">
       {#if !previewMode}
-        <form on:submit|preventDefault={handleSubmit} class="space-y-6">
+        <!-- ✅ Form dengan method POST dan use:enhance -->
+        <form method="POST" use:enhance class="space-y-6">
           <div>
             <label for="title" class="block text-sm font-medium mb-2">
               Judul Artikel *
             </label>
             <input
               id="title"
+              name="title"
               type="text"
               required
               bind:value={title}
@@ -149,6 +113,7 @@ ${'```'}`;
             </label>
             <input
               id="slug"
+              name="slug"
               type="text"
               required
               bind:value={slug}
@@ -164,6 +129,7 @@ ${'```'}`;
             </label>
             <textarea
               id="excerpt"
+              name="excerpt"
               bind:value={excerpt}
               rows="2"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
@@ -172,11 +138,12 @@ ${'```'}`;
           </div>
 
           <div>
-            <label for="coverImage" class="block text-sm font-medium mb-2">
+            <label for="cover_image" class="block text-sm font-medium mb-2">
               Cover Image URL
             </label>
             <input
-              id="coverImage"
+              id="cover_image"
+              name="cover_image"
               type="url"
               bind:value={coverImage}
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
@@ -190,6 +157,7 @@ ${'```'}`;
             </label>
             <input
               id="author"
+              name="author"
               type="text"
               bind:value={author}
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
@@ -202,6 +170,7 @@ ${'```'}`;
             </label>
             <textarea
               id="content"
+              name="content"
               required
               bind:value={content}
               rows="20"
@@ -219,6 +188,7 @@ ${'```'}`;
           <div class="flex items-center">
             <input
               id="published"
+              name="published"
               type="checkbox"
               bind:checked={published}
               class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
@@ -237,10 +207,9 @@ ${'```'}`;
             </a>
             <button
               type="submit"
-              disabled={loading}
-              class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50"
+              class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
             >
-              {loading ? 'Menyimpan...' : published ? 'Publish' : 'Simpan sebagai Draft'}
+              {published ? 'Publish' : 'Simpan sebagai Draft'}
             </button>
           </div>
         </form>
@@ -258,17 +227,13 @@ ${'```'}`;
 </div>
 
 <style>
-  :global(.prose) {
-    color: inherit;
-  }
+  :global(.prose) { color: inherit; }
   :global(.prose h1) { font-size: 2.25rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; }
   :global(.prose h2) { font-size: 1.875rem; font-weight: 700; margin-top: 1.75rem; margin-bottom: 0.875rem; }
   :global(.prose h3) { font-size: 1.5rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
   :global(.prose p) { margin-bottom: 1.25rem; line-height: 1.75; }
   :global(.prose a) { color: #3b82f6; text-decoration: underline; }
-  :global(.prose ul, .prose ol) { margin-bottom: 1.25rem; padding-left: 1.5rem; }
-  :global(.prose code) { background-color: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; }
+  :global(.prose code) { background-color: #f3f4f6; padding: 0.125rem 0.375rem; border-radius: 0.25rem; }
   :global(.dark .prose code) { background-color: #374151; }
-  :global(.prose pre) { background-color: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.25rem; }
-  :global(.prose pre code) { background-color: transparent; padding: 0; color: #e5e7eb; }
+  :global(.prose pre) { background-color: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
 </style>

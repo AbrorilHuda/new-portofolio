@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { supabase, type Blog } from '$lib/supabase';
+  import { supabase, type Blog } from '$lib/supabase/supabase';
 
   let blogs: Blog[] = [];
   let loading = true;
@@ -26,6 +26,10 @@
     });
   }
 </script>
+
+<svelte:head>
+  <title>Blogs</title>
+</svelte:head>
 
 <div class="container mx-auto px-4 py-20 max-w-6xl">
   <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent py-3">Blog</h1>

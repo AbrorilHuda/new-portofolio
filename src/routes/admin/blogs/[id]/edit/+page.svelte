@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import { supabase, type Blog } from '$lib/supabase';
+  import { supabase, type Blog } from '$lib/supabase/supabase';
   import { marked } from 'marked';
   import DOMPurify from 'dompurify';
 

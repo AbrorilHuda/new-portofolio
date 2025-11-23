@@ -2,11 +2,14 @@
   import { page } from '$app/stores';
   import type { LayoutData } from './$types';
    import { enhance } from '$app/forms';
-  import "../../app.css"
 
   export let data: LayoutData;
 
 </script>
+
+<svelte:head>
+  <title>Admin Dashboard</title>
+</svelte:head>
 
 {#if $page.url.pathname === '/admin/login'}
   <slot />

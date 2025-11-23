@@ -1,13 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { supabase, type Blog } from '$lib/supabase';
+  import { supabase, type Blog } from '$lib/supabase/supabase';
   import { marked } from 'marked';
   import DOMPurify from 'dompurify';
 
   let blog: Blog | null = null;
   let loading = true;
   let htmlContent = '';
+
+  let siteUrl = 'https://yourdomain.com';
+  let canonicalUrl = '';
+  let metaDescription = '';
+  let metaImage = '';
 
   onMount(async () => {
     const slug = $page.params.slug;
@@ -21,9 +26,12 @@
 
     if (data) {
       blog = data;
-      // Convert markdown to HTML and sanitize
       const rawHtml = await marked(blog!.content);
       htmlContent = DOMPurify.sanitize(rawHtml);
+
+      canonicalUrl = `${siteUrl}/blog/${blog!.slug}`;
+      metaDescription = blog!.excerpt || blog!.content.substring(0, 160).replace(/[#*_\[\]]/g, '');
+      metaImage = blog!.cover_image || `${siteUrl}/og-default-image.png`;
     }
     
     loading = false;
@@ -36,12 +44,76 @@
       day: 'numeric'
     });
   }
+   function formatDateISO(date: string) {
+    return new Date(date).toISOString();
+  }
 </script>
 
 <svelte:head>
   {#if blog}
-    <title>{blog.title} - Blog</title>
-    <meta name="description" content={blog.excerpt || blog.title} />
+    <!-- Primary Meta Tags -->
+    <title>{blog.title}</title>
+    <meta name="title" content={blog.title} />
+    <meta name="description" content={metaDescription} />
+    <meta name="author" content={blog.author} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={blog.title} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:image" content={metaImage} />
+    <meta property="og:site_name" content="AbrorilHuda.me" />
+    <meta property="article:published_time" content={formatDateISO(blog.created_at)} />
+    <meta property="article:modified_time" content={formatDateISO(blog.updated_at)} />
+    <meta property="article:author" content={blog.author} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={blog.title} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={metaImage} />
+    <meta name="twitter:creator" content="@abror_dc" />
+
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta name="keywords" content="blog, artikel, {blog.title}" />
+
+    <!-- Schema.org JSON-LD for Article -->
+    {@html `
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "${blog.title}",
+        "description": "${metaDescription.replace(/"/g, '\\"')}",
+        "image": "${metaImage}",
+        "author": {
+          "@type": "Person",
+          "name": "${blog.author}"
+        },
+        "publisher": {
+          "@type": "Abrorilhuda",
+          "name": "AbrorilHuda.me",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "${siteUrl}/logo.png"
+          }
+        },
+        "datePublished": "${formatDateISO(blog.created_at)}",
+        "dateModified": "${formatDateISO(blog.updated_at)}",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "${canonicalUrl}"
+        }
+      }
+      <\/script>
+    `}
+  {:else}
+    <title>Loading... | Blog</title>
+    <meta name="robots" content="noindex" />
   {/if}
 </svelte:head>
 

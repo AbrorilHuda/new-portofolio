@@ -1,3 +1,21 @@
-# allow crawling everything by default
 User-agent: *
+Allow: /
+
+# Disallow admin pages
+Disallow: /admin/
 Disallow: /admin
+
+# Sitemap
+Sitemap: https://abrorilhuda.me/sitemap.xml
+
+Crawl-delay: 10
+
+# Common bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /

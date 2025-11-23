@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { AdminUser } from "$lib/supabase";
+import type { AdminUser } from "$lib/supabase/supabase";
 
 export const adminUser = writable<AdminUser | null>(null);
 export const isAuthenticated = writable(false);

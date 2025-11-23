@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { supabase, type Blog } from '$lib/supabase';
+  import { supabase, type Blog } from '$lib/supabase/supabase';
 
   let blogs: Blog[] = [];
   let loading = true;

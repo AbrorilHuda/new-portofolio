@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { supabase } from '$lib/supabase';
+  import { supabase } from '$lib/supabase/supabase';
 
   let stats = {
     total: 0,
