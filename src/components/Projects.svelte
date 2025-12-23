@@ -57,14 +57,14 @@
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        Featured <span class="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Projects</span>
+        Featured <span class="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">Projects</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
         A selection of my recent work and personal projects
       </p>
     </div>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation">
       {#each projects as project}
         <ProjectCard {project} />
       {/each}

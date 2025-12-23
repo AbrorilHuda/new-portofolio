@@ -23,7 +23,7 @@
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        Get In <span class="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Touch</span>
+        Get In <span class="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">Touch</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
         Have a project in mind? Let's work together to create something amazing
@@ -95,8 +95,8 @@
           </div>
         {:else}
           <form on:submit={handleSubmit} class="space-y-6">
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div class="group">
+              <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
                 Name
               </label>
               <input
@@ -104,13 +104,13 @@
                 id="name"
                 bind:value={formData.name}
                 required
-                class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
+                class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white input-spotlight"
                 placeholder="Your name"
               />
             </div>
             
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div class="group">
+              <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
                 Email
               </label>
               <input
@@ -118,13 +118,13 @@
                 id="email"
                 bind:value={formData.email}
                 required
-                class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
+                class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white input-spotlight"
                 placeholder="your.email@example.com"
               />
             </div>
             
-            <div>
-              <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div class="group">
+              <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
                 Message
               </label>
               <textarea
@@ -132,19 +132,20 @@
                 bind:value={formData.message}
                 required
                 rows="5"
-                class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all resize-none text-gray-900 dark:text-white"
+                class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all resize-none text-gray-900 dark:text-white input-spotlight"
                 placeholder="Tell me about your project..."
               ></textarea>
             </div>
             
             <button
               type="submit"
-              class="w-full px-8 py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2"
+              class="group relative w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 overflow-hidden"
             >
-              Send Message
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span class="relative z-10">Send Message</span>
+              <svg class="w-5 h-5 relative z-10 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
+              <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
             </button>
           </form>
         {/if}

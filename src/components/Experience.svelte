@@ -2,18 +2,34 @@
   const experiences = [
     {
       id: 1,
-      title: 'Cooming Soon',
-      company: '.........',
-      period: '.......',
-      description: '........',
-      type: '.......'
+      title: 'Builder & Organizer',
+      company: 'dicoding community network university madura',
+      period: '2025 - now',
+      description: 'Sebagai salah satu inisiator dan builder Dicoding Community Network (DCN) Universitas Madura, saya terlibat dari fase perencanaan hingga eksekusi pembentukan komunitas resmi yang diakui oleh Dicoding Indonesia. Tanggung jawab saya mencakup penyusunan proposal pengajuan, rekrutmen anggota inti, perancangan program kerja, serta koordinasi dengan pihak kampus dan Dicoding untuk mendapatkan endorsement. Keberhasilan dalam membangun DCN Universitas Madura tidak hanya menciptakan ekosistem belajar yang lebih terstruktur, tetapi juga secara resmi menghubungkan kampus dengan sumber belajar dan peluang karir berskala nasional melalui platform Dicoding.',
+      type: 'work'
     },
     {
       id: 2,
+      title: 'Assistant Practicum',
+      company: 'Informatics Department Madura University',
+      period: 'April 2025 - July 2025',
+      description: 'Sebagai Asisten Praktikum Sistem Operasi, saya bertugas mendampingi dan membimbing mahasiswa dalam memahami konsep-konsep fundamental sistem operasi melalui sesi praktik di laboratorium. Tanggung jawab saya meliputi persiapan materi dan modul praktikum, memberikan demonstrasi langsung penggunaan command line interface (CLI), manajemen proses, memori, dan file system, serta membantu mahasiswa dalam mendiagnosis dan menyelesaikan masalah teknis yang mereka hadapi. Peran ini tidak hanya memperdalam expertise teknis saya di bidang sistem operasi, tetapi juga melatih kemampuan komunikasi, penyampaian materi yang kompleks dengan sederhana, kesabaran, dan kepemimpinan dalam setting edukatif.',
+      type: 'work'
+    },
+    {
+      id: 3,
+      title: 'Lead Organizer',
+      company: 'MaduraDev Community',
+      period: '2025 - now',
+      description: 'Sebagai Lead Organizer MaduraDev, saya memimpin komunitas developer  di Pulau Madura dengan visi untuk menumbuhkan ekosistem teknologi lokal. Tugas saya mencakup penyusunan strategi komunitas, perekrutan dan koordinasi tim inti, serta pengorganisasian berbagai event seperti workshop, seminar teknis, dan networking meetup baik secara daring maupun luring. Dan juga berkontribusi dalam pembuatan web komunitas dan lain-lain.',
+      type: 'work'
+    },
+    {
+      id: 4,
       title: 'Bachelor of Computer Science',
       company: 'Madura University',
       period: '2022 - now',
-      description: 'create community DCN Madura University',
+      description: 'Saya mahasiswa Universitas Madura yang aktif belajar melalui kontribusi langsung, seperti mengelola komunitas developer (MaduraDev), membangun komunitas belajar bersama Dicoding (DCN UNIRA), dan membantu sesama sebagai asisten praktikum. Saya senang terlibat dalam proyek kolaboratif yang bermanfaat.',
       type: 'education'
     }
   ];
