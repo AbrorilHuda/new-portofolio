@@ -1,5 +1,7 @@
 <script lang="ts">
   import type {  Blog } from '$lib/supabase/supabase';
+  import PageViewTracker from '../../../../components/PageViewTracker.svelte';
+  import ViewCounter from '../../../../components/ViewCounter.svelte';
   import type { PageData } from '../$types';
 
   export let data: PageData & {
@@ -8,6 +10,7 @@
   };
 
   let siteUrl = 'https://abrorilhuda.me';
+  const slug = data.blog.slug;
 
   $: canonicalUrl = `${siteUrl}/blog/${data.blog.slug}`;
   $: metaDescription = data.blog.excerpt || data.blog.content.substring(0, 160).replace(/[#*_\[\]]/g, '');
@@ -25,6 +28,8 @@
     return new Date(date).toISOString();
   }
 </script>
+
+<PageViewTracker {slug} />
 
 <svelte:head>
     <!-- Primary Meta Tags -->
@@ -91,7 +96,7 @@
 
 <div class="container mx-auto px-4 py-16 max-w-4xl">
   <article itemscope itemtype="https://schema.org/BlogPosting">
-    <a href="/blog" class="inline-flex items-center text-blue-600 hover:underline mb-8">
+    <a href="/blog" class="inline-flex items-center text-blue-600 hover:underline mb-8 p-2">
       ← Kembali ke Blog
     </a>
 
@@ -117,6 +122,10 @@
         <time itemprop="datePublished" datetime={formatDateISO(data.blog.created_at)}>
           {formatDate(data.blog.created_at)}
         </time>
+         <span>•</span>
+        <span itemprop="view">
+          <ViewCounter slug={data.blog.slug}/>
+        </span>
       </div>
 
       {#if data.blog.excerpt}

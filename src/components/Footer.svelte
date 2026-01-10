@@ -1,13 +1,12 @@
 <script>
   const currentYear = new Date().getFullYear();
+  import ChatMessage from './ChatMessage.svelte';
 </script>
 
 <footer class="bg-gray-900 dark:bg-black text-gray-300 py-12 px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
+     <ChatMessage/>
     <div class="grid md:grid-cols-4 gap-8 mb-8">
-       <p class="italic text-sm">
-        Cooming Fiture..
-       </p>
        <div class="md:col-span-2">
         <h3 class="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
           Abrorilhuda.me
