@@ -2,7 +2,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import type { RealtimeChannel } from '@supabase/supabase-js';
-   import { supabase } from '$lib/supabase/supabase';
+  import { supabase } from '$lib/supabase/supabase';
   
   interface Message {
     id: string | number;
@@ -18,7 +18,6 @@
   let messagesContainer: HTMLDivElement;
   let realtimeChannel: RealtimeChannel | null = null;
 
-  // Demo mode - set to false when using real Supabase
   const DEMO_MODE: boolean = false;
 
   onMount(() => {
@@ -234,6 +233,12 @@
     height: 500px;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s;
+  }
+
+  :global(.dark) .chat-window {
+    background: #1f2937;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   }
 
   @media (min-width: 640px) {
@@ -252,6 +257,10 @@
     align-items: center;
   }
 
+  :global(.dark) .chat-header {
+    background-color: #1e40af;
+  }
+
   .chat-header h3 {
     font-weight: 600;
     margin: 0;
@@ -262,6 +271,10 @@
     font-size: 0.75rem;
     color: #bfdbfe;
     margin: 0.25rem 0 0 0;
+  }
+
+  :global(.dark) .chat-header p {
+    color: #93c5fd;
   }
 
   .close-button {
@@ -278,6 +291,10 @@
     background-color: #1d4ed8;
   }
 
+  :global(.dark) .close-button:hover {
+    background-color: #1e3a8a;
+  }
+
   .messages-area {
     flex: 1;
     overflow-y: auto;
@@ -286,6 +303,11 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    transition: background-color 0.3s;
+  }
+
+  :global(.dark) .messages-area {
+    background-color: #111827;
   }
 
   .message {
@@ -293,6 +315,12 @@
     border-radius: 0.5rem;
     padding: 0.75rem;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s;
+  }
+
+  :global(.dark) .message {
+    background: #374151;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   }
 
   .message-header {
@@ -306,11 +334,21 @@
     font-weight: 600;
     font-size: 0.875rem;
     color: #2563eb;
+    transition: color 0.3s;
+  }
+
+  :global(.dark) .username {
+    color: #60a5fa;
   }
 
   .timestamp {
     font-size: 0.75rem;
     color: #9ca3af;
+    transition: color 0.3s;
+  }
+
+  :global(.dark) .timestamp {
+    color: #6b7280;
   }
 
   .message-text {
@@ -318,6 +356,11 @@
     color: #374151;
     margin: 0;
     word-wrap: break-word;
+    transition: color 0.3s;
+  }
+
+  :global(.dark) .message-text {
+    color: #d1d5db;
   }
 
   .input-area {
@@ -325,6 +368,12 @@
     border-top: 1px solid #e5e7eb;
     background: white;
     border-radius: 0 0 0.5rem 0.5rem;
+    transition: all 0.3s;
+  }
+
+  :global(.dark) .input-area {
+    background: #1f2937;
+    border-top-color: #374151;
   }
 
   .name-input {
@@ -334,12 +383,26 @@
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
+    color: #000;
+    background: white;
+    transition: all 0.3s;
+  }
+
+  :global(.dark) .name-input {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f3f4f6;
   }
 
   .name-input:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  :global(.dark) .name-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
   }
 
   .message-input-wrapper {
@@ -353,12 +416,26 @@
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
     font-size: 0.875rem;
+    color: #000;
+    background: white;
+    transition: all 0.3s;
+  }
+
+  :global(.dark) .message-input {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f3f4f6;
   }
 
   .message-input:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  :global(.dark) .message-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
   }
 
   .send-button {
@@ -373,5 +450,44 @@
 
   .send-button:hover {
     background-color: #1d4ed8;
+  }
+
+  :global(.dark) .send-button {
+    background-color: #1e40af;
+  }
+
+  :global(.dark) .send-button:hover {
+    background-color: #1e3a8a;
+  }
+
+  /* Scrollbar styling */
+  .messages-area::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .messages-area::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+
+  :global(.dark) .messages-area::-webkit-scrollbar-track {
+    background: #1e293b;
+  }
+
+  .messages-area::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  :global(.dark) .messages-area::-webkit-scrollbar-thumb {
+    background: #475569;
+  }
+
+  .messages-area::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  :global(.dark) .messages-area::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
   }
 </style>
