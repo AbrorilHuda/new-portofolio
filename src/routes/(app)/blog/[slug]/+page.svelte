@@ -63,35 +63,46 @@
     <meta name="keywords" content="blog, artikel, {data.blog.title}" />
 
     <!-- Schema.org JSON-LD for Article -->
-    {@html `
-      <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "headline": "${data.blog.title}",
-        "description": "${metaDescription.replace(/"/g, '\\"')}",
-        "image": "${metaImage}",
-        "author": {
-          "@type": "Person",
-          "name": "${data.blog.author}"
-        },
-        "publisher": {
-          "@type": "Abrorilhuda",
-          "name": "AbrorilHuda.me",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "${siteUrl}/logo.png"
-          }
-        },
-        "datePublished": "${formatDateISO(data.blog.created_at)}",
-        "dateModified": "${formatDateISO(data.blog.updated_at)}",
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": "${canonicalUrl}"
-        }
+   {@html `
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "${data.blog.title}",
+    "description": "${metaDescription.replace(/[""\"''\']/g, '')}",
+    "image": {
+      "@type": "ImageObject",
+      "url": "${metaImage}",
+      "width": 1200,
+      "height": 630
+    },
+    "author": {
+      "@type": "Person",
+      "name": "${data.blog.author}",
+      "url": "${siteUrl}/about"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AbrorilHuda.me",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "${siteUrl}/logo.png",
+        "width": 600,
+        "height": 60
       }
-      </script>
-    `}
+    },
+    "datePublished": "${formatDateISO(data.blog.created_at)}",
+    "dateModified": "${formatDateISO(data.blog.updated_at)}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "${canonicalUrl}"
+    },
+    "wordCount": ${data.blog.content?.length || 0},
+    "articleBody": "${data.blog.content?.substring(0, 200).replace(/"/g, '\\"')}...",
+    "inLanguage": "id-ID"
+  }
+  </script>
+`}
 </svelte:head>
 
 <div class="container mx-auto px-4 py-16 max-w-4xl">

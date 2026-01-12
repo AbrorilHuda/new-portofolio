@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { supabase, type Blog } from '$lib/supabase/supabase';
+  import ViewCounter from '../../../components/ViewCounter.svelte';
 
   let blogs: Blog[] = [];
   let loading = true;
@@ -83,7 +84,7 @@
       </a>
     </div>
   {:else}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-x-auto">
       <table class="w-full">
         <thead class="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
           <tr>
@@ -95,6 +96,9 @@
             </th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
               Tanggal
+            </th>
+             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Views
             </th>
             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
               Actions
@@ -122,19 +126,24 @@
               <td class="px-6 py-4 text-sm text-gray-500">
                 {formatDate(blog.created_at)}
               </td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <ViewCounter slug={blog.slug}/>
+              </td>
               <td class="px-6 py-4 text-right text-sm space-x-2">
                 <a 
                   href="/blog/{blog.slug}" 
                   target="_blank"
                   class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+                  aria-label="view blog"
                 >
-                  👁️
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mouse-pointer-click-icon lucide-mouse-pointer-click"><path d="M14 4.1 12 6"/><path d="m5.1 8-2.9-.8"/><path d="m6 12-1.9 2"/><path d="M7.2 2.2 8 5.1"/><path d="M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z"/></svg>
                 </a>
                 <a 
                   href="/admin/blogs/{blog.id}/edit"
                   class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-200"
+                  aria-label="edit blogs"
                 >
-                  ✏️
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen-icon lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
                 </a>
                 <button 
                   on:click={() => togglePublish(blog)}
@@ -146,8 +155,9 @@
                 <button 
                   on:click={() => deleteConfirm = blog.id}
                   class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-200"
+                  aria-label="delete blogs"
                 >
-                  🗑️
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 </button>
               </td>
             </tr>
