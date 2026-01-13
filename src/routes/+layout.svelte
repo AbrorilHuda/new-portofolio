@@ -58,33 +58,9 @@ import { page } from '$app/stores';
           name: "Home",
           item: siteurl,
         },
-        {
+         {
           "@type": "ListItem",
           position: 2,
-          name: "About me",
-          item: `${siteurl}#about`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: "Projects",
-          item: `${siteurl}#projects`,
-        },
-         {
-          "@type": "ListItem",
-          position: 4,
-          name: "Experience",
-          item: `${siteurl}#experience`,
-        },
-         {
-          "@type": "ListItem",
-          position: 5,
-          name: "Contact",
-          item: `${siteurl}#contact`,
-        },
-         {
-          "@type": "ListItem",
-          position: 6,
           name: "Blogs",
           item: `${siteurl}/blog`,
         },
