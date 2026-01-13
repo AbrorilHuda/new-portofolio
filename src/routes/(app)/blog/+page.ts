@@ -1,7 +1,7 @@
 import { definePageMetaTags } from "svelte-meta-tags";
 
 const siteurl = "https://abrorilhuda.me";
-const defaultimage = "https://abrorilhuda.me/og-image.png";
+const defaultimage = "https://abrorilhuda.me/og-default-image.png";
 
 export const load = () => {
   const pageTags = definePageMetaTags({

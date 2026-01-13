@@ -1,7 +1,7 @@
 import { definePageMetaTags } from "svelte-meta-tags";
 
 const siteurl = "https://abrorilhuda.me";
-const defaultimage = "https://abrorilhuda.me/og-image.png";
+const defaultimage = "https://abrorilhuda.me/og-default-image.png";
 const description =
   "Portofolio resmi Abrorilhuda. Profesional kreatif yang berdedikasi memberikan solusi inovatif dan hasil kerja berkualitas tinggi. Jelajahi proyek dan keahlian saya di sini.";
 
