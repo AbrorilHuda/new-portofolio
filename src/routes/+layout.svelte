@@ -1,6 +1,20 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.ico';
-    import "../app.css";
+import { MetaTags, JsonLd } from 'svelte-meta-tags';
+import favicon from '$lib/assets/favicon.ico';
+import "../app.css";
+import { page } from '$app/stores';
+
+  $: data = $page.data;
+  
+  // Default values untuk avoid undefined
+  const siteurl = data?.siteurl || 'https://abrorilhuda.me';
+  const defaultimage = data?.defaultimage || 'https://abrorilhuda.me/og-image.png';
+  
+  // Destructure dengan safe check
+  $: metaTags = (() => {
+    const { siteurl: _, defaultimage: __, ...rest } = data || {};
+    return rest;
+  })();
 </script>
 
 <svelte:head>
@@ -10,34 +24,78 @@
     title="RSS Feed" 
     href="/rss.xml" 
      />
-    <title>Moh.AbrorilHuda</title>
     <link rel="icon" href={favicon} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#3b82f6" />
-    <meta name="title" content="Abrorihuda.me" />
-    <meta name="description" content="web portofolio abrorilhuda" />
-    <meta name="author" content="moh.abrorilhuda" />
-    <link rel="canonical" href="https://abrorilhuda.me/" />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://abrorilhuda.me/" />
-    <meta property="og:title" content="Abrorilhuda.me" />
-    <meta property="og:description" content="web portofolio abrorilhuda" />
-    <meta property="og:image" content="https://abrorilhuda.me/og-default-image.png" />
-    <meta property="og:site_name" content="AbrorilHuda.me" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://abrorilhuda.me" />
-    <meta name="twitter:title" content="Abrorilhuda.me" />
-    <meta name="twitter:description" content="web portofolio abrorilhuda" />
-    <meta name="twitter:image" content="https://abrorilhuda.me/og-default-image.png" />
-    <meta name="twitter:creator" content="@abror_dc" />
-
-    <!-- Additional SEO -->
-    <meta name="robots" content="index, follow" />
-    <meta name="keywords" content="portofolio,abrorilhuda,abrordc,moh.abrorilhuda" />
 </svelte:head>
+
+
+<MetaTags {...metaTags}/>
+
+<JsonLd
+  schema={[
+    {
+      "@type": "Person",
+      name: "abrorilhuda",
+      url: siteurl,
+      image: defaultimage,
+      sameAs: [
+        "https://www.linkedin.com/in/moh-abroril-huda",
+        "https://github.com/abrorilhuda",
+        "https://twitter.com/abror_dc",
+      ],
+      jobTitle: "Full-Stack Developer",
+      worksFor: {
+        "@type": "Organization",
+        name: "Freelancer",
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: siteurl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "About me",
+          item: `${siteurl}#about`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Projects",
+          item: `${siteurl}#projects`,
+        },
+         {
+          "@type": "ListItem",
+          position: 4,
+          name: "Experience",
+          item: `${siteurl}#experience`,
+        },
+         {
+          "@type": "ListItem",
+          position: 5,
+          name: "Contact",
+          item: `${siteurl}#contact`,
+        },
+         {
+          "@type": "ListItem",
+          position: 6,
+          name: "Blogs",
+          item: `${siteurl}/blog`,
+        },
+      ],
+    },
+    {
+      "@type": "WebSite",
+      name: "Moh.AbrorilHuda",
+      url: siteurl,
+    },
+  ]}
+/>
 
 <slot />

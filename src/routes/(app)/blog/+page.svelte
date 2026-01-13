@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { supabase, type Blog } from '$lib/supabase/supabase';
-
   let blogs: Blog[] = [];
   let loading = true;
+
 
   onMount(async () => {
     const { data, error } = await supabase
@@ -27,13 +27,10 @@
   }
 </script>
 
-<svelte:head>
-  <title>Blogs</title>
-</svelte:head>
 
 <div class="container mx-auto px-4 py-20 max-w-6xl">
-  <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent py-3">Blog</h1>
-  <p class="text-gray-600 dark:text-gray-400 mb-12">Artikel dan tulisan seputar teknologi</p>
+  <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent py-3">Blogs</h1>
+  <p class="text-gray-600 dark:text-gray-400 mb-12">Artikel dan tulisan hal-hal random</p>
 
   {#if loading}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

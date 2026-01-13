@@ -3,18 +3,18 @@
   import PageViewTracker from '../../../../components/PageViewTracker.svelte';
   import ViewCounter from '../../../../components/ViewCounter.svelte';
   import type { PageData } from '../$types';
+  import { JsonLd } from 'svelte-meta-tags';
 
   export let data: PageData & {
     blog: Blog
     htmlContent: string
   };
 
-  let siteUrl = 'https://abrorilhuda.me';
   const slug = data.blog.slug;
 
-  $: canonicalUrl = `${siteUrl}/blog/${data.blog.slug}`;
-  $: metaDescription = data.blog.excerpt || data.blog.content.substring(0, 160).replace(/[#*_\[\]]/g, '');
-  $: metaImage = data.blog.cover_image || `${siteUrl}/og-default-image.png`;
+  $: canonicalUrl = `${data.siteurl}/blog/${data.blog.slug}`;
+  // $: metaDescription = data.blog.excerpt || data.blog.content.substring(0, 160).replace(/[#*_\[\]]/g, '');
+  // $: metaImage = data.blog.cover_image || `${data.siteurl}/og-default-image.png`;
 
 
   function formatDate(date: string) {
@@ -31,79 +31,44 @@
 
 <PageViewTracker {slug} />
 
-<svelte:head>
-    <!-- Primary Meta Tags -->
-    <title>{data.blog.title}</title>
-    <meta name="title" content={data.blog.title} />
-    <meta name="description" content={metaDescription} />
-    <meta name="author" content={data.blog.author} />
-    <link rel="canonical" href={canonicalUrl} />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={data.blog.title} />
-    <meta property="og:description" content={metaDescription} />
-    <meta property="og:image" content={metaImage} />
-    <meta property="og:site_name" content="AbrorilHuda.me" />
-    <meta property="article:published_time" content={formatDateISO(data.blog.created_at)} />
-    <meta property="article:modified_time" content={formatDateISO(data.blog.updated_at)} />
-    <meta property="article:author" content={data.blog.author} />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={canonicalUrl} />
-    <meta name="twitter:title" content={data.blog.title} />
-    <meta name="twitter:description" content={metaDescription} />
-    <meta name="twitter:image" content={metaImage} />
-    <meta name="twitter:creator" content="@abror_dc" />
-
-    <!-- Additional SEO -->
-    <meta name="robots" content="index, follow" />
-    <meta name="keywords" content="blog, artikel, {data.blog.title}" />
-
-    <!-- Schema.org JSON-LD for Article -->
-   {@html `
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": "${data.blog.title}",
-    "description": "${metaDescription.replace(/[""\"''\']/g, '')}",
-    "image": {
-      "@type": "ImageObject",
-      "url": "${metaImage}",
-      "width": 1200,
-      "height": 630
+<JsonLd
+  schema={{
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: data.blog.title,
+    description: data.blog.excerpt,
+    image: {
+      '@type': 'ImageObject',
+      url: data.blog.cover_image || data.defaultimage,
+      width: 1200,
+      height: 630
     },
-    "author": {
-      "@type": "Person",
-      "name": "${data.blog.author}",
-      "url": "${siteUrl}/about"
+    author: {
+      '@type': 'Person',
+      name: data.blog.author,
+      url: `${data.siteurl}/about`
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "AbrorilHuda.me",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "${siteUrl}/logo.png",
-        "width": 600,
-        "height": 60
+    publisher: {
+      '@type': 'Organization',
+      name: 'AbrorilHuda.me',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${data.siteurl}/logo.png`,
+        width: 600,
+        height: 60
       }
     },
-    "datePublished": "${formatDateISO(data.blog.created_at)}",
-    "dateModified": "${formatDateISO(data.blog.updated_at)}",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "${canonicalUrl}"
+    datePublished: formatDateISO(data.blog.created_at),
+    dateModified: formatDateISO(data.blog.updated_at),
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl
     },
-    "wordCount": ${data.blog.content?.length || 0},
-    "articleBody": "${data.blog.content?.substring(0, 200).replace(/"/g, '\\"')}...",
-    "inLanguage": "id-ID"
-  }
-  </script>
-`}
-</svelte:head>
+    wordCount: data.blog.content?.length || 0,
+    articleBody: data.blog.content?.substring(0, 200).replace(/"/g, '\\"') + '...',
+    inLanguage: 'id-ID'
+  }}
+/>
 
 <div class="container mx-auto px-4 py-16 max-w-4xl">
   <article itemscope itemtype="https://schema.org/BlogPosting">
