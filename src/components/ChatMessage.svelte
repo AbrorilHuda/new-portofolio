@@ -210,6 +210,7 @@
   }
 
   .chat-button {
+    position: relative;
     background-color: #2563eb;
     color: white;
     border: none;
@@ -218,6 +219,25 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: all 0.3s;
+  }
+
+  /* Animasi Ping */
+  .chat-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: #2563eb;
+    border-radius: 9999px;
+    opacity: 0.3;
+    pointer-events: none;
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2);
+      opacity: 0;
+    }
   }
 
   .chat-button:hover {

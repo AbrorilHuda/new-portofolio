@@ -28,27 +28,27 @@
     },
     {
       id: 4,
-      title: 'Mobile Fitness App',
-      description: 'Cross-platform fitness tracking application with workout plans and progress monitoring.',
-      image: 'https://images.unsplash.com/photo-1641567535859-c58187ac4954',
-      technologies: ['React Native', 'Firebase', 'Redux', 'TypeScript'],
-      link: '#'
+      title: 'Maduradev ',
+      description: 'Website information maduradev.',
+      image: 'https://32ily8ib82.ucarecd.net/519fe07d-e17b-4b57-b2ef-d6f2948955a9/maduradev.png',
+      technologies: ['Next.js', 'TypeScript', 'TailwindCSS'],
+      link: 'https://madura.dev'
     },
     {
       id: 5,
-      title: 'Portfolio Generator',
-      description: 'SaaS platform for creating beautiful portfolio websites with drag-and-drop interface.',
-      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960',
-      technologies: ['Vue.js', 'Express', 'AWS S3', 'WebSockets'],
-      link: '#'
+      title: 'DCN UNIRA',
+      description: 'A create web information dcn universitas madura',
+      image: 'https://32ily8ib82.ucarecd.net/68fcd631-d4c4-4f53-becf-2b602286e771/dcnuniradev.png',
+      technologies: ['Next.js', 'TailwindCSS', 'Framer Motion', 'etc'],
+      link: 'https://dcnunira.dev'
     },
     {
       id: 6,
-      title: 'Social Media App',
-      description: 'Feature-rich social networking platform with real-time messaging and content sharing.',
-      image: 'https://images.unsplash.com/photo-1597740985671-2a8a3b80502e',
-      technologies: ['Svelte', 'Socket.io', 'Redis', 'Docker'],
-      link: '#'
+      title: 'Presentasion deck',
+      description: 'Saas presentasion deck for student',
+      image: 'https://32ily8ib82.ucarecd.net/4abf756f-b6ac-4ba6-8a10-bf1d29ed688e/presentasionapp.png',
+      technologies: ['Next.js', 'gemini', 'markdown', 'etc'],
+      link: 'https://slide.dcnunira.dev'
     }
   ];
 </script>
@@ -57,7 +57,7 @@
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        Featured <span class="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">Projects</span>
+        Featured <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-size[200%_100%] bg-clip-text text-transparent animate-shine">Projects</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
         A selection of my recent work and personal projects
