@@ -1,6 +1,7 @@
 <script>
   import ProjectCard from './ProjectCard.svelte';
-  
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';
   const projects = [
     {
       id: 1,
@@ -57,10 +58,10 @@
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        Featured <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-size[200%_100%] bg-clip-text text-transparent animate-shine">Projects</span>
+        {t($locale, 'projects.titlePrefix')} <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-size[200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'projects.titleHighlight')}</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-        A selection of my recent work and personal projects
+        {t($locale, 'projects.tagline')}
       </p>
     </div>
     

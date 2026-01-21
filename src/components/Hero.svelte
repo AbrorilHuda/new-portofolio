@@ -1,4 +1,6 @@
 <script>
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';
   import { onMount } from 'svelte';
   
   let visible = false;
@@ -32,15 +34,15 @@
       <div class="space-y-8">
         <div class="space-y-4">
           <h1 class="text-5xl md:text-7xl font-bold leading-tight {visible ? 'fade-in-up' : 'opacity-0'}">
-            Hi, I'm <span class="inline-block bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">Moh. Abroril Huda</span>
+            {t($locale, 'hero.titlePrefix')} <span class="inline-block bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'hero.titleHighlight')}</span>
           </h1>
           <p class="text-2xl md:text-3xl text-gray-600 dark:text-gray-400 {visible ? 'fade-in-up delay-100' : 'opacity-0'}">
-            Full Stack Developer etc.
+            {t($locale, 'hero.subtitle')}
           </p>
         </div>
         
         <p class="text-lg text-gray-600 dark:text-gray-400 max-w-xl {visible ? 'fade-in-up delay-200' : 'opacity-0'}">
-          Vibe coders engginer only
+          {t($locale, 'hero.description')}
         </p>
         
         <div class="flex flex-wrap gap-4 {visible ? 'fade-in-up delay-300' : 'opacity-0'}">
@@ -48,14 +50,14 @@
             on:click={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
             class="group relative px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all overflow-hidden"
           >
-            <span class="relative z-10">View My Work</span>
+            <span class="relative z-10">{t($locale, 'hero.viewProjects')}</span>
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
           </button>
           <button
             on:click={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             class="px-8 py-3 border-2 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-full font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-all hover:scale-105"
           >
-            Get In Touch
+            {t($locale, 'hero.contactMe')}
           </button>
         </div>
         
@@ -100,7 +102,7 @@
           <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 z-50 animate-float" style="animation-delay: 0.5s;">
             <p class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
               <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              Available for work
+              {t($locale, 'hero.availableForWork')}
             </p>
           </div>
         </div>

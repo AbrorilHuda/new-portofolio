@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';  
   import { onMount } from 'svelte';
   import { supabase, type Blog } from '$lib/supabase/supabase';
   let blogs: Blog[] = [];
@@ -29,8 +31,8 @@
 
 
 <div class="container mx-auto px-4 py-20 max-w-6xl">
-  <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent py-3">Blogs</h1>
-  <p class="text-gray-600 dark:text-gray-400 mb-12">Artikel dan tulisan hal-hal random</p>
+  <h1 class="text-4xl md:text-5xl font-bold mb-4 py-3">{t($locale, 'blog.titlePrefix')} <span class="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{t($locale, 'blog.titleHighlight')}</span></h1>
+  <p class="text-gray-600 dark:text-gray-400 mb-12">{t($locale, 'blog.tagline')}</p>
 
   {#if loading}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

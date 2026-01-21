@@ -1,48 +1,67 @@
 <script>
+ import { locale } from '$lib/stores/locale';
+ import { t } from '$lib/i18n';
   const experiences = [
     {
       id: 1,
-      title: 'Builder & Organizer',
-      company: 'dicoding community network university madura',
+      title_id: 'Builder & Organizer',
+      title_en: 'Builder & Organizer',
+      company_id: 'Dicoding Community Network Universitas Madura',
+      company_en: 'Dicoding Community Network Madura University',
       period: '2025 - now',
-      description: 'Sebagai salah satu inisiator dan builder Dicoding Community Network (DCN) Universitas Madura, saya terlibat dari fase perencanaan hingga eksekusi pembentukan komunitas resmi yang diakui oleh Dicoding Indonesia. Tanggung jawab saya mencakup penyusunan proposal pengajuan, rekrutmen anggota inti, perancangan program kerja, serta koordinasi dengan pihak kampus dan Dicoding untuk mendapatkan endorsement. Keberhasilan dalam membangun DCN Universitas Madura tidak hanya menciptakan ekosistem belajar yang lebih terstruktur, tetapi juga secara resmi menghubungkan kampus dengan sumber belajar dan peluang karir berskala nasional melalui platform Dicoding.',
+      description_id: 'Sebagai salah satu inisiator dan builder Dicoding Community Network (DCN) Universitas Madura, saya terlibat dari fase perencanaan hingga eksekusi pembentukan komunitas resmi yang diakui oleh Dicoding Indonesia. Tanggung jawab saya mencakup penyusunan proposal pengajuan, rekrutmen anggota inti, perancangan program kerja, serta koordinasi dengan pihak kampus dan Dicoding untuk mendapatkan endorsement. Keberhasilan dalam membangun DCN Universitas Madura tidak hanya menciptakan ekosistem belajar yang lebih terstruktur, tetapi juga secara resmi menghubungkan kampus dengan sumber belajar dan peluang karir berskala nasional melalui platform Dicoding.',
+      description_en: 'As one of the initiators and builders of the Dicoding Community Network (DCN) at Madura University, I was involved from the planning phase to the execution of establishing an official community recognized by Dicoding Indonesia. My responsibilities included drafting the application proposal, recruiting core members, designing work programs, and coordinating with the university and Dicoding to obtain endorsement. The success in building DCN Madura University not only created a more structured learning ecosystem but also officially connected the campus with national-scale learning resources and career opportunities through the Dicoding platform.',
       type: 'work'
     },
     {
       id: 2,
-      title: 'Assistant Practicum',
-      company: 'Informatics Department Madura University',
+      title_id: 'Asisten Praktikum',
+      title_en: 'Assistant Practicum',
+      company_id: 'Jurusan Informatika Universitas Madura',
+      company_en: 'Informatics Department Madura University',
       period: 'April 2025 - July 2025',
-      description: 'Sebagai Asisten Praktikum Sistem Operasi, saya bertugas mendampingi dan membimbing mahasiswa dalam memahami konsep-konsep fundamental sistem operasi melalui sesi praktik di laboratorium. Tanggung jawab saya meliputi persiapan materi dan modul praktikum, memberikan demonstrasi langsung penggunaan command line interface (CLI), manajemen proses, memori, dan file system, serta membantu mahasiswa dalam mendiagnosis dan menyelesaikan masalah teknis yang mereka hadapi. Peran ini tidak hanya memperdalam expertise teknis saya di bidang sistem operasi, tetapi juga melatih kemampuan komunikasi, penyampaian materi yang kompleks dengan sederhana, kesabaran, dan kepemimpinan dalam setting edukatif.',
+      description_id: 'Sebagai Asisten Praktikum Sistem Operasi, saya bertugas mendampingi dan membimbing mahasiswa dalam memahami konsep-konsep fundamental sistem operasi melalui sesi praktik di laboratorium. Tanggung jawab saya meliputi persiapan materi dan modul praktikum, memberikan demonstrasi langsung penggunaan command line interface (CLI), manajemen proses, memori, dan file system, serta membantu mahasiswa dalam mendiagnosis dan menyelesaikan masalah teknis yang mereka hadapi. Peran ini tidak hanya memperdalam expertise teknis saya di bidang sistem operasi, tetapi juga melatih kemampuan komunikasi, penyampaian materi yang kompleks dengan sederhana, kesabaran, dan kepemimpinan dalam setting edukatif.',
+      description_en: 'As an Operating Systems Practicum Assistant, I was responsible for accompanying and guiding students in understanding fundamental operating system concepts through practical laboratory sessions. My responsibilities included preparing materials and practicum modules, providing live demonstrations of command line interface (CLI) usage, process management, memory, and file systems, as well as helping students diagnose and solve technical problems they encountered. This role not only deepened my technical expertise in operating systems but also trained my communication skills, ability to present complex material simply, patience, and leadership in an educational setting.',
       type: 'work'
     },
     {
       id: 3,
-      title: 'Lead Organizer',
-      company: 'MaduraDev Community',
+      title_id: 'Lead Organizer',
+      title_en: 'Lead Organizer',
+      company_id: 'Komunitas MaduraDev',
+      company_en: 'MaduraDev Community',
       period: '2025 - now',
-      description: 'Sebagai Lead Organizer MaduraDev, saya memimpin komunitas developer  di Pulau Madura dengan visi untuk menumbuhkan ekosistem teknologi lokal. Tugas saya mencakup penyusunan strategi komunitas, perekrutan dan koordinasi tim inti, serta pengorganisasian berbagai event seperti workshop, seminar teknis, dan networking meetup baik secara daring maupun luring. Dan juga berkontribusi dalam pembuatan web komunitas dan lain-lain.',
+      description_id: 'Sebagai Lead Organizer MaduraDev, saya memimpin komunitas developer di Pulau Madura dengan visi untuk menumbuhkan ekosistem teknologi lokal. Tugas saya mencakup penyusunan strategi komunitas, perekrutan dan koordinasi tim inti, serta pengorganisasian berbagai event seperti workshop, seminar teknis, dan networking meetup baik secara daring maupun luring. Dan juga berkontribusi dalam pembuatan web komunitas dan lain-lain.',
+      description_en: 'As Lead Organizer of MaduraDev, I lead the developer community on Madura Island with a vision to grow the local technology ecosystem. My duties include developing community strategy, recruiting and coordinating the core team, and organizing various events such as workshops, technical seminars, and networking meetups both online and offline. I also contribute to building the community website and other initiatives.',
       type: 'work'
     },
     {
       id: 4,
-      title: 'Bachelor of Computer Science',
-      company: 'Madura University',
+      title_id: 'Sarjana Ilmu Komputer',
+      title_en: 'Bachelor of Computer Science',
+      company_id: 'Universitas Madura',
+      company_en: 'Madura University',
       period: '2022 - now',
-      description: 'Saya mahasiswa Universitas Madura yang aktif belajar melalui kontribusi langsung, seperti mengelola komunitas developer (MaduraDev), membangun komunitas belajar bersama Dicoding (DCN UNIRA), dan membantu sesama sebagai asisten praktikum. Saya senang terlibat dalam proyek kolaboratif yang bermanfaat.',
+      description_id: 'Saya mahasiswa Universitas Madura yang aktif belajar melalui kontribusi langsung, seperti mengelola komunitas developer (MaduraDev), membangun komunitas belajar bersama Dicoding (DCN UNIRA), dan membantu sesama sebagai asisten praktikum. Saya senang terlibat dalam proyek kolaboratif yang bermanfaat.',
+      description_en: 'I am a Madura University student who actively learns through direct contributions, such as managing a developer community (MaduraDev), building a learning community with Dicoding (DCN UNIRA), and helping peers as a practicum assistant. I enjoy being involved in beneficial collaborative projects.',
       type: 'education'
     }
   ];
+  
+  // Helper function to get localized text
+  function getLocalizedText(item, field) {
+    return $locale === 'en' ? item[`${field}_en`] : item[`${field}_id`];
+  }
 </script>
 
 <section id="experience" class="py-24 px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50">
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        Experience & <span class="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Education</span>
+       {t($locale, 'experience.titlePrefix')} & <span class="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{t($locale, 'experience.titleHighlight')}</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-        My professional journey and academic background
+        {t($locale, 'experience.tagline')}
       </p>
     </div>
     
@@ -75,9 +94,9 @@
                   {/if}
                   <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{exp.period}</span>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{exp.title}</h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-3">{exp.company}</p>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{exp.description}</p>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{getLocalizedText(exp, 'title')}</h3>
+                <p class="text-blue-600 dark:text-blue-400 font-medium mb-3">{getLocalizedText(exp, 'company')}</p>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{getLocalizedText(exp, 'description')}</p>
               </div>
             </div>
             

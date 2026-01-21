@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';  
   import type { Blog } from '$lib/supabase/supabase';
   import PageViewTracker from '../../../../components/PageViewTracker.svelte';
   import ViewCounter from '../../../../components/ViewCounter.svelte';
@@ -135,7 +137,7 @@
 <div class="container mx-auto px-4 py-16 max-w-4xl">
   <article itemscope itemtype="https://schema.org/BlogPosting">
     <a href="/blog" class="inline-flex items-center text-blue-600 hover:underline mb-8 p-2">
-      ← Kembali ke Blog
+      ← {t($locale, 'blog.backToBlog')}
     </a>
 
     <!-- Cover Image -->
@@ -185,7 +187,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
           </svg>
-          Bagikan Blog
+          {t($locale, 'blog.shareArticle')}
         </h3>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           <!-- Copy Link -->
@@ -197,12 +199,12 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-green-600 dark:text-green-400">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
-              <span class="text-xs font-medium text-green-600 dark:text-green-400">Copied!</span>
+              <span class="text-xs font-medium text-green-600 dark:text-green-400">{t($locale, 'blog.copied')}</span>
             {:else}
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
               </svg>
-              <span class="text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">Copy Link</span>
+              <span class="text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{t($locale, 'blog.copyLink')}</span>
             {/if}
           </button>
 

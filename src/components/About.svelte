@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';
   const skills = [
     { name: 'JavaScript', color: '#F7DF1E', bg: 'bg-yellow-100 dark:bg-yellow-900/30' },
     { name: 'TypeScript', color: '#3178C6', bg: 'bg-blue-100 dark:bg-blue-900/30' },
@@ -15,10 +17,10 @@
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        About <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-size[length:200%_100%] bg-clip-text text-transparent animate-shine">Me</span>
+        {t($locale, 'about.titlePrefix')} <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-size[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'about.titleHighlight')}</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-        Passionate about creating exceptional digital experiences
+        {t($locale, 'about.tagline')}
       </p>
     </div>
     
@@ -27,7 +29,7 @@
       <div class="space-y-6">
         <div class="prose dark:prose-invert max-w-none">
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            I am a Full-Stack Web Developer and Computer Science student at Madura University with experience in building web applications from front-end to back-end. Currently, I also serve as Lead Developer at MaduraDev and DCN, leading feature development and ensuring the quality and scalability of the solutions developed. Focused on clean code, problem-solving, and continuous learning, I believe that every error is part of the process of becoming a better developer. I am committed to delivering effective, functional, and reliable digital solutions.
+           {t($locale, 'about.description')}
           </p>
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
             ..
@@ -44,7 +46,7 @@
       
       <!-- Skills -->
       <div class="space-y-6">
-        <h3 class="text-2xl font-bold mb-8">Technical Skills</h3>
+        <h3 class="text-2xl font-bold mb-8">{t($locale, 'about.tecnicalSkills')}</h3>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {#each skills as skill, i}
             <div 

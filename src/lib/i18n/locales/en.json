@@ -1,0 +1,96 @@
+{
+    "nav": {
+        "home": "Home",
+        "about": "About",
+        "blog": "Blog",
+        "projects": "Projects",
+        "experience": "Experience",
+        "contact": "Contact"
+    },
+    "hero": {
+        "title": "Hi, I'm Abroril Huda",
+        "titlePrefix": "Hi, I'm",
+        "titleHighlight": "Abroril Huda",
+        "subtitle": "Full Stack Developer etc.",
+        "description": "Vibe coders engineer only - learn",
+        "cta": "View My Projects",
+        "viewProjects": "View Projects",
+        "contactMe": "Contact Me",
+        "availableForWork": "Available for work"
+    },
+    "about": {
+        "title": "About Me",
+        "titlePrefix": "About",
+        "titleHighlight": "Me",
+        "tagline": "Passionate about creating exceptional digital experiences",
+        "description": "I am a Full-Stack Web Developer and Computer Science student at Madura University with experience in building web applications from front-end to back-end. Currently, I also serve as Lead Organizer at MaduraDev and DCN UNIRA, leading feature development and ensuring the quality and scalability of the solutions developed. Focused on clean code, problem-solving, and continuous learning, every error is part of the process of becoming a better developer. I am committed to delivering effective, functional, and reliable digital solutions.",
+        "tecnicalSkills": "Technical Skills"
+    },
+    "projects": {
+        "title": "My Projects",
+        "titlePrefix": "My",
+        "titleHighlight": "Projects",
+        "tagline": "Some things I've built",
+        "viewAll": "View All Projects",
+        "viewProject": "View Project",
+        "sourceCode": "Source Code"
+    },
+    "experience": {
+        "title": "Experience",
+        "titlePrefix": "Experience",
+        "titleHighlight": "Education",
+        "tagline": "My professional journey and academic background"
+    },
+    "blog": {
+        "title": "My Blog",
+        "titlePrefix": "My",
+        "titleHighlight": "Blog",
+        "tagline": "My thoughts and learnings",
+        "latestPosts": "Latest Posts",
+        "readMore": "Read More",
+        "readingTime": "{minutes} min read",
+        "shareArticle": "Share Blog",
+        "copyLink": "Copy Link",
+        "copied": "Copied!",
+        "backToBlog": "Back to Blog",
+        "publishedOn": "Published on",
+        "views": "views"
+    },
+    "contact": {
+        "title": "Contact Me",
+        "titlePrefix": "Contact",
+        "titleHighlight": "Me",
+        "tagline": "Let's connect and work together",
+        "description": "I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!",
+        "getInTouch": "Let's talk about your project",
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "send": "Send Message",
+        "sending": "Sending...",
+        "success": "Message sent successfully!",
+        "error": "Failed to send message"
+    },
+    "footer": {
+        "quickLinks": "Quick Links",
+        "connect": "Connect",
+        "copyright": "© {year} Abrordc. All rights reserved.",
+        "builtWith": "Built with {heart} using Svelte & Tailwind CSS",
+        "oldWebsite": "old website"
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "tryAgain": "Try Again",
+        "close": "Close",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "view": "View",
+        "search": "Search",
+        "filter": "Filter",
+        "sort": "Sort",
+        "language": "Language"
+    }
+}

@@ -1,4 +1,6 @@
 <script>
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';
   const currentYear = new Date().getFullYear();
   import ChatMessage from './ChatMessage.svelte';
 </script>
@@ -18,7 +20,7 @@
       
       <!-- Quick Links -->
       <div>
-        <h4 class="font-bold text-white mb-4">Quick Links</h4>
+        <h4 class="font-bold text-white mb-4">{t($locale, 'footer.quickLinks')}</h4>
         <ul class="space-y-2">
           <li>
             <button
@@ -53,14 +55,14 @@
             </button>
           </li>
           <li>
-            <a href="https://demtimcod.my.id" target="_blank" class="hover:text-blue-400 transition-colors">old website</a>
+            <a href="https://demtimcod.my.id" target="_blank" class="hover:text-blue-400 transition-colors">{t($locale, 'footer.oldWebsite')}</a>
           </li>
         </ul>
       </div>
       
       <!-- Social Links -->
       <div>
-        <h4 class="font-bold text-white mb-4">Connect</h4>
+        <h4 class="font-bold text-white mb-4">{t($locale, 'footer.connect')}</h4>
         <div class="flex gap-4">
           <a
             href="https://github.com/abrorilhuda"
@@ -102,10 +104,10 @@
     <!-- Bottom Bar -->
     <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
       <p class="text-gray-400 text-sm">
-        © {currentYear} Abrordc. All rights reserved.
+        {t($locale, 'footer.copyright', { year: currentYear })}
       </p>
       <p class="text-gray-400 text-sm">
-        Built with <span class="text-red-500">♥</span> using Svelte & Tailwind CSS
+        {t($locale, 'footer.builtWith', { heart: '♥' })}
       </p>
     </div>
   </div>

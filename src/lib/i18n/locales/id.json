@@ -1,0 +1,96 @@
+{
+    "nav": {
+        "home": "Beranda",
+        "about": "Tentang",
+        "blog": "Blog",
+        "projects": "Proyek",
+        "experience": "Pengalaman",
+        "contact": "Kontak"
+    },
+    "hero": {
+        "title": "Halo, Saya Abroril Huda",
+        "titlePrefix": "Halo, Saya",
+        "titleHighlight": "Abroril Huda",
+        "subtitle": "Full Stack Developer dll.",
+        "description": "Vibe coders engineer only - learn",
+        "cta": "Lihat Proyek Saya",
+        "viewProjects": "Lihat Proyek",
+        "contactMe": "Hubungi Saya",
+        "availableForWork": "Tersedia untuk bekerja"
+    },
+    "about": {
+        "title": "Tentang Saya",
+        "titlePrefix": "Tentang",
+        "titleHighlight": "Saya",
+        "tagline": "Bersemangat menciptakan pengalaman digital yang luar biasa",
+        "description": "Saya seorang Pengembang Web Full-Stack dan mahasiswa Ilmu Komputer di Universitas Madura dengan pengalaman membangun aplikasi web dari front-end hingga back-end. Saat ini, saya juga menjabat sebagai Ketua Penyelenggara di MaduraDev dan DCN UNIRA, memimpin pengembangan fitur dan memastikan kualitas serta skalabilitas solusi yang dikembangkan. Berfokus pada kode yang bersih, pemecahan masalah, dan pembelajaran berkelanjutan, setiap kesalahan adalah bagian dari proses untuk menjadi pengembang yang lebih baik. Saya berkomitmen untuk memberikan solusi digital yang efektif, fungsional, dan andal.",
+        "tecnicalSkills": "Keahlian Teknis"
+    },
+    "projects": {
+        "title": "Proyek Saya",
+        "titlePrefix": "Proyek",
+        "titleHighlight": "Saya",
+        "tagline": "Beberapa hal yang telah saya bangun",
+        "viewAll": "Lihat Semua Proyek",
+        "viewProject": "Lihat Proyek",
+        "sourceCode": "Kode Sumber"
+    },
+    "experience": {
+        "title": "Pengalaman",
+        "titlePrefix": "Pengalaman",
+        "titleHighlight": "Pendidikan",
+        "tagline": "Perjalanan profesional dan latar belakang akademis saya"
+    },
+    "blog": {
+        "title": "Blog Saya",
+        "titlePrefix": "Blog",
+        "titleHighlight": "Saya",
+        "tagline": "Pemikiran dan pembelajaran saya",
+        "latestPosts": "Artikel Terbaru",
+        "readMore": "Baca Selengkapnya",
+        "readingTime": "{minutes} menit baca",
+        "shareArticle": "Bagikan Blog",
+        "copyLink": "Salin Link",
+        "copied": "Tersalin!",
+        "backToBlog": "Kembali ke Blog",
+        "publishedOn": "Dipublikasikan pada",
+        "views": "views"
+    },
+    "contact": {
+        "title": "Hubungi Saya",
+        "titlePrefix": "Hubungi",
+        "titleHighlight": "Saya",
+        "tagline": "Mari terhubung dan bekerja sama",
+        "description": "Saya selalu tertarik mendengar tentang proyek dan peluang baru. Baik Anda memiliki pertanyaan atau hanya ingin menyapa, jangan ragu untuk menghubungi saya!",
+        "getInTouch": "Mari kita bicarakan proyek Anda.",
+        "name": "Nama",
+        "email": "Email",
+        "message": "Pesan",
+        "send": "Kirim Pesan",
+        "sending": "Mengirim...",
+        "success": "Pesan berhasil dikirim!",
+        "error": "Gagal mengirim pesan"
+    },
+    "footer": {
+        "quickLinks": "Tautan Cepat",
+        "connect": "Hubungi",
+        "copyright": "© {year} Abrordc. Hak cipta dilindungi.",
+        "builtWith": "Dibuat dengan {heart} menggunakan Svelte & Tailwind CSS",
+        "oldWebsite": "website lama"
+    },
+    "common": {
+        "loading": "Memuat...",
+        "error": "Terjadi kesalahan",
+        "tryAgain": "Coba Lagi",
+        "close": "Tutup",
+        "save": "Simpan",
+        "cancel": "Batal",
+        "delete": "Hapus",
+        "edit": "Edit",
+        "view": "Lihat",
+        "search": "Cari",
+        "filter": "Filter",
+        "sort": "Urutkan",
+        "language": "Bahasa"
+    }
+}

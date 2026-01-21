@@ -1,5 +1,7 @@
 <script>
   export let project;
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';
 </script>
 
 <div class="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 card-shine">
@@ -23,7 +25,7 @@
       target="_blank"
       class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 px-6 py-3 bg-white text-gray-900 rounded-full font-medium hover:bg-gray-100 flex items-center gap-2 hover:scale-105"
     >
-      View Project
+      {t($locale, 'projects.viewProject')}
       <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
       </svg>

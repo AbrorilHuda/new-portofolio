@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { locale } from '$lib/stores/locale';
+  import { t } from '$lib/i18n';
+  import LanguageSwitcher from './LanguageSwitcher.svelte';
+  
   export let darkMode = false;
   export let toggleDarkMode;
   
@@ -39,11 +43,14 @@
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex items-center space-x-8">
-        <button on:click={() => scrollToSection('about')} class="nav-link">About</button>
-        <button on:click={() => scrollToSection('projects')} class="nav-link">Projects</button>
-        <button on:click={() => scrollToSection('experience')} class="nav-link">Experience</button>
-        <button on:click={() => scrollToSection('contact')} class="nav-link">Contact</button>
-        <button on:click={() => window.location.href = "/blog"} class="nav-link">Blog</button>
+        <button on:click={() => scrollToSection('about')} class="nav-link">{t($locale, 'nav.about')}</button>
+        <button on:click={() => scrollToSection('projects')} class="nav-link">{t($locale, 'nav.projects')}</button>
+        <button on:click={() => scrollToSection('experience')} class="nav-link">{t($locale, 'nav.experience')}</button>
+        <button on:click={() => scrollToSection('contact')} class="nav-link">{t($locale, 'nav.contact')}</button>
+        <button on:click={() => window.location.href = "/blog"} class="nav-link">{t($locale, 'nav.blog')}</button>
+        
+        <!-- Language Switcher -->
+        <LanguageSwitcher />
         
         <!-- Dark Mode Toggle -->
         <button
@@ -86,11 +93,17 @@
   {#if mobileMenuOpen}
     <div class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
       <div class="px-6 py-4 space-y-3">
-        <button on:click={() => scrollToSection('about')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</button>
-        <button on:click={() => scrollToSection('projects')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Projects</button>
-        <button on:click={() => scrollToSection('experience')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Experience</button>
-        <button on:click={() => scrollToSection('contact')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</button>
-        <button on:click={() => window.location.href = "/blog"} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Blog</button>
+        <button on:click={() => scrollToSection('about')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.about')}</button>
+        <button on:click={() => scrollToSection('projects')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.projects')}</button>
+        <button on:click={() => scrollToSection('experience')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.experience')}</button>
+        <button on:click={() => scrollToSection('contact')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.contact')}</button>
+        <button on:click={() => window.location.href = "/blog"} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.blog')}</button>
+        
+        <!-- Language Switcher -->
+        <div class="py-2">
+          <LanguageSwitcher />
+        </div>
+        
         <button on:click={toggleDarkMode} class="flex items-center gap-2 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
           <span>Dark Mode</span>
           <div class="w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative transition-colors">

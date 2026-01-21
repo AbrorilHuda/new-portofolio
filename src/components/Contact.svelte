@@ -1,4 +1,6 @@
 <script lang="ts">
+import { locale } from '$lib/stores/locale';
+import { t } from '$lib/i18n';
   let formData = {
     name: '',
     email: '',
@@ -23,10 +25,10 @@
   <div class="max-w-5xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        Get In <span class="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">Touch</span>
+        {t($locale, 'contact.titlePrefix')} <span class="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'contact.titleHighlight')}</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-        Have a project in mind? Let's work together to create something amazing
+        {t($locale, 'contact.tagline')}
       </p>
     </div>
     
@@ -34,10 +36,9 @@
       <!-- Contact Info -->
       <div class="space-y-8">
         <div>
-          <h3 class="text-2xl font-bold mb-6">Let's talk about your project</h3>
+          <h3 class="text-2xl font-bold mb-6">{t($locale, 'contact.getInTouch')}</h3>
           <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-8">
-            I'm always interested in hearing about new projects and opportunities. 
-            Whether you have a question or just want to say hi, feel free to reach out!
+            {t($locale, 'contact.description')}
           </p>
         </div>
         
@@ -90,14 +91,14 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h3>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{t($locale, 'contact.success')}</h3>
             <p class="text-gray-600 dark:text-gray-400">Thank you for reaching out. I'll get back to you soon.</p>
           </div>
         {:else}
           <form on:submit={handleSubmit} class="space-y-6">
             <div class="group">
               <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
-                Name
+                {t($locale, 'contact.name')}
               </label>
               <input
                 type="text"
@@ -111,7 +112,7 @@
             
             <div class="group">
               <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
-                Email
+                {t($locale, 'contact.email')}
               </label>
               <input
                 type="email"
@@ -125,7 +126,7 @@
             
             <div class="group">
               <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors">
-                Message
+                {t($locale, 'contact.message')}
               </label>
               <textarea
                 id="message"
@@ -141,7 +142,7 @@
               type="submit"
               class="group relative w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 overflow-hidden"
             >
-              <span class="relative z-10">Send Message</span>
+              <span class="relative z-10">{t($locale, 'contact.send')}</span>
               <svg class="w-5 h-5 relative z-10 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
