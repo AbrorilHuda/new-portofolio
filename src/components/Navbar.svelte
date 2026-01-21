@@ -32,7 +32,7 @@
       <!-- Logo -->
       <button
         on:click={() => window.location.href = '/'}
-        class="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform"
+        class="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer"
       >
         Abrorilhuda.me
       </button>

@@ -29,6 +29,7 @@
     "@tailwindcss/vite": "^4.1.17",
     "bcryptjs": "^3.0.3",
     "dompurify": "^3.3.0",
+    "highlight.js": "^11.11.1",
     "marked": "^17.0.1",
     "tailwindcss": "^4.1.17"
   }
