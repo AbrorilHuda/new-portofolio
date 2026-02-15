@@ -3,6 +3,9 @@ import { MetaTags, JsonLd } from 'svelte-meta-tags';
 import favicon from '$lib/assets/favicon.ico';
 import "../app.css";
 import { page } from '$app/stores';
+import { onMount } from 'svelte';
+import CommandPalette from '../components/CommandPalette.svelte';
+import { toggleCommandPalette } from '$lib/stores/command-palette';
 
   $: data = $page.data;
   
@@ -15,6 +18,20 @@ import { page } from '$app/stores';
     const { siteurl: _, defaultimage: __, ...rest } = data || {};
     return rest;
   })();
+
+  // Global keyboard shortcut for Command Palette
+  onMount(() => {
+    function handleKeydown(e: KeyboardEvent) {
+      // Ctrl+K or Cmd+K
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
+  });
 </script>
 
 <svelte:head>
@@ -73,5 +90,8 @@ import { page } from '$app/stores';
     },
   ]}
 />
+
+<!-- Command Palette -->
+<CommandPalette />
 
 <slot />

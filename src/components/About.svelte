@@ -17,7 +17,7 @@
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
       <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        {t($locale, 'about.titlePrefix')} <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-size[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'about.titleHighlight')}</span>
+        {t($locale, 'about.titlePrefix')} <span class="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'about.titleHighlight')}</span>
       </h2>
       <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
         {t($locale, 'about.tagline')}
@@ -30,9 +30,6 @@
         <div class="prose dark:prose-invert max-w-none">
           <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
            {t($locale, 'about.description')}
-          </p>
-          <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-            ..
           </p>
         </div>
         

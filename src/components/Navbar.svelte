@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { locale } from '$lib/stores/locale';
-  import { t } from '$lib/i18n';
-  import LanguageSwitcher from './LanguageSwitcher.svelte';
-  
+  import { locale } from "$lib/stores/locale";
+  import { t } from "$lib/i18n";
+  import LanguageSwitcher from "./LanguageSwitcher.svelte";
+  import { openCommandPalette } from "$lib/stores/command-palette";
+
   export let darkMode = false;
   export let toggleDarkMode;
-  
+
   let mobileMenuOpen = false;
   let scrolled = false;
 
@@ -16,13 +17,13 @@
   function scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
       mobileMenuOpen = false;
     }
   }
 
-  if (typeof window !== 'undefined') {
-    window.addEventListener('scroll', handleScroll);
+  if (typeof window !== "undefined") {
+    window.addEventListener("scroll", handleScroll);
   }
 </script>
 
@@ -35,7 +36,7 @@
     <div class="flex items-center justify-between h-20">
       <!-- Logo -->
       <button
-        on:click={() => window.location.href = '/'}
+        on:click={() => (window.location.href = "/")}
         class="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer"
       >
         Abrorilhuda.me
@@ -43,15 +44,52 @@
 
       <!-- Desktop Menu -->
       <div class="hidden md:flex items-center space-x-8">
-        <button on:click={() => scrollToSection('about')} class="nav-link">{t($locale, 'nav.about')}</button>
-        <button on:click={() => scrollToSection('projects')} class="nav-link">{t($locale, 'nav.projects')}</button>
-        <button on:click={() => scrollToSection('experience')} class="nav-link">{t($locale, 'nav.experience')}</button>
-        <button on:click={() => scrollToSection('contact')} class="nav-link">{t($locale, 'nav.contact')}</button>
-        <button on:click={() => window.location.href = "/blog"} class="nav-link">{t($locale, 'nav.blog')}</button>
-        
+        <button on:click={() => scrollToSection("about")} class="nav-link"
+          >{t($locale, "nav.about")}</button
+        >
+        <button on:click={() => scrollToSection("projects")} class="nav-link"
+          >{t($locale, "nav.projects")}</button
+        >
+        <button on:click={() => scrollToSection("experience")} class="nav-link"
+          >{t($locale, "nav.experience")}</button
+        >
+        <button on:click={() => scrollToSection("contact")} class="nav-link"
+          >{t($locale, "nav.contact")}</button
+        >
+        <button
+          on:click={() => (window.location.href = "/blog")}
+          class="nav-link">{t($locale, "nav.blog")}</button
+        >
+
+        <!-- Command Palette Button -->
+        <button
+          on:click={openCommandPalette}
+          class="flex items-center gap-2 px-2 py-1 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group cursor-pointer"
+          title="Quick search (Ctrl+K)"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <kbd
+            class="hidden lg:inline-block px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600"
+          >
+            Ctrl K
+          </kbd>
+        </button>
+
         <!-- Language Switcher -->
         <LanguageSwitcher />
-        
+
         <!-- Dark Mode Toggle -->
         <button
           on:click={toggleDarkMode}
@@ -59,12 +97,32 @@
           aria-label="Toggle dark mode"
         >
           {#if darkMode}
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+              />
             </svg>
           {:else}
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+              />
             </svg>
           {/if}
         </button>
@@ -77,12 +135,32 @@
         aria-label="Toggle menu"
       >
         {#if mobileMenuOpen}
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         {:else}
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         {/if}
       </button>
@@ -91,23 +169,81 @@
 
   <!-- Mobile Menu -->
   {#if mobileMenuOpen}
-    <div class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+    <div
+      class="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800"
+    >
       <div class="px-6 py-4 space-y-3">
-        <button on:click={() => scrollToSection('about')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.about')}</button>
-        <button on:click={() => scrollToSection('projects')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.projects')}</button>
-        <button on:click={() => scrollToSection('experience')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.experience')}</button>
-        <button on:click={() => scrollToSection('contact')} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.contact')}</button>
-        <button on:click={() => window.location.href = "/blog"} class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">{t($locale, 'nav.blog')}</button>
-        
+        <button
+          on:click={() => scrollToSection("about")}
+          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >{t($locale, "nav.about")}</button
+        >
+        <button
+          on:click={() => scrollToSection("projects")}
+          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >{t($locale, "nav.projects")}</button
+        >
+        <button
+          on:click={() => scrollToSection("experience")}
+          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >{t($locale, "nav.experience")}</button
+        >
+        <button
+          on:click={() => scrollToSection("contact")}
+          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >{t($locale, "nav.contact")}</button
+        >
+        <button
+          on:click={() => (window.location.href = "/blog")}
+          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >{t($locale, "nav.blog")}</button
+        >
+
+        <!-- Command Palette Button -->
+        <button
+          on:click={openCommandPalette}
+          class="flex items-center justify-between w-full py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        >
+          <span class="flex items-center gap-2">
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            Quick Search
+          </span>
+          <kbd
+            class="px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded"
+            >Ctrk K</kbd
+          >
+        </button>
+
         <!-- Language Switcher -->
         <div class="py-2">
           <LanguageSwitcher />
         </div>
-        
-        <button on:click={toggleDarkMode} class="flex items-center gap-2 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+
+        <button
+          on:click={toggleDarkMode}
+          class="flex items-center gap-2 py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        >
           <span>Dark Mode</span>
-          <div class="w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative transition-colors">
-            <div class="absolute top-1 {darkMode ? 'right-1' : 'left-1'} w-4 h-4 bg-white rounded-full transition-all"></div>
+          <div
+            class="w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative transition-colors"
+          >
+            <div
+              class="absolute top-1 {darkMode
+                ? 'right-1'
+                : 'left-1'} w-4 h-4 bg-white rounded-full transition-all"
+            ></div>
           </div>
         </button>
       </div>
@@ -117,24 +253,24 @@
 
 <style>
   .nav-link {
-    color: #374151; 
-    font-weight: 500; 
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    color: #374151;
+    font-weight: 500;
+    transition-property: color, background-color, border-color,
+      text-decoration-color, fill, stroke;
     transition-duration: 150ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
   }
 
   .nav-link:hover {
-    color: #2563EB; 
+    color: #2563eb;
   }
 
-  
   :global(.dark) .nav-link {
-    color: #D1D5DB;
+    color: #d1d5db;
   }
 
   :global(.dark) .nav-link:hover {
-    color: #60A5FA;
+    color: #60a5fa;
   }
 </style>

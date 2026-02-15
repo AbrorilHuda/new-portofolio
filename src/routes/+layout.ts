@@ -37,13 +37,9 @@ export const load = () => {
       imageAlt: "Moh.AbrorilHuda",
     },
     additionalRobotsProps: {
-      noarchive: true,
-      nosnippet: true,
-      maxSnippet: -1,
-      maxImagePreview: "none",
-      maxVideoPreview: -1,
-      notranslate: true,
-      noimageindex: true,
+      maxSnippet: 320,           // Allow snippet up to 320 characters
+      maxImagePreview: "large",  // Allow large image previews in search results
+      maxVideoPreview: -1,       // Allow unlimited video preview
     },
   });
 

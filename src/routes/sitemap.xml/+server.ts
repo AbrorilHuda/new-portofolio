@@ -14,8 +14,10 @@ export const GET: RequestHandler = async () => {
   const staticPages = [
     { url: "/", changefreq: "daily", priority: "1.0" },
     { url: "/blog", changefreq: "daily", priority: "0.9" },
-    // { url: "/about", changefreq: "monthly", priority: "0.8" },
-    // { url: "/projects", changefreq: "weekly", priority: "0.8" },
+    { url: "/#about", changefreq: "monthly", priority: "0.8" },
+    { url: "/#projects", changefreq: "weekly", priority: "0.8" },
+    { url: "/#experience", changefreq: "monthly", priority: "0.7" },
+    { url: "/#contact", changefreq: "monthly", priority: "0.7" },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -26,32 +28,31 @@ export const GET: RequestHandler = async () => {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   
   ${staticPages
-    .map(
-      (page) => `
+      .map(
+        (page) => `
   <url>
     <loc>${siteUrl}${page.url}</loc>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
     <lastmod>${new Date().toISOString()}</lastmod>
   </url>`
-    )
-    .join("")}
+      )
+      .join("")}
   
-  ${
-    blogs
+  ${blogs
       ? blogs
-          .map(
-            (blog) => `
+        .map(
+          (blog) => `
   <url>
     <loc>${siteUrl}/blog/${blog.slug}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>${new Date(blog.updated_at).toISOString()}</lastmod>
   </url>`
-          )
-          .join("")
+        )
+        .join("")
       : ""
-  }
+    }
 </urlset>`;
 
   return new Response(xml, {

@@ -2,10 +2,21 @@
   import { locale } from '$lib/stores/locale';
   import { t } from '$lib/i18n';  
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
   import { supabase, type Blog } from '$lib/supabase/supabase';
+  import Pagination from '../../../components/Pagination.svelte';
+  
   let blogs: Blog[] = [];
   let loading = true;
+  let currentPage = 1;
+  const postsPerPage = 6;
 
+  // Get page from URL query parameter
+  $: {
+    const pageParam = $page.url.searchParams.get('page');
+    currentPage = pageParam ? parseInt(pageParam) : 1;
+  }
 
   onMount(async () => {
     const { data, error } = await supabase
@@ -20,6 +31,19 @@
     loading = false;
   });
 
+  // Computed values
+  $: totalPages = Math.ceil(blogs.length / postsPerPage);
+  $: paginatedBlogs = blogs.slice(
+    (currentPage - 1) * postsPerPage,
+    currentPage * postsPerPage
+  );
+
+  function handlePageChange(page: number) {
+    currentPage = page;
+    goto(`/blog?page=${page}`, { replaceState: false, noScroll: false });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function formatDate(date: string) {
     return new Date(date).toLocaleDateString('id-ID', {
       year: 'numeric',
@@ -31,7 +55,7 @@
 
 
 <div class="container mx-auto px-4 py-20 max-w-6xl">
-  <h1 class="text-4xl md:text-5xl font-bold mb-4 py-3">{t($locale, 'blog.titlePrefix')} <span class="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{t($locale, 'blog.titleHighlight')}</span></h1>
+  <h1 class="text-4xl md:text-5xl font-bold mb-4 py-3">{t($locale, 'blog.titlePrefix')} <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{t($locale, 'blog.titleHighlight')}</span></h1>
   <p class="text-gray-600 dark:text-gray-400 mb-12">{t($locale, 'blog.tagline')}</p>
 
   {#if loading}
@@ -50,7 +74,7 @@
     </div>
   {:else}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {#each blogs as blog}
+      {#each paginatedBlogs as blog}
         <a href="/blog/{blog.slug}" class="group">
           <article class="h-full flex flex-col">
             {#if blog.cover_image}
@@ -58,9 +82,10 @@
                 src={blog.cover_image} 
                 alt={blog.title}
                 class="w-full h-48 object-cover rounded-lg mb-4 group-hover:opacity-90 transition-opacity"
+                loading="lazy"
               />
             {:else}
-              <div class="w-full h-48 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg mb-4"></div>
+              <div class="w-full h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mb-4"></div>
             {/if}
             
             <div class="flex-1">
@@ -83,6 +108,15 @@
         </a>
       {/each}
     </div>
+
+    <!-- Pagination Component -->
+    {#if totalPages > 1}
+      <Pagination 
+        {currentPage} 
+        {totalPages} 
+        onPageChange={handlePageChange}
+      />
+    {/if}
   {/if}
 </div>
 

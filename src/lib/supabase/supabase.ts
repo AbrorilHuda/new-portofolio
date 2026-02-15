@@ -27,3 +27,16 @@ export type AdminUser = {
   email: string;
   name?: string;
 };
+
+export type FeedbackMessage = {
+  id: string;
+  name: string;
+  message: string;
+  type: 'quick_feedback' | 'contact_form';
+  email?: string;
+  page_url?: string;
+  created_at: string;
+  read: boolean;
+  replied: boolean;
+};
+
