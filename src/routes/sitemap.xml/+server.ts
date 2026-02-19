@@ -14,10 +14,7 @@ export const GET: RequestHandler = async () => {
   const staticPages = [
     { url: "/", changefreq: "daily", priority: "1.0" },
     { url: "/blog", changefreq: "daily", priority: "0.9" },
-    { url: "/#about", changefreq: "monthly", priority: "0.8" },
-    { url: "/#projects", changefreq: "weekly", priority: "0.8" },
-    { url: "/#experience", changefreq: "monthly", priority: "0.7" },
-    { url: "/#contact", changefreq: "monthly", priority: "0.7" },
+    { url: "/celoteh", changefreq: "daily", priority: "0.9" },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

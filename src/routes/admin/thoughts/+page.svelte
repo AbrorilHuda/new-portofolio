@@ -8,6 +8,124 @@
     export let form: ActionData;
 
     let loading = false;
+
+    let mentionState = {
+        show: false,
+        query: "",
+        index: -1,
+        thoughtId: null as any,
+        activeInput: null as HTMLInputElement | null,
+        filteredNames: [] as string[],
+    };
+
+    function handleReplyInput(e: Event, thoughtId: any, comments: any[]) {
+        const target = e.target as HTMLInputElement;
+        const val = target.value;
+        const selStart = target.selectionStart || 0;
+        const lastAt = val.lastIndexOf("@", selStart - 1);
+
+        if (lastAt !== -1) {
+            const query = val.substring(lastAt + 1, selStart);
+            if (!query.includes("\n")) {
+                const uniqueNames = [
+                    ...new Set((comments || []).map((c) => c.name)),
+                ];
+                const filtered = uniqueNames.filter((name) =>
+                    name.toLowerCase().includes(query.toLowerCase()),
+                );
+
+                mentionState = {
+                    show: true,
+                    query,
+                    index: lastAt,
+                    thoughtId,
+                    activeInput: target,
+                    filteredNames: filtered,
+                };
+                return;
+            }
+        }
+        mentionState.show = false;
+    }
+
+    function selectReplyMention(name: string) {
+        if (!mentionState.activeInput) return;
+        const input = mentionState.activeInput;
+        const val = input.value;
+        const before = val.substring(0, mentionState.index);
+        const after = val.substring(input.selectionStart || 0);
+
+        input.value = `${before}@${name} ${after}`;
+        mentionState.show = false;
+        input.focus();
+    }
+
+    function getMentions(content: string, comments: any[]) {
+        const uniqueNames = [...new Set((comments || []).map((c) => c.name))];
+        let mentions: string[] = [];
+
+        const escapeHtml = (unsafe: string) => {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+        const escapedContent = escapeHtml(content);
+
+        uniqueNames.forEach((name) => {
+            const htmlEscapedName = escapeHtml(name);
+            const regexSafeName = htmlEscapedName.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&",
+            );
+            const regex = new RegExp(`@${regexSafeName}\\b`, "gi");
+
+            if (regex.test(escapedContent)) {
+                mentions.push(name);
+            }
+        });
+        return mentions;
+    }
+
+    function formatComment(content: string, comments: any[]) {
+        // Get unique names from comments in this thread ONLY
+        const uniqueNames = [...new Set((comments || []).map((c) => c.name))];
+
+        const escapeHtml = (unsafe: string) => {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+
+        // Escape HTML content
+        const escapedContent = escapeHtml(content);
+
+        let formatted = escapedContent;
+        uniqueNames.forEach((name) => {
+            // Escape nama agar cocok dengan content yang sudah di-escape HTML-nya
+            // Misal: "it'sme" -> "it&#039;sme"
+            const htmlEscapedName = escapeHtml(name);
+
+            // Escape untuk regex (agar karakter seperti . * + ? tidak dianggap regex command)
+            const regexSafeName = htmlEscapedName.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&",
+            );
+
+            // Ganti @Nama dengan span (Case Insensitive)
+            const regex = new RegExp(`@${regexSafeName}\\b`, "gi");
+            formatted = formatted.replace(regex, (match) => {
+                return `<span class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">@${htmlEscapedName}</span>`;
+            });
+        });
+
+        return formatted;
+    }
 </script>
 
 <div class="max-w-4xl mx-auto space-y-8">
@@ -208,7 +326,7 @@
                                 <span>{thought.likes_count || 0} Likes</span>
                             </div>
                             <button
-                                class="flex items-center gap-1 hover:text-blue-600 transition-colors"
+                                class="flex items-center gap-1 hover:text-blue-600 transition-colors cursor-pointer"
                                 on:click={() => {
                                     const el = document.getElementById(
                                         `comments-${thought.id}`,
@@ -245,6 +363,10 @@
                         <div class="space-y-4 mb-4">
                             {#if thought.thought_comments && thought.thought_comments.length > 0}
                                 {#each thought.thought_comments as comment}
+                                    {@const mentions = getMentions(
+                                        comment.content,
+                                        thought.thought_comments,
+                                    )}
                                     <div
                                         class="bg-white dark:bg-gray-800 p-3 rounded shadow-sm text-sm"
                                     >
@@ -252,21 +374,55 @@
                                             class="flex justify-between font-medium text-xs text-gray-500 mb-1"
                                         >
                                             <span
-                                                class={comment.name ===
-                                                "Abroril Huda"
-                                                    ? "text-blue-600 font-bold"
-                                                    : ""}>{comment.name}</span
+                                                class="flex items-center gap-1 {comment.name ===
+                                                'Abroril Huda'
+                                                    ? 'text-blue-600 font-bold'
+                                                    : ''}"
                                             >
+                                                {comment.name}
+                                                {#if comment.name === "Abroril Huda"}
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                        fill="currentColor"
+                                                        class="w-3 h-3"
+                                                    >
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                                                            clip-rule="evenodd"
+                                                        />
+                                                    </svg>
+                                                {/if}
+                                            </span>
                                             <span
                                                 >{new Date(
                                                     comment.created_at,
                                                 ).toLocaleString("id-ID")}</span
                                             >
                                         </div>
+
+                                        {#if mentions.length > 0}
+                                            <div
+                                                class="text-xs text-gray-500 mb-1 flex flex-wrap gap-1 items-center"
+                                            >
+                                                <span>Membalas</span>
+                                                {#each mentions as mentioned}
+                                                    <span
+                                                        class="text-blue-600 dark:text-blue-400 font-medium hover:underline"
+                                                        >@{mentioned}</span
+                                                    >
+                                                {/each}
+                                            </div>
+                                        {/if}
+
                                         <p
                                             class="text-gray-800 dark:text-gray-200"
                                         >
-                                            {comment.content}
+                                            {@html formatComment(
+                                                comment.content,
+                                                thought.thought_comments,
+                                            )}
                                         </p>
                                     </div>
                                 {/each}
@@ -285,13 +441,37 @@
                             use:enhance
                         >
                             <input type="hidden" name="id" value={thought.id} />
-                            <input
-                                type="text"
-                                name="content"
-                                placeholder="Balas komentar..."
-                                required
-                                class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
-                            />
+                            <div class="flex-1 relative">
+                                <input
+                                    type="text"
+                                    name="content"
+                                    placeholder="Balas komentar... (@user untuk tag)"
+                                    required
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                                    on:input={(e) =>
+                                        handleReplyInput(
+                                            e,
+                                            thought.id,
+                                            thought.thought_comments,
+                                        )}
+                                />
+                                {#if mentionState.show && mentionState.thoughtId === thought.id && mentionState.filteredNames.length > 0}
+                                    <div
+                                        class="absolute bottom-full left-0 mb-1 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded shadow-lg max-h-32 overflow-y-auto z-10"
+                                    >
+                                        {#each mentionState.filteredNames as name}
+                                            <button
+                                                type="button"
+                                                class="w-full text-left px-3 py-2 hover:bg-blue-50 dark:hover:bg-gray-600 text-xs text-gray-700 dark:text-gray-200"
+                                                on:click={() =>
+                                                    selectReplyMention(name)}
+                                            >
+                                                {name}
+                                            </button>
+                                        {/each}
+                                    </div>
+                                {/if}
+                            </div>
                             <button
                                 type="submit"
                                 class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors"

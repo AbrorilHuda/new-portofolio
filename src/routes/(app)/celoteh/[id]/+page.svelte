@@ -9,6 +9,109 @@
     let liked = false;
     let likesCount = data.thought.likes_count;
     let showCommentModal = false;
+
+    let textarea: HTMLTextAreaElement;
+    let showMentions = false;
+    let mentionQuery = "";
+    let mentionIndex = -1;
+
+    $: uniqueNames = [...new Set((data.comments || []).map((c) => c.name))];
+    $: filteredNames = uniqueNames.filter((name) =>
+        name.toLowerCase().includes(mentionQuery.toLowerCase()),
+    );
+
+    function handleInput(e: Event) {
+        const target = e.target as HTMLTextAreaElement;
+        const val = target.value;
+        const selStart = target.selectionStart;
+
+        const lastAt = val.lastIndexOf("@", selStart - 1);
+
+        if (lastAt !== -1) {
+            const query = val.substring(lastAt + 1, selStart);
+            if (!query.includes("\n")) {
+                mentionQuery = query;
+                showMentions = true;
+                mentionIndex = lastAt;
+                return;
+            }
+        }
+        showMentions = false;
+    }
+
+    function selectMention(name: string) {
+        if (!textarea) return;
+        const val = textarea.value;
+        const before = val.substring(0, mentionIndex);
+        const after = val.substring(textarea.selectionStart);
+
+        textarea.value = `${before}@${name} ${after}`;
+        showMentions = false;
+        textarea.focus();
+    }
+
+    function getMentions(content: string) {
+        let mentions: string[] = [];
+        // Escape content dulu agar match dengan nama yang sudah di-escape
+        const escapeHtml = (unsafe: string) => {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+        const escapedContent = escapeHtml(content);
+
+        uniqueNames.forEach((name) => {
+            const htmlEscapedName = escapeHtml(name);
+            const regexSafeName = htmlEscapedName.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&",
+            );
+            const regex = new RegExp(`@${regexSafeName}\\b`, "gi");
+
+            if (regex.test(escapedContent)) {
+                mentions.push(name);
+            }
+        });
+        return mentions;
+    }
+
+    // Fungsi untuk memformat mention menjadi highlight
+    function formatComment(content: string) {
+        const escapeHtml = (unsafe: string) => {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+
+        // Escape HTML content
+        const escapedContent = escapeHtml(content);
+
+        let formatted = escapedContent;
+        uniqueNames.forEach((name) => {
+            // Escape nama agar cocok dengan content yang sudah di-escape HTML-nya
+            const htmlEscapedName = escapeHtml(name);
+
+            // Escape untuk regex
+            const regexSafeName = htmlEscapedName.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&",
+            );
+
+            // Ganti @Nama dengan span (Case Insensitive)
+            const regex = new RegExp(`@${regexSafeName}\\b`, "gi");
+            formatted = formatted.replace(regex, (match) => {
+                return `<span class="text-blue-600 dark:text-blue-400 font-semibold hover:underline">@${htmlEscapedName}</span>`;
+            });
+        });
+
+        return formatted;
+    }
 </script>
 
 <div class="container mx-auto px-4 pt-32 pb-12 max-w-2xl">
@@ -46,8 +149,22 @@
                 AH
             </div>
             <div>
-                <h1 class="font-bold text-xl text-gray-900 dark:text-gray-100">
+                <h1
+                    class="font-bold text-xl text-gray-900 dark:text-gray-100 flex items-center gap-1"
+                >
                     Abroril Huda
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        class="w-4 h-4 text-blue-500"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
                 </h1>
                 <span class="text-gray-500">
                     {new Date(data.thought.created_at).toLocaleString("id-ID", {
@@ -192,10 +309,12 @@
                     action="?/comment"
                     use:enhance={() => {
                         commenting = true;
-                        return async ({ update }) => {
+                        return async ({ update, result }) => {
                             await update();
                             commenting = false;
-                            showCommentModal = false; // Close modal on success
+                            if (result.type === "success") {
+                                showCommentModal = false;
+                            }
                         };
                     }}
                     class="space-y-4"
@@ -215,7 +334,20 @@
                             placeholder="Nama kamu"
                         />
                     </div>
-                    <div>
+
+                    <!-- Honeypot Field (Hidden) -->
+                    <div style="display: none;" aria-hidden="true">
+                        <label for="website">Website</label>
+                        <input
+                            type="text"
+                            id="website"
+                            name="website"
+                            tabindex="-1"
+                            autocomplete="off"
+                        />
+                    </div>
+
+                    <div class="relative">
                         <label
                             for="content"
                             class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300"
@@ -224,11 +356,29 @@
                         <textarea
                             id="content"
                             name="content"
+                            bind:this={textarea}
+                            on:input={handleInput}
                             required
                             rows="4"
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow resize-none"
-                            placeholder="Tulis pendapatmu..."
+                            placeholder="Tulis pendapatmu... (ketik @ untuk mention)"
                         ></textarea>
+
+                        {#if showMentions && filteredNames.length > 0}
+                            <div
+                                class="absolute z-10 w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto"
+                            >
+                                {#each filteredNames as name}
+                                    <button
+                                        type="button"
+                                        class="w-full text-left px-4 py-2 hover:bg-blue-50 dark:hover:bg-gray-600 text-sm text-gray-700 dark:text-gray-200"
+                                        on:click={() => selectMention(name)}
+                                    >
+                                        {name}
+                                    </button>
+                                {/each}
+                            </div>
+                        {/if}
                     </div>
                     <div class="flex justify-end gap-3 pt-2">
                         <button
@@ -263,13 +413,31 @@
             </p>
         {:else}
             {#each data.comments as comment (comment.id)}
+                {@const mentions = getMentions(comment.content)}
                 <div
                     class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700"
                 >
                     <div class="flex justify-between items-start mb-2">
-                        <span class="font-bold text-gray-900 dark:text-gray-100"
-                            >{comment.name}</span
-                        >
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="font-bold text-gray-900 dark:text-gray-100"
+                                >{comment.name}</span
+                            >
+                            {#if comment.name === "Abroril Huda"}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    class="w-4 h-4 text-blue-500"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.491 4.491 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                            {/if}
+                        </div>
                         <span class="text-xs text-gray-500">
                             {new Date(comment.created_at).toLocaleString(
                                 "id-ID",
@@ -277,10 +445,25 @@
                             )}
                         </span>
                     </div>
+
+                    {#if mentions.length > 0}
+                        <div
+                            class="text-xs text-gray-500 mb-1 flex flex-wrap gap-1 items-center"
+                        >
+                            <span>Membalas</span>
+                            {#each mentions as mentioned}
+                                <span
+                                    class="text-blue-600 dark:text-blue-400 font-medium hover:underline"
+                                    >@{mentioned}</span
+                                >
+                            {/each}
+                        </div>
+                    {/if}
+
                     <p
                         class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap"
                     >
-                        {comment.content}
+                        {@html formatComment(comment.content)}
                     </p>
                 </div>
             {/each}

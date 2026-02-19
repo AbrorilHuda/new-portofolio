@@ -71,6 +71,9 @@
         "success": "Pesan berhasil dikirim!",
         "error": "Gagal mengirim pesan"
     },
+    "celoteh": {
+        "tagline": "Sekadar pemikiran, ide, dan catatan singkat sehari-hari."
+    },
     "footer": {
         "quickLinks": "Tautan Cepat",
         "connect": "Hubungi",

@@ -6,7 +6,6 @@ import { definePageMetaTags } from "svelte-meta-tags";
 export const load: PageServerLoad = async ({ params, url }) => {
     const { id } = params;
 
-    // 1. Fetch Thought
     const { data: thought, error: thoughtError } = await supabase
         .from('thoughts')
         .select('*')
@@ -17,7 +16,6 @@ export const load: PageServerLoad = async ({ params, url }) => {
         throw error(404, 'Celoteh tidak ditemukan');
     }
 
-    // 2. Fetch Comments
     const { data: comments, error: commentsError } = await supabase
         .from('thought_comments')
         .select('*')
@@ -71,10 +69,34 @@ export const load: PageServerLoad = async ({ params, url }) => {
 };
 
 export const actions: Actions = {
-    comment: async ({ request, params }) => {
+    comment: async ({ request, params, cookies }) => {
         const formData = await request.formData();
         const name = formData.get('name') as string;
         const content = formData.get('content') as string;
+
+        // 1. Honeypot check
+        const honeypot = formData.get('website') as string;
+        if (honeypot) {
+            console.warn('Bot detected via honeypot');
+            // Return success to confuse the bot, but don't save anything
+            return { success: true };
+        }
+
+        // 2. Cookie Rate Limiting
+        const lastCommentTime = cookies.get('last_comment_at');
+        const now = Date.now();
+        const COOLDOWN_PERIOD = 60 * 1000; // 60 seconds
+
+        if (lastCommentTime) {
+            const timeDiff = now - parseInt(lastCommentTime);
+            if (timeDiff < COOLDOWN_PERIOD) {
+                const remaining = Math.ceil((COOLDOWN_PERIOD - timeDiff) / 1000);
+                return fail(429, {
+                    error: `Terlalu cepat! Silakan tunggu ${remaining} detik lagi sebelum mengirim komentar baru.`
+                });
+            }
+        }
+
         const id = params.id;
 
         if (!name || !content) {
@@ -104,6 +126,14 @@ export const actions: Actions = {
         if (incrementError) {
             console.error('RPC increment_comments failed:', incrementError);
         }
+
+        // Set Cooldown Cookie
+        cookies.set('last_comment_at', Date.now().toString(), {
+            path: '/',
+            httpOnly: true,
+            sameSite: 'strict',
+            maxAge: 60 // 60 seconds
+        });
 
         return { success: true };
     },

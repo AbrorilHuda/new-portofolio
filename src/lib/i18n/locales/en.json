@@ -71,6 +71,9 @@
         "success": "Message sent successfully!",
         "error": "Failed to send message"
     },
+    "celoteh": {
+        "tagline": "Just thoughts, ideas, and short daily notes."
+    },
     "footer": {
         "quickLinks": "Quick Links",
         "connect": "Connect",
