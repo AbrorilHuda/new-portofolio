@@ -61,6 +61,11 @@
           class="nav-link">{t($locale, "nav.blog")}</button
         >
 
+        <button
+          on:click={() => (window.location.href = "/celoteh")}
+          class="nav-link">Celoteh</button
+        >
+
         <!-- Command Palette Button -->
         <button
           on:click={openCommandPalette}
@@ -197,6 +202,12 @@
           on:click={() => (window.location.href = "/blog")}
           class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >{t($locale, "nav.blog")}</button
+        >
+
+        <button
+          on:click={() => (window.location.href = "/celoteh")}
+          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >Celoteh</button
         >
 
         <!-- Command Palette Button -->
