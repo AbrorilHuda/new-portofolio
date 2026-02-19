@@ -33,9 +33,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
         ? thought.content.substring(0, 150) + '...'
         : thought.content;
 
-    const ogImage = thought.images && thought.images.length > 0
-        ? thought.images[0]
-        : `${siteUrl}/og-celoteh.png`; // Fallback image (make sure this exists or use a default logo)
+    const ogImage = `${siteUrl}/api/og/celoteh?id=${id}`;
 
     const pageMetaTags = {
         title: `Celoteh by Abroril Huda: "${description}"`,
