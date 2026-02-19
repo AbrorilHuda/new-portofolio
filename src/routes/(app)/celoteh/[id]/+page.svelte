@@ -1,6 +1,6 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
-    import type { PageData, ActionData } from "./$types";
+    import type { PageData } from "./$types";
     import { MetaTags } from "svelte-meta-tags";
 
     export let data: PageData;
@@ -10,9 +10,6 @@
     let likesCount = data.thought.likes_count;
     let showCommentModal = false;
 </script>
-
-<!-- Inject Meta Tags -->
-<MetaTags {...data.pageMetaTags} />
 
 <div class="container mx-auto px-4 pt-32 pb-12 max-w-2xl">
     <div class="flex items-center justify-between mb-8">

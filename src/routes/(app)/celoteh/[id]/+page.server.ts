@@ -1,6 +1,7 @@
 import { fail, error } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { supabase } from '$lib/supabase/supabase';
+import { definePageMetaTags } from "svelte-meta-tags";
 
 export const load: PageServerLoad = async ({ params, url }) => {
     const { id } = params;
@@ -35,7 +36,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
 
     const ogImage = `${siteUrl}/api/og/celoteh?id=${id}`;
 
-    const pageMetaTags = {
+    const pageTags = definePageMetaTags({
         title: `Celoteh by Abroril Huda: "${description}"`,
         description: "Lihat selengkapnya di Celoteh Abroril Huda.",
         canonical: `${siteUrl}/celoteh/${id}`,
@@ -60,12 +61,12 @@ export const load: PageServerLoad = async ({ params, url }) => {
             image: ogImage,
             imageAlt: 'Celoteh Content',
         }
-    };
+    });
 
     return {
         thought,
         comments: comments || [],
-        pageMetaTags
+        ...pageTags.pageMetaTags
     };
 };
 
