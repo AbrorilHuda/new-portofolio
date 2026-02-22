@@ -52,6 +52,13 @@
       category: "Navigation",
     },
     {
+      title: "Celoteh",
+      description: "My Tweet",
+      url: "/celoteh",
+      icon: "🔥",
+      category: "Navigation",
+    },
+    {
       title: "Blog",
       description: "Read my articles",
       url: "/blog",

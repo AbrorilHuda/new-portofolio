@@ -76,7 +76,7 @@
               document
                 .getElementById("projects")
                 ?.scrollIntoView({ behavior: "smooth" })}
-            class="group relative px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all overflow-hidden"
+            class="group relative px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all overflow-hidden cursor-pointer"
           >
             <span class="relative z-10">{t($locale, "hero.viewProjects")}</span>
             <div
@@ -88,7 +88,7 @@
               document
                 .getElementById("contact")
                 ?.scrollIntoView({ behavior: "smooth" })}
-            class="px-8 py-3 border-2 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-full font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-all hover:scale-105"
+            class="px-8 py-3 border-2 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-full font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-all hover:scale-105 cursor-pointer"
           >
             {t($locale, "hero.contactMe")}
           </button>
