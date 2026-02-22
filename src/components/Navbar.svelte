@@ -3,6 +3,9 @@
   import { t } from "$lib/i18n";
   import LanguageSwitcher from "./LanguageSwitcher.svelte";
   import { openCommandPalette } from "$lib/stores/command-palette";
+  import { page } from "$app/stores";
+
+  $: currentPath = $page.url.pathname;
 
   export let darkMode = false;
   export let toggleDarkMode;
@@ -58,12 +61,16 @@
         >
         <button
           on:click={() => (window.location.href = "/blog")}
-          class="nav-link">{t($locale, "nav.blog")}</button
+          class="nav-link {currentPath.startsWith('/blog')
+            ? 'nav-link--active'
+            : ''}">{t($locale, "nav.blog")}</button
         >
 
         <button
           on:click={() => (window.location.href = "/celoteh")}
-          class="nav-link">Celoteh</button
+          class="nav-link {currentPath.startsWith('/celoteh')
+            ? 'nav-link--active'
+            : ''}">Celoteh</button
         >
 
         <!-- Command Palette Button -->
@@ -200,14 +207,21 @@
         >
         <button
           on:click={() => (window.location.href = "/blog")}
-          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          class="block w-full text-left py-2 transition-colors {currentPath.startsWith(
+            '/blog',
+          )
+            ? 'text-blue-600 dark:text-blue-400 font-semibold'
+            : 'hover:text-blue-600 dark:hover:text-blue-400'}"
           >{t($locale, "nav.blog")}</button
         >
 
         <button
           on:click={() => (window.location.href = "/celoteh")}
-          class="block w-full text-left py-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-          >Celoteh</button
+          class="block w-full text-left py-2 transition-colors {currentPath.startsWith(
+            '/celoteh',
+          )
+            ? 'text-blue-600 dark:text-blue-400 font-semibold'
+            : 'hover:text-blue-600 dark:hover:text-blue-400'}">Celoteh</button
         >
 
         <!-- Command Palette Button -->
@@ -277,11 +291,32 @@
     color: #2563eb;
   }
 
+  .nav-link--active {
+    color: #2563eb;
+    font-weight: 600;
+    position: relative;
+  }
+
+  .nav-link--active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right, #2563eb, #9333ea);
+    border-radius: 9999px;
+  }
+
   :global(.dark) .nav-link {
     color: #d1d5db;
   }
 
   :global(.dark) .nav-link:hover {
+    color: #60a5fa;
+  }
+
+  :global(.dark) .nav-link--active {
     color: #60a5fa;
   }
 </style>
