@@ -65,3 +65,13 @@ export type ThoughtComment = {
   content: string;
   created_at: string;
 };
+
+export type NowItem = {
+  id: string;
+  project_name: string;
+  github_url: string;
+  tasks: string[];
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};

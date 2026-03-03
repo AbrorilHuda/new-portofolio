@@ -73,6 +73,13 @@
             : ''}">Celoteh</button
         >
 
+        <button
+          on:click={() => (window.location.href = "/now")}
+          class="nav-link {currentPath.startsWith('/now')
+            ? 'nav-link--active'
+            : ''}">{t($locale, "nav.now")}</button
+        >
+
         <!-- Command Palette Button -->
         <button
           on:click={openCommandPalette}
@@ -222,6 +229,16 @@
           )
             ? 'text-blue-600 dark:text-blue-400 font-semibold'
             : 'hover:text-blue-600 dark:hover:text-blue-400'}">Celoteh</button
+        >
+
+        <button
+          on:click={() => (window.location.href = "/now")}
+          class="block w-full text-left py-2 transition-colors {currentPath.startsWith(
+            '/now',
+          )
+            ? 'text-blue-600 dark:text-blue-400 font-semibold'
+            : 'hover:text-blue-600 dark:hover:text-blue-400'}"
+          >{t($locale, "nav.now")}</button
         >
 
         <!-- Command Palette Button -->

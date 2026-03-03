@@ -3,6 +3,7 @@
         "home": "Beranda",
         "about": "Tentang",
         "blog": "Blog",
+        "now": "Now",
         "projects": "Proyek",
         "experience": "Pengalaman",
         "contact": "Kontak"
@@ -80,6 +81,20 @@
         "copyright": "© {year} Abrordc. Hak cipta dilindungi.",
         "builtWith": "Dibuat dengan {heart} menggunakan Svelte & Tailwind CSS",
         "oldWebsite": "website lama"
+    },
+    "now": {
+        "title": "Now",
+        "titlePrefix": "Apa yang Sedang",
+        "titleHighlight": "Kukerjakan",
+        "tagline": "Snapshot fokus dan proyek aktif saya saat ini",
+        "focusSection": "Fokus Saat Ini",
+        "githubSection": "Repo GitHub Aktif",
+        "noFocus": "Belum ada yang ditambahkan — cek lagi nanti!",
+        "viewOnGitHub": "Lihat di GitHub",
+        "lastPushed": "Terakhir diperbarui",
+        "stars": "bintang",
+        "githubError": "Gagal memuat repo GitHub.",
+        "updatedNote": "Halaman ini diperbarui secara manual setiap kali ada perubahan."
     },
     "common": {
         "loading": "Memuat...",

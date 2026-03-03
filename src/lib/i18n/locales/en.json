@@ -3,6 +3,7 @@
         "home": "Home",
         "about": "About",
         "blog": "Blog",
+        "now": "Now",
         "projects": "Projects",
         "experience": "Experience",
         "contact": "Contact"
@@ -80,6 +81,20 @@
         "copyright": "© {year} Abrordc. All rights reserved.",
         "builtWith": "Built with {heart} using Svelte & Tailwind CSS",
         "oldWebsite": "old website"
+    },
+    "now": {
+        "title": "Now",
+        "titlePrefix": "What I'm",
+        "titleHighlight": "Working On",
+        "tagline": "A snapshot of what I'm currently focused on",
+        "focusSection": "Current Focus",
+        "githubSection": "Active GitHub Repos",
+        "noFocus": "Nothing added yet — check back soon!",
+        "viewOnGitHub": "View on GitHub",
+        "lastPushed": "Last pushed",
+        "stars": "stars",
+        "githubError": "Could not load GitHub repos.",
+        "updatedNote": "This page is updated manually whenever something changes."
     },
     "common": {
         "loading": "Loading...",

@@ -3,11 +3,13 @@
     import type { PageData, ActionData } from "./$types";
     import { t } from "$lib/i18n";
     import { locale } from "$lib/stores/locale";
+    import ConfirmDialog from "$lib/../components/ConfirmDialog.svelte";
 
     export let data: PageData;
     export let form: ActionData;
 
     let loading = false;
+    let pendingDeleteId: string | null = null;
 
     let mentionState = {
         show: false,
@@ -257,14 +259,8 @@
                                 class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                 title="Hapus"
                                 on:click={(e) => {
-                                    if (
-                                        !confirm(
-                                            "Yakin ingin menghapus postingan ini?",
-                                        )
-                                    ) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                    }
+                                    e.preventDefault();
+                                    pendingDeleteId = thought.id;
                                 }}
                             >
                                 <svg
@@ -485,3 +481,27 @@
         {/if}
     </div>
 </div>
+
+<!-- Hidden delete form for thoughts -->
+<form
+    id="thought-delete-form"
+    method="POST"
+    action="?/delete"
+    use:enhance
+    class="hidden"
+>
+    <input type="hidden" name="id" value={pendingDeleteId ?? ""} />
+</form>
+
+<ConfirmDialog
+    open={pendingDeleteId !== null}
+    message="Yakin ingin menghapus postingan ini? Semua data akan hilang secara permanen."
+    on:confirm={() => {
+        const f = document.getElementById(
+            "thought-delete-form",
+        ) as HTMLFormElement;
+        f?.requestSubmit();
+        pendingDeleteId = null;
+    }}
+    on:cancel={() => (pendingDeleteId = null)}
+/>
