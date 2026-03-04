@@ -29,6 +29,32 @@
     function tasksToText(tasks: string[]): string {
         return tasks.join("\n");
     }
+
+    const priorityConfig = {
+        high: {
+            label: "High",
+            color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+        },
+        medium: {
+            label: "Medium",
+            color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+        },
+        low: {
+            label: "Low",
+            color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+        },
+    };
+
+    const statusConfig = {
+        active: {
+            label: "Active",
+            color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+        },
+        completed: {
+            label: "Completed",
+            color: "bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400",
+        },
+    };
 </script>
 
 <div class="space-y-8">
@@ -126,6 +152,54 @@
                         />
                     </div>
                 </div>
+
+                <!-- Priority + Status row -->
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                            for="create_priority">Priority</label
+                        >
+                        <select
+                            id="create_priority"
+                            name="priority"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        >
+                            <option value="high">🔴 High</option>
+                            <option value="medium" selected>🟡 Medium</option>
+                            <option value="low">🔵 Low</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                            for="create_status">Status</label
+                        >
+                        <select
+                            id="create_status"
+                            name="status"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        >
+                            <option value="active" selected>Active</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                            for="create_order">Sort Order</label
+                        >
+                        <input
+                            id="create_order"
+                            name="sort_order"
+                            type="number"
+                            value="0"
+                            min="0"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        />
+                    </div>
+                </div>
+
                 <div>
                     <label
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -143,20 +217,7 @@
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y font-mono"
                     ></textarea>
                 </div>
-                <div class="w-32">
-                    <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                        for="create_order">Sort Order</label
-                    >
-                    <input
-                        id="create_order"
-                        name="sort_order"
-                        type="number"
-                        value="0"
-                        min="0"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                    />
-                </div>
+
                 <div class="flex gap-3 pt-2">
                     <button
                         type="submit"
@@ -212,7 +273,10 @@
         <div class="space-y-4">
             {#each nowItems as item}
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6"
+                    class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 {item.status ===
+                    'completed'
+                        ? 'opacity-70'
+                        : ''}"
                 >
                     {#if editingItem?.id === item.id}
                         <!-- Edit form -->
@@ -262,6 +326,62 @@
                                     />
                                 </div>
                             </div>
+
+                            <!-- Priority + Status row -->
+                            <div class="grid sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                        for="edit_priority_{item.id}"
+                                        >Priority</label
+                                    >
+                                    <select
+                                        id="edit_priority_{item.id}"
+                                        name="priority"
+                                        bind:value={editingItem.priority}
+                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    >
+                                        <option value="high">🔴 High</option>
+                                        <option value="medium">🟡 Medium</option
+                                        >
+                                        <option value="low">🔵 Low</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                        for="edit_status_{item.id}"
+                                        >Status</label
+                                    >
+                                    <select
+                                        id="edit_status_{item.id}"
+                                        name="status"
+                                        bind:value={editingItem.status}
+                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    >
+                                        <option value="active">Active</option>
+                                        <option value="completed"
+                                            >Completed</option
+                                        >
+                                    </select>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                        for="edit_order_{item.id}"
+                                        >Sort Order</label
+                                    >
+                                    <input
+                                        id="edit_order_{item.id}"
+                                        name="sort_order"
+                                        type="number"
+                                        bind:value={editingItem.sort_order}
+                                        min="0"
+                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    />
+                                </div>
+                            </div>
+
                             <div>
                                 <label
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -280,20 +400,7 @@
                                     class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y font-mono"
                                 ></textarea>
                             </div>
-                            <div class="w-32">
-                                <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                                    for="edit_order_{item.id}">Sort Order</label
-                                >
-                                <input
-                                    id="edit_order_{item.id}"
-                                    name="sort_order"
-                                    type="number"
-                                    bind:value={editingItem.sort_order}
-                                    min="0"
-                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                                />
-                            </div>
+
                             <div class="flex gap-3 pt-2">
                                 <button
                                     type="submit"
@@ -340,12 +447,33 @@
                         <!-- Display mode -->
                         <div class="flex items-start justify-between gap-4">
                             <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-3 mb-2">
+                                <div
+                                    class="flex items-center gap-2 flex-wrap mb-2"
+                                >
                                     <h3
                                         class="font-semibold text-gray-900 dark:text-white"
                                     >
                                         {item.project_name}
                                     </h3>
+                                    <!-- Priority badge -->
+                                    <span
+                                        class="text-xs font-medium px-2 py-0.5 rounded-full {priorityConfig[
+                                            item.priority ?? 'medium'
+                                        ].color}"
+                                    >
+                                        {priorityConfig[
+                                            item.priority ?? "medium"
+                                        ].label}
+                                    </span>
+                                    <!-- Status badge -->
+                                    <span
+                                        class="text-xs font-medium px-2 py-0.5 rounded-full {statusConfig[
+                                            item.status ?? 'active'
+                                        ].color}"
+                                    >
+                                        {statusConfig[item.status ?? "active"]
+                                            .label}
+                                    </span>
                                     <span
                                         class="text-xs text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded"
                                         >#{item.sort_order}</span

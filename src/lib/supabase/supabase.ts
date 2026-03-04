@@ -72,6 +72,8 @@ export type NowItem = {
   github_url: string;
   tasks: string[];
   sort_order: number;
+  priority: 'high' | 'medium' | 'low';
+  status: 'active' | 'completed';
   created_at: string;
   updated_at: string;
 };

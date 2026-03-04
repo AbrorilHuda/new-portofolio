@@ -24,6 +24,8 @@ export const actions: Actions = {
         const github_url = formData.get('github_url') as string;
         const tasksRaw = formData.get('tasks') as string;
         const sort_order = parseInt(formData.get('sort_order') as string) || 0;
+        const priority = (formData.get('priority') as string) || 'medium';
+        const status = (formData.get('status') as string) || 'active';
 
         if (!project_name || !github_url) {
             return fail(400, { error: 'Project name and GitHub URL are required' });
@@ -37,7 +39,9 @@ export const actions: Actions = {
             project_name,
             github_url,
             tasks,
-            sort_order
+            sort_order,
+            priority,
+            status
         });
 
         if (error) {
@@ -54,6 +58,8 @@ export const actions: Actions = {
         const github_url = formData.get('github_url') as string;
         const tasksRaw = formData.get('tasks') as string;
         const sort_order = parseInt(formData.get('sort_order') as string) || 0;
+        const priority = (formData.get('priority') as string) || 'medium';
+        const status = (formData.get('status') as string) || 'active';
 
         if (!id || !project_name || !github_url) {
             return fail(400, { error: 'ID, project name, and GitHub URL are required' });
@@ -66,7 +72,7 @@ export const actions: Actions = {
 
         const { error } = await supabase
             .from('now_items')
-            .update({ project_name, github_url, tasks, sort_order, updated_at: new Date().toISOString() })
+            .update({ project_name, github_url, tasks, sort_order, priority, status, updated_at: new Date().toISOString() })
             .eq('id', id);
 
         if (error) {

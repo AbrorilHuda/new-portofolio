@@ -88,6 +88,7 @@
         "titleHighlight": "Working On",
         "tagline": "A snapshot of what I'm currently focused on",
         "focusSection": "Current Focus",
+        "historySection": "Completed",
         "githubSection": "Active GitHub Repos",
         "noFocus": "Nothing added yet — check back soon!",
         "viewOnGitHub": "View on GitHub",
