@@ -4,6 +4,7 @@ Allow: /
 # Disallow admin pages
 Disallow: /admin/
 Disallow: /admin
+Disallow: /api/
 
 # Sitemap
 Sitemap: https://abrorilhuda.me/sitemap.xml
