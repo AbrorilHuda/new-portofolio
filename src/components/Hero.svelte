@@ -1,15 +1,6 @@
 <script>
   import { locale } from "$lib/stores/locale";
   import { t } from "$lib/i18n";
-  import { onMount } from "svelte";
-
-  let visible = false;
-
-  onMount(() => {
-    setTimeout(() => {
-      visible = true;
-    }, 100);
-  });
 </script>
 
 <section
@@ -39,9 +30,7 @@
       <div class="space-y-8">
         <div class="space-y-4">
           <h1
-            class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight {visible
-              ? 'fade-in-up'
-              : 'opacity-0'}"
+            class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight fade-in-up"
           >
             {t($locale, "hero.titlePrefix")}
             <span
@@ -50,27 +39,19 @@
             >
           </h1>
           <p
-            class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 dark:text-gray-400 {visible
-              ? 'fade-in-up delay-100'
-              : 'opacity-0'}"
+            class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 dark:text-gray-400 fade-in-up delay-100"
           >
             {t($locale, "hero.subtitle")}
           </p>
         </div>
 
         <p
-          class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl {visible
-            ? 'fade-in-up delay-200'
-            : 'opacity-0'}"
+          class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl fade-in-up delay-200"
         >
           {t($locale, "hero.description")}
         </p>
 
-        <div
-          class="flex flex-wrap gap-4 {visible
-            ? 'fade-in-up delay-300'
-            : 'opacity-0'}"
-        >
+        <div class="flex flex-wrap gap-4 fade-in-up delay-300">
           <button
             on:click={() =>
               document
@@ -95,11 +76,7 @@
         </div>
 
         <!-- Social Links -->
-        <div
-          class="flex gap-3 sm:gap-4 {visible
-            ? 'fade-in-up delay-400'
-            : 'opacity-0'}"
-        >
+        <div class="flex gap-3 sm:gap-4 fade-in-up delay-400">
           <a
             href="https://github.com/abrorilhuda"
             target="_blank"
@@ -155,7 +132,7 @@
       </div>
 
       <!-- Right Content - Profile Image -->
-      <div class="relative {visible ? 'fade-in-up delay-200' : 'opacity-0'}">
+      <div class="relative fade-in-up delay-200">
         <div class="relative w-full aspect-square max-w-md mx-auto">
           <!-- Decorative elements with animation -->
           <div
@@ -174,7 +151,9 @@
               src="https://avatars.githubusercontent.com/u/114936122?v=4"
               alt="Moh. Abroril Huda - Full Stack Developer specializing in React, Svelte, and Node.js"
               class="w-full h-full object-cover"
-              loading="lazy"
+              loading="eager"
+              fetchpriority="high"
+              decoding="sync"
             />
           </div>
 

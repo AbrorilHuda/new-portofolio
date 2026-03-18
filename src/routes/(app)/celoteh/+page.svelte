@@ -1,14 +1,68 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
+    import { onMount, onDestroy } from "svelte";
     import type { PageData } from "./$types";
     import { t } from "$lib/i18n";
     import { locale } from "$lib/stores/locale";
+    import { supabase } from "$lib/supabase/supabase";
 
     export let data: PageData;
 
     // Optimistic UI for likes
     let localLikes: Record<string, number> = {};
     let likedThoughts: Set<string> = new Set();
+
+    // Infinite Scroll State
+    let thoughts = data.thoughts;
+    let bottomElement: HTMLElement;
+    let loadingMore = false;
+    let hasMore = data.thoughts.length === 10;
+    let offset = 10;
+    let observer: IntersectionObserver;
+
+    // Update state if data changes from SSR
+    $: if (data.thoughts && data.thoughts[0]?.id !== thoughts[0]?.id) {
+        thoughts = data.thoughts;
+        offset = data.thoughts.length;
+        hasMore = data.thoughts.length === 10;
+    }
+
+    async function loadMore() {
+        if (loadingMore || !hasMore) return;
+        loadingMore = true;
+
+        const { data: newThoughts, error } = await supabase
+            .from('thoughts')
+            .select('*')
+            .eq('is_public', true)
+            .order('created_at', { ascending: false })
+            .range(offset, offset + 9);
+
+        if (error) {
+            console.error('Error fetching more thoughts:', error);
+        } else if (newThoughts) {
+            thoughts = [...thoughts, ...newThoughts];
+            offset += newThoughts.length;
+            if (newThoughts.length < 10) {
+                hasMore = false;
+            }
+        }
+        loadingMore = false;
+    }
+
+    onMount(() => {
+        observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadMore();
+            }
+        }, { rootMargin: "100px" });
+
+        if (bottomElement) observer.observe(bottomElement);
+    });
+
+    onDestroy(() => {
+        if (observer) observer.disconnect();
+    });
 </script>
 
 <svelte:head>
@@ -32,7 +86,7 @@
     </div>
 
     <div class="space-y-6">
-        {#if data.thoughts.length === 0}
+        {#if thoughts.length === 0}
             <div
                 class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-2xl"
             >
@@ -41,7 +95,7 @@
                 </p>
             </div>
         {:else}
-            {#each data.thoughts as thought (thought.id)}
+            {#each thoughts as thought (thought.id)}
                 <article
                     class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md transition-shadow"
                 >
@@ -239,6 +293,21 @@
                     </div>
                 </article>
             {/each}
+        {/if}
+
+        <!-- Infinite Scroll Bottom Trigger Element -->
+        {#if hasMore}
+            <div bind:this={bottomElement} class="h-16 flex items-center justify-center">
+                {#if loadingMore}
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                {/if}
+            </div>
+        {/if}
+
+        {#if !hasMore && thoughts.length > 0}
+            <div class="text-center py-8 text-gray-500 text-sm">
+                Kamu sudah mencapai akhir celoteh 🎉
+            </div>
         {/if}
     </div>
 </div>

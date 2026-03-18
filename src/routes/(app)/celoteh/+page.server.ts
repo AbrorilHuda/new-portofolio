@@ -7,7 +7,8 @@ export const load: PageServerLoad = async () => {
         .from('thoughts')
         .select('*')
         .eq('is_public', true)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(10);
 
     if (error) {
         console.error('Error fetching thoughts:', error);
@@ -57,8 +58,6 @@ export const actions: Actions = {
         const { error: incrementError } = await supabase.rpc('increment_likes', { row_id: id });
 
         if (incrementError) {
-            // Fallback manual increment if RPC fails (though RPC is safer)
-            // For now just log usage
             console.error('RPC increment_likes failed:', incrementError);
         }
 

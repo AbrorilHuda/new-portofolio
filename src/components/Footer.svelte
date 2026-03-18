@@ -2,7 +2,7 @@
   import { locale } from "$lib/stores/locale";
   import { t } from "$lib/i18n";
   import { supabase } from "$lib/supabase/supabase";
-  import { slide } from "svelte/transition";
+  import { fly } from "svelte/transition";
   import ChatMessage from "./ChatMessage.svelte";
 
   const currentYear = new Date().getFullYear();
@@ -97,7 +97,7 @@
             </button>
           {:else}
             <div
-              transition:slide
+              transition:fly={{ y: 20, duration: 250 }}
               class="bg-gray-800/50 rounded-xl p-4 border border-gray-800"
             >
               <div class="flex items-center justify-between mb-3">
@@ -196,7 +196,7 @@
               {#if feedbackSuccess}
                 <div
                   class="mt-3 p-2 bg-green-900/30 border border-green-700/50 rounded-lg flex items-center gap-2"
-                  transition:slide
+                  transition:fly={{ y: -10, duration: 200 }}
                 >
                   <svg
                     class="w-4 h-4 text-green-400 flex-shrink-0"
@@ -218,7 +218,7 @@
               {#if feedbackError}
                 <div
                   class="mt-3 p-2 bg-red-900/30 border border-red-700/50 rounded-lg flex items-center gap-2"
-                  transition:slide
+                  transition:fly={{ y: -10, duration: 200 }}
                 >
                   <svg
                     class="w-4 h-4 text-red-400 flex-shrink-0"
