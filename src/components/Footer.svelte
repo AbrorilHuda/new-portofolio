@@ -293,11 +293,11 @@
           </li>
           <li>
             <a
-              href="https://demtimcod.my.id"
-              target="_blank"
+              href="/privacy-policy"
               class="hover:text-blue-400 transition-colors"
-              >{t($locale, "footer.oldWebsite")}</a
             >
+              Privacy Policy
+            </a>
           </li>
         </ul>
       </div>

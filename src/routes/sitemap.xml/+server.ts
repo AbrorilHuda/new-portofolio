@@ -15,6 +15,7 @@ export const GET: RequestHandler = async () => {
     { url: "/", changefreq: "daily", priority: "1.0" },
     { url: "/blog", changefreq: "daily", priority: "0.9" },
     { url: "/celoteh", changefreq: "daily", priority: "0.9" },
+    { url: "/privacy-policy", changefreq: "monthly", priority: "0.5" }
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
