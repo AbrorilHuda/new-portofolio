@@ -1,2 +1,7 @@
 [build.environment]
   SECRETS_SCAN_OMIT_KEYS = "PUBLIC_SUPABASE_URL,PUBLIC_SUPABASE_ANON_KEY"
+[[redirects]]
+  from = "https://abrorilhuda.me/"
+  to = "https://abror.madura.dev/"
+  status = 301
+

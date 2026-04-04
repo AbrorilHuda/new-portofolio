@@ -1,7 +1,7 @@
 import type { RequestHandler } from "./$types";
 import { supabase } from "$lib/supabase/supabase";
 
-const siteUrl = "https://abrorilhuda.me";
+const siteUrl = "https://abror.madura.dev";
 
 export const GET: RequestHandler = async () => {
   const { data: blogs } = await supabase
@@ -15,7 +15,7 @@ export const GET: RequestHandler = async () => {
     { url: "/", changefreq: "daily", priority: "1.0" },
     { url: "/blog", changefreq: "daily", priority: "0.9" },
     { url: "/celoteh", changefreq: "daily", priority: "0.9" },
-    { url: "/privacy-policy", changefreq: "monthly", priority: "0.5" }
+    { url: "/privacy-policy", changefreq: "monthly", priority: "0.5" },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -26,31 +26,32 @@ export const GET: RequestHandler = async () => {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   
   ${staticPages
-      .map(
-        (page) => `
+    .map(
+      (page) => `
   <url>
     <loc>${siteUrl}${page.url}</loc>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
     <lastmod>${new Date().toISOString()}</lastmod>
-  </url>`
-      )
-      .join("")}
+  </url>`,
+    )
+    .join("")}
   
-  ${blogs
+  ${
+    blogs
       ? blogs
-        .map(
-          (blog) => `
+          .map(
+            (blog) => `
   <url>
     <loc>${siteUrl}/blog/${blog.slug}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>${new Date(blog.updated_at).toISOString()}</lastmod>
-  </url>`
-        )
-        .join("")
+  </url>`,
+          )
+          .join("")
       : ""
-    }
+  }
 </urlset>`;
 
   return new Response(xml, {

@@ -1,7 +1,7 @@
 import type { RequestHandler } from "./$types";
 import { supabase } from "$lib/supabase/supabase";
 
-const siteUrl = "https://abrorilhuda.me";
+const siteUrl = "https://abror.madura.dev";
 const siteName = "Moh.AbrorilHuda";
 const siteDescription = "Artikel dan tutorial seputar teknologi";
 
@@ -43,7 +43,7 @@ export const GET: RequestHandler = async () => {
           : ""
       }
       <content:encoded><![CDATA[${blog.content}]]></content:encoded>
-    </item>`
+    </item>`,
             )
             .join("")
         : ""

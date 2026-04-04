@@ -10,8 +10,8 @@ import { toggleCommandPalette } from '$lib/stores/command-palette';
   $: data = $page.data;
   
   // Default values untuk avoid undefined
-  const siteurl = data?.siteurl || 'https://abrorilhuda.me';
-  const defaultimage = data?.defaultimage || 'https://abrorilhuda.me/og-image.png';
+  const siteurl = data?.siteurl || 'https://abror.madura.dev';
+  const defaultimage = data?.defaultimage || 'https://abror.madura.dev/og-image.png';
   
   // Destructure dengan safe check
   $: metaTags = (() => {

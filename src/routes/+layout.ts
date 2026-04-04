@@ -1,7 +1,7 @@
 import { definePageMetaTags } from "svelte-meta-tags";
 
-const siteurl = "https://abrorilhuda.me";
-const defaultimage = "https://abrorilhuda.me/og-default-image.png";
+const siteurl = "https://abror.madura.dev";
+const defaultimage = "https://abror.madura.dev/og-default-image.png";
 const description =
   "Portofolio resmi Abrorilhuda. Profesional kreatif yang berdedikasi memberikan solusi inovatif dan hasil kerja berkualitas tinggi. Jelajahi proyek dan keahlian saya di sini.";
 
@@ -37,9 +37,9 @@ export const load = () => {
       imageAlt: "Moh.AbrorilHuda",
     },
     additionalRobotsProps: {
-      maxSnippet: 320,           // Allow snippet up to 320 characters
-      maxImagePreview: "large",  // Allow large image previews in search results
-      maxVideoPreview: -1,       // Allow unlimited video preview
+      maxSnippet: 320, // Allow snippet up to 320 characters
+      maxImagePreview: "large", // Allow large image previews in search results
+      maxVideoPreview: -1, // Allow unlimited video preview
     },
   });
 
