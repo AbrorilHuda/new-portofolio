@@ -2,6 +2,16 @@ import { json, error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { checkRateLimit } from "$lib/rateLimiter";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, x-api-key",
+};
+
+export const OPTIONS: RequestHandler = async () => {
+  return new Response(null, { headers: corsHeaders });
+};
+
 export const GET: RequestHandler = async ({ request, getClientAddress }) => {
   const apiKey = request.headers.get("x-api-key");
   const clientId = apiKey ? `key:${apiKey}` : `ip:${getClientAddress()}`;
@@ -10,6 +20,7 @@ export const GET: RequestHandler = async ({ request, getClientAddress }) => {
 
   const headers = new Headers({
     "Content-Type": "application/json",
+    ...corsHeaders,
     "X-RateLimit-Limit": "10000",
     "X-RateLimit-Remaining": String(rateLimit.remaining),
     "X-RateLimit-Reset": String(rateLimit.resetTime),
