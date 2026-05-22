@@ -29,7 +29,7 @@ export const POST: RequestHandler = async ({ request }) => {
     // Send notification to Telegram bot if configured
     if (botToken && adminChatId) {
       try {
-        const text = `💬 *Pesan Baru di abrorilhuda.me*\n👤 *${username}*:\n${message}`;
+        const text = `💬 *Pesan Baru di abrorilhuda.me/lounge*\n👤 *${username}*:\n${message}`;
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
         // Call Telegram API asynchronously without blocking the client response
