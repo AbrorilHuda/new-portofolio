@@ -113,16 +113,27 @@
       .channel("lounge-realtime-messages")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
+        { event: "*", schema: "public", table: "messages" },
         (payload) => {
-          const newMsg = payload.new;
-          // Check if message is already in state (e.g. from optimistic UI update)
-          const exists = messages.find(
-            (m) => m.id === newMsg.id || m.tempId === newMsg.id,
-          );
-          if (!exists) {
-            messages = [...messages, newMsg];
-            scrollToBottom();
+          if (payload.eventType === "INSERT") {
+            const newMsg = payload.new;
+            // Check if message is already in state (e.g. from optimistic UI update)
+            const exists = messages.find(
+              (m) => m.id === newMsg.id || m.tempId === newMsg.id,
+            );
+            if (!exists) {
+              messages = [...messages, newMsg];
+              scrollToBottom();
+            }
+          } else if (payload.eventType === "DELETE") {
+            // Remove the deleted message from local state
+            const oldId = payload.old?.id;
+            if (oldId) {
+              messages = messages.filter((m) => m.id !== oldId);
+            } else {
+              // Fallback if bulk deleted without specific IDs
+              messages = [];
+            }
           }
         },
       )
