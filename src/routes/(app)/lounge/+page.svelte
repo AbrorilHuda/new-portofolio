@@ -113,27 +113,16 @@
       .channel("lounge-realtime-messages")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "messages" },
+        { event: "INSERT", schema: "public", table: "messages" },
         (payload) => {
-          if (payload.eventType === "INSERT") {
-            const newMsg = payload.new;
-            // Check if message is already in state (e.g. from optimistic UI update)
-            const exists = messages.find(
-              (m) => m.id === newMsg.id || m.tempId === newMsg.id,
-            );
-            if (!exists) {
-              messages = [...messages, newMsg];
-              scrollToBottom();
-            }
-          } else if (payload.eventType === "DELETE") {
-            // Remove the deleted message from local state
-            const oldId = payload.old?.id;
-            if (oldId) {
-              messages = messages.filter((m) => m.id !== oldId);
-            } else {
-              // Fallback if bulk deleted without specific IDs
-              messages = [];
-            }
+          const newMsg = payload.new;
+          // Check if message is already in state (e.g. from optimistic UI update)
+          const exists = messages.find(
+            (m) => m.id === newMsg.id || m.tempId === newMsg.id,
+          );
+          if (!exists) {
+            messages = [...messages, newMsg];
+            scrollToBottom();
           }
         },
       )
@@ -316,7 +305,6 @@
       class="flex items-center justify-between px-6 py-4 border-b border-gray-150 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md z-20"
     >
       <div class="flex items-center gap-3">
-        <!-- Pulse Glow Icon -->
         <div
           class="w-10 h-10 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md relative"
         >
