@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
  import { locale } from '$lib/stores/locale';
  import { t } from '$lib/i18n';
   const experiences = [
@@ -49,7 +49,7 @@
   ];
   
   // Helper function to get localized text
-  function getLocalizedText(item, field) {
+  function getLocalizedText(item: any, field: string) {
     return $locale === 'en' ? item[`${field}_en`] : item[`${field}_id`];
   }
 </script>

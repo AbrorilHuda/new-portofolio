@@ -74,6 +74,13 @@
         >
 
         <button
+          on:click={() => (window.location.href = "/lounge")}
+          class="nav-link {currentPath.startsWith('/lounge')
+            ? 'nav-link--active'
+            : ''}">Lounge</button
+        >
+
+        <button
           on:click={() => (window.location.href = "/now")}
           class="nav-link {currentPath.startsWith('/now')
             ? 'nav-link--active'
@@ -229,6 +236,15 @@
           )
             ? 'text-blue-600 dark:text-blue-400 font-semibold'
             : 'hover:text-blue-600 dark:hover:text-blue-400'}">Celoteh</button
+        >
+
+        <button
+          on:click={() => (window.location.href = "/lounge")}
+          class="block w-full text-left py-2 transition-colors {currentPath.startsWith(
+            '/lounge',
+          )
+            ? 'text-blue-600 dark:text-blue-400 font-semibold'
+            : 'hover:text-blue-600 dark:hover:text-blue-400'}">Lounge</button
         >
 
         <button
