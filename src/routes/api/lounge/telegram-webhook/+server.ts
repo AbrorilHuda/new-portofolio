@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { supabase } from '$lib/supabase/supabase';
+import { supabaseAdmin } from '$lib/supabase/supabase.server';
 import { env } from '$env/dynamic/private';
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -25,10 +25,8 @@ export const POST: RequestHandler = async ({ request }) => {
     const text = message.text.trim();
     const botToken = env.TELEGRAM_BOT_TOKEN;
 
-    // Handle command /pesandelete
     if (text === '/pesandelete' || text.startsWith('/pesandelete ')) {
-      // Delete all messages from Supabase
-      const { error: deleteError } = await supabase
+      const { error: deleteError } = await supabaseAdmin
         .from('messages')
         .delete()
         .not('id', 'is', null);
@@ -50,8 +48,6 @@ export const POST: RequestHandler = async ({ request }) => {
 
         return json({ error: 'Failed to delete messages' }, { status: 500 });
       }
-
-      // Send success confirmation notification
       if (botToken) {
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
         await fetch(telegramUrl, {
@@ -75,8 +71,6 @@ export const POST: RequestHandler = async ({ request }) => {
       const nameMatch = text.match(/👤\s*\*?([^*:\n]+)\*?:/);
       if (nameMatch && nameMatch[1]) {
         const targetUser = nameMatch[1].trim();
-
-        // Extract the original message snippet (everything after the first two lines)
         const lines = text.split('\n');
         let originalMsgSnippet = '';
         if (lines.length > 2) {
@@ -95,7 +89,7 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     // Insert the admin's message into Supabase messages table
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('messages')
       .insert({
         username: 'Abrorilhuda',
