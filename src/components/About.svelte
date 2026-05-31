@@ -13,13 +13,13 @@
   ];
 </script>
 
-<section id="about" class="py-24 px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50">
+<section id="about" class="py-20 md:py-32 px-6 lg:px-8 bg-gray-50 dark:bg-zinc-950/20 border-y border-gray-200/30 dark:border-white/5">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-16">
-      <h2 class="text-4xl md:text-5xl font-bold mb-4">
-        {t($locale, 'about.titlePrefix')} <span class="bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'about.titleHighlight')}</span>
+      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        {t($locale, 'about.titlePrefix')} <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'about.titleHighlight')}</span>
       </h2>
-      <p class="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+      <p class="text-gray-500 dark:text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
         {t($locale, 'about.tagline')}
       </p>
     </div>

@@ -2,6 +2,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { marked } from "marked";
+  import { fade } from "svelte/transition";
 
   interface Message {
     id: string | number;
@@ -21,9 +22,12 @@
     return marked(text) as string;
   }
 
+  import { aiAssistantOpen } from "$lib/stores/ai-assistant";
+  import { mobileMenuOpenStore } from "$lib/stores/mobile-menu";
+
   let messages: Message[] = [];
   let newMessage: string = "";
-  let isOpen: boolean = false;
+  $: isOpen = $aiAssistantOpen;
   let messagesContainer: HTMLDivElement;
   let isTyping: boolean = false;
   let isSpeaking: boolean = false;
@@ -419,11 +423,12 @@
 </script>
 
 <div class="ai-assistant-widget">
-  {#if !isOpen}
+  {#if !isOpen && !$mobileMenuOpenStore}
     <button
-      class="ai-button"
-      on:click={() => (isOpen = true)}
+      class="ai-button hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl cursor-pointer"
+      on:click={() => ($aiAssistantOpen = true)}
       aria-label="Open AI Assistant"
+      transition:fade={{ duration: 150 }}
     >
       <div class="ai-icon">
         <svg
@@ -453,7 +458,7 @@
         <div class="ai-header-content">
           <button
             class="mobile-back-button"
-            on:click={() => (isOpen = false)}
+            on:click={() => ($aiAssistantOpen = false)}
             aria-label="Kembali"
           >
             <svg
@@ -590,7 +595,7 @@
           <!-- Close Button (Desktop only, hidden on mobile in favor of Back Button) -->
           <button
             class="desktop-close-button"
-            on:click={() => (isOpen = false)}
+            on:click={() => ($aiAssistantOpen = false)}
             aria-label="Tutup AI Assistant"
           >
             <svg

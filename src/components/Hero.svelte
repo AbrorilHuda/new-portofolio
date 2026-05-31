@@ -30,26 +30,68 @@
       <div class="space-y-8">
         <div class="space-y-4">
           <h1
-            class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight fade-in-up"
+            class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-[1.1] fade-in-up"
           >
             {t($locale, "hero.titlePrefix")}
             <span
-              class="inline-block bg-gradient-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine"
+              class="inline-block bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine"
               >{t($locale, "hero.titleHighlight")}</span
             >
           </h1>
           <p
-            class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 dark:text-gray-400 fade-in-up delay-100"
+            class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-gray-500 dark:text-gray-400 fade-in-up delay-100"
           >
             {t($locale, "hero.subtitle")}
           </p>
         </div>
 
         <p
-          class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl fade-in-up delay-200"
+          class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-xl leading-relaxed fade-in-up delay-200"
         >
           {t($locale, "hero.description")}
         </p>
+
+        <!-- Stats Row -->
+        <div
+          class="grid grid-cols-3 gap-4 sm:gap-6 py-5 border-y border-gray-200/50 dark:border-white/5 fade-in-up delay-200 max-w-lg"
+        >
+          <div>
+            <p
+              class="text-2xl sm:text-3xl font-display font-extrabold text-blue-600 dark:text-blue-400"
+            >
+              3+
+            </p>
+            <p
+              class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {$locale === "en" ? "Years Exp" : "Thn Pengalaman"}
+            </p>
+          </div>
+          <div>
+            <p
+              class="text-2xl sm:text-3xl font-display font-extrabold text-purple-600 dark:text-purple-400"
+            >
+              15+
+            </p>
+            <p
+              class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {$locale === "en" ? "Projects Built" : "Proyek Dibuat"}
+            </p>
+          </div>
+          <div>
+            <p
+              class="text-2xl sm:text-3xl font-display font-extrabold text-emerald-600 dark:text-emerald-400"
+            >
+              2+
+            </p>
+            <p
+              class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
+            >
+              {$locale === "en" ? "Communities" : "Komunitas"}
+            </p>
+          </div>
+        </div>
 
         <div class="flex flex-wrap gap-4 fade-in-up delay-300">
           <button
@@ -57,11 +99,11 @@
               document
                 .getElementById("projects")
                 ?.scrollIntoView({ behavior: "smooth" })}
-            class="group relative px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all overflow-hidden cursor-pointer"
+            class="group relative px-8 py-3.5 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-semibold hover:shadow-xl hover:shadow-blue-500/20 dark:hover:shadow-purple-500/10 hover:scale-[1.02] active:scale-98 transition-all duration-300 overflow-hidden cursor-pointer"
           >
             <span class="relative z-10">{t($locale, "hero.viewProjects")}</span>
             <div
-              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
+              class="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
             ></div>
           </button>
           <button
@@ -69,7 +111,7 @@
               document
                 .getElementById("contact")
                 ?.scrollIntoView({ behavior: "smooth" })}
-            class="px-8 py-3 border-2 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded-full font-medium hover:bg-blue-50 dark:hover:bg-gray-800 transition-all hover:scale-105 cursor-pointer"
+            class="px-8 py-3.5 border border-gray-300 dark:border-white/10 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md text-gray-700 dark:text-gray-300 rounded-2xl font-semibold hover:bg-gray-100 dark:hover:bg-zinc-800 hover:scale-[1.02] active:scale-98 transition-all duration-300 cursor-pointer"
           >
             {t($locale, "hero.contactMe")}
           </button>

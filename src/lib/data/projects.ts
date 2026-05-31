@@ -1,0 +1,66 @@
+export interface Project {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  link: string;
+  icon?: string;
+}
+
+export const projects: Project[] = [
+  {
+    id: 1,
+    title: 'Demtimcod Docs',
+    description: 'to make it easier for readers to read the documentation',
+    image: 'https://32ily8ib82.ucarecd.net/80bddb32-e19f-453c-a1a9-a0c30a1f52ec/demtimcod.png',
+    technologies: ['React', 'docusaurus', 'tailwindcss'],
+    link: 'https://demtimcod.github.io/',
+    icon: '📚'
+  },
+  {
+    id: 2,
+    title: 'Website Digital Solution',
+    description: 'Modern website digital solution codverse for businesses',
+    image: 'https://32ily8ib82.ucarecd.net/40e78aef-543f-4bc6-8b46-402cdaefe117/codverse.png',
+    technologies: ['Next.js', 'Tailwind'],
+    link: 'https://codverse.site',
+    icon: '🌐'
+  },
+  {
+    id: 3,
+    title: 'Mobile Apps',
+    description: 'Cross-platform mobile application built with React Native',
+    image: 'https://32ily8ib82.ucarecd.net/edf30a1d-c76b-46b2-8582-45edee790a5b/reunira.png',
+    technologies: ['React Native'],
+    link: '',
+    icon: '📱'
+  },
+  {
+    id: 4,
+    title: 'Maduradev',
+    description: 'Community website for Madura developers showcasing local tech talent',
+    image: 'https://32ily8ib82.ucarecd.net/519fe07d-e17b-4b57-b2ef-d6f2948955a9/maduradev.png',
+    technologies: ['Next.js', 'TypeScript', 'TailwindCSS'],
+    link: 'https://madura.dev',
+    icon: '👥'
+  },
+  {
+    id: 5,
+    title: 'DCN UNIRA',
+    description: 'Information hub for Dicoding Community Network at Universitas Madura',
+    image: 'https://32ily8ib82.ucarecd.net/68fcd631-d4c4-4f53-becf-2b602286e771/dcnuniradev.png',
+    technologies: ['Next.js', 'TailwindCSS', 'Framer Motion', 'etc'],
+    link: 'https://dcnunira.dev',
+    icon: '🎓'
+  },
+  {
+    id: 6,
+    title: 'Presentation Deck',
+    description: 'SaaS presentation deck platform for students with AI-powered features',
+    image: 'https://32ily8ib82.ucarecd.net/4abf756f-b6ac-4ba6-8a10-bf1d29ed688e/presentasionapp.png',
+    technologies: ['Next.js', 'gemini', 'markdown', 'etc'],
+    link: 'https://slide.dcnunira.dev',
+    icon: '🎨'
+  }
+];

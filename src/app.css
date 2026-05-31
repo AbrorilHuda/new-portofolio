@@ -3,6 +3,9 @@
 @variant dark (&:is(.dark *));
 
 @theme {
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+
   --animate-shimmer: shimmer 3s linear infinite;
   --animate-shine: shine 2s linear infinite;
   --animate-ripple: ripple 3s ease-in-out infinite;

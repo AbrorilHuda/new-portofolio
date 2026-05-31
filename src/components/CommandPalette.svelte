@@ -7,6 +7,7 @@
   } from "$lib/stores/command-palette";
   import { supabase } from "$lib/supabase/supabase";
   import { fade, fly } from "svelte/transition";
+  import { projects as rawProjects } from "$lib/data/projects";
 
   let searchQuery = "";
   let selectedIndex = 0;
@@ -67,52 +68,6 @@
     },
   ];
 
-  // Projects data
-  const projects = [
-    {
-      title: "Demtimcod Docs",
-      description: "Documentation platform",
-      url: "https://demtimcod.github.io/",
-      icon: "📚",
-      category: "Projects",
-    },
-    {
-      title: "Codverse",
-      description: "Digital solution website",
-      url: "https://codverse.site",
-      icon: "🌐",
-      category: "Projects",
-    },
-    {
-      title: "Mobile Apps",
-      description: "React Native application",
-      url: "",
-      icon: "📱",
-      category: "Projects",
-    },
-    {
-      title: "Maduradev",
-      description: "Madura developers community",
-      url: "https://madura.dev",
-      icon: "👥",
-      category: "Projects",
-    },
-    {
-      title: "DCN UNIRA",
-      description: "Dicoding Community Network",
-      url: "https://dcnunira.dev",
-      icon: "🎓",
-      category: "Projects",
-    },
-    {
-      title: "Presentation Deck",
-      description: "SaaS presentation platform",
-      url: "https://slide.dcnunira.dev",
-      icon: "🎨",
-      category: "Projects",
-    },
-  ];
-
   // Load recent blogs
   onMount(async () => {
     const { data } = await supabase
@@ -132,6 +87,14 @@
     url: `/blog/${blog.slug}`,
     icon: "📝",
     category: "Blog Posts",
+  }));
+
+  $: projects = rawProjects.map((p) => ({
+    title: p.title,
+    description: p.description,
+    url: p.link,
+    icon: p.icon || "💼",
+    category: "Projects",
   }));
 
   $: displayBlogItems =
@@ -228,156 +191,172 @@
 </script>
 
 {#if $commandPaletteOpen}
-  <!-- Backdrop -->
+  <!-- Backdrop Overlay -->
   <div
-    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+    class="fixed inset-0 bg-zinc-950/50 dark:bg-black/65 backdrop-blur-md z-50 flex items-start justify-center pt-[10vh] sm:pt-[15vh] px-4"
     on:click={handleBackdropClick}
     transition:fade={{ duration: 200 }}
     role="presentation"
   >
-    <!-- Command Palette Modal -->
+    <!-- Command Palette Container Modal -->
     <div
-      class="fixed top-[15%] sm:top-[20%] left-1/2 -translate-x-1/2 w-[95%] sm:w-full max-w-2xl"
-      transition:fly={{ y: -20, duration: 200 }}
+      class="w-full max-w-2xl bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl rounded-2xl shadow-[0_32px_64px_rgba(0,0,0,0.18)] dark:shadow-[0_32px_64px_rgba(0,0,0,0.4)] border border-gray-200/60 dark:border-white/10 overflow-hidden flex flex-col transition-all duration-300"
+      on:click|stopPropagation
+      on:keydown|stopPropagation
+      transition:fly={{ y: -15, duration: 250 }}
       role="dialog"
+      tabindex="-1"
       aria-modal="true"
       aria-label="Command palette"
     >
+      <!-- Search Input Area -->
       <div
-        class="bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+        class="flex items-center gap-3 px-5 py-4 border-b border-gray-200/50 dark:border-white/5"
       >
-        <!-- Search Input -->
-        <div
-          class="flex items-center gap-3 px-4 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700"
+        <svg
+          class="w-5 h-5 text-gray-400 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
         >
-          <svg
-            class="w-5 h-5 text-gray-400 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-          <input
-            bind:this={searchInput}
-            bind:value={searchQuery}
-            type="text"
-            placeholder="Search..."
-            class="flex-1 bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-400 text-sm sm:text-base"
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
           />
-          <kbd
-            class="hidden sm:inline-block px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 dark:bg-gray-800 dark:text-gray-400 rounded"
-          >
-            ESC
-          </kbd>
-        </div>
+        </svg>
+        <input
+          bind:this={searchInput}
+          bind:value={searchQuery}
+          type="text"
+          placeholder="Search pages, projects, or articles..."
+          class="flex-1 bg-transparent border-none outline-none font-display font-medium text-gray-900 dark:text-zinc-100 placeholder-gray-400 text-sm sm:text-base tracking-tight"
+        />
+        <kbd
+          class="hidden sm:inline-block px-2 py-0.5 text-[9px] font-semibold text-gray-400 bg-gray-100 dark:bg-zinc-900 border border-gray-200 dark:border-white/5 rounded-md shadow-2xs select-none"
+        >
+          ESC
+        </kbd>
+      </div>
 
-        <!-- Results -->
-        <div class="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
-          {#if filteredItems.length === 0}
-            <div
-              class="px-4 py-8 sm:py-12 text-center text-gray-500 dark:text-gray-400"
-            >
-              <p class="text-sm sm:text-base">
-                No results found for "{searchQuery}"
-              </p>
-            </div>
-          {:else}
-            {#each Object.entries(groupedItems) as [category, items], categoryIndex}
-              <div class="py-2">
-                <!-- Category Header -->
-                <div
-                  class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                >
-                  {category}
-                </div>
+      <!-- Results Area -->
+      <div class="max-h-[50vh] sm:max-h-[55vh] overflow-y-auto py-2">
+        {#if filteredItems.length === 0}
+          <div class="px-5 py-12 text-center text-gray-500 dark:text-gray-400">
+            <span class="text-3xl block mb-2">🔍</span>
+            <p class="text-sm font-medium">
+              No results found for "{searchQuery}"
+            </p>
+          </div>
+        {:else}
+          {#each Object.entries(groupedItems) as [category, items], categoryIndex}
+            <div class="space-y-1">
+              <!-- Category Header -->
+              <div
+                class="px-5 pt-3 pb-1 text-[10px] font-bold text-gray-450 dark:text-gray-500 uppercase tracking-widest"
+              >
+                {category}
+              </div>
 
-                <!-- Items -->
+              <!-- Items Container -->
+              <div class="space-y-1.5 px-2">
                 {#each items as item, itemIndex}
                   {@const globalIndex = filteredItems.indexOf(item)}
                   <button
                     on:click={() => navigateToItem(item)}
                     on:mouseenter={() => (selectedIndex = globalIndex)}
-                    class="w-full flex items-center gap-3 px-4 py-2 sm:py-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer
+                    class="w-[98%] mx-auto flex items-center gap-3.5 px-3 py-2.5 rounded-xl transition-all duration-200 cursor-pointer text-left group
                            {selectedIndex === globalIndex
-                      ? 'bg-blue-50 dark:bg-blue-900/20'
-                      : ''}"
+                      ? 'bg-gray-100/75 dark:bg-zinc-900/80 border border-gray-200/40 dark:border-white/5 shadow-2xs translate-x-1.5'
+                      : 'border border-transparent'}"
                   >
-                    <span class="text-xl sm:text-2xl flex-shrink-0"
-                      >{item.icon}</span
+                    <!-- framed icon badge -->
+                    <div
+                      class="w-8 h-8 rounded-lg bg-gray-50 dark:bg-zinc-900/60 border border-gray-250/20 dark:border-white/5 flex items-center justify-center text-lg flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
                     >
-                    <div class="flex-1 text-left min-w-0">
+                      {item.icon}
+                    </div>
+
+                    <div class="flex-1 min-w-0">
                       <div
-                        class="font-medium text-gray-900 dark:text-gray-100 text-sm sm:text-base truncate"
+                        class="font-display font-bold text-gray-900 dark:text-zinc-100 text-sm truncate"
                       >
                         {item.title}
                       </div>
                       {#if item.description}
                         <div
-                          class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate"
+                          class="text-xs text-gray-500 dark:text-gray-450 truncate mt-0.5"
                         >
                           {item.description}
                         </div>
                       {/if}
                     </div>
-                    {#if item.url.startsWith("http")}
-                      <svg
-                        class="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+
+                    <!-- Shortcut enter / link indicator -->
+                    {#if selectedIndex === globalIndex}
+                      <span
+                        class="flex items-center gap-1.5 flex-shrink-0 transition-all duration-200"
                       >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
+                        {#if item.url.startsWith("http")}
+                          <svg
+                            class="w-3.5 h-3.5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                        {/if}
+                        <kbd
+                          class="px-1.5 py-0.5 text-[8px] font-bold text-gray-400 bg-white dark:bg-zinc-950 border border-gray-200 dark:border-white/10 rounded shadow-3xs uppercase"
+                          >Enter</kbd
+                        >
+                      </span>
                     {/if}
                   </button>
                 {/each}
               </div>
-            {/each}
-          {/if}
-        </div>
-
-        <!-- Footer -->
-        <div
-          class="px-4 py-2 sm:py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50"
-        >
-          <div
-            class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
-          >
-            <div class="hidden sm:flex items-center gap-4">
-              <span class="flex items-center gap-1">
-                <kbd
-                  class="px-2 py-1 bg-white dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600"
-                  >↑↓</kbd
-                >
-                Navigate
-              </span>
-              <span class="flex items-center gap-1">
-                <kbd
-                  class="px-2 py-1 bg-white dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600"
-                  >Enter</kbd
-                >
-                Select
-              </span>
             </div>
-            <span class="flex items-center gap-1 ml-auto">
+          {/each}
+        {/if}
+      </div>
+
+      <!-- Redesigned Footer control bar -->
+      <div
+        class="px-5 py-3 border-t border-gray-200/50 dark:border-white/5 bg-gray-50/50 dark:bg-zinc-950/40"
+      >
+        <div
+          class="flex items-center justify-between text-[11px] text-gray-400 dark:text-gray-500"
+        >
+          <div class="hidden sm:flex items-center gap-4">
+            <span class="flex items-center gap-1.5">
               <kbd
-                class="px-2 py-1 bg-white dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600"
-                >ESC</kbd
+                class="px-1.5 py-0.5 bg-white dark:bg-zinc-900 border border-gray-250/20 dark:border-white/5 rounded shadow-2xs font-semibold text-[9px]"
+                >↑↓</kbd
               >
-              Close
+              Navigate
+            </span>
+            <span class="flex items-center gap-1.5">
+              <kbd
+                class="px-1.5 py-0.5 bg-white dark:bg-zinc-900 border border-gray-250/20 dark:border-white/5 rounded shadow-2xs font-semibold text-[9px]"
+                >Enter</kbd
+              >
+              Select
             </span>
           </div>
+          <span class="flex items-center gap-1.5 ml-auto">
+            <kbd
+              class="px-1.5 py-0.5 bg-white dark:bg-zinc-900 border border-gray-250/20 dark:border-white/5 rounded shadow-2xs font-semibold text-[9px]"
+              >ESC</kbd
+            >
+            Close
+          </span>
         </div>
       </div>
     </div>
