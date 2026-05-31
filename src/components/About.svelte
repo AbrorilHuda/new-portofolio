@@ -1,6 +1,7 @@
 <script lang="ts">
   import { locale } from '$lib/stores/locale';
   import { t } from '$lib/i18n';
+
   const skills = [
     { name: 'JavaScript', color: '#F7DF1E', bg: 'bg-yellow-100 dark:bg-yellow-900/30' },
     { name: 'TypeScript', color: '#3178C6', bg: 'bg-blue-100 dark:bg-blue-900/30' },
@@ -11,47 +12,83 @@
     { name: 'PostgreSQL', color: '#4169E1', bg: 'bg-indigo-100 dark:bg-indigo-900/30' },
     { name: 'Git', color: '#F05032', bg: 'bg-red-100 dark:bg-red-900/30' },
   ];
+
+  let visible = $state(false);
+  let element = $state<HTMLElement>();
+
+  $effect(() => {
+    if (!element) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        visible = true;
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    observer.observe(element);
+    return () => observer.disconnect();
+  });
 </script>
 
-<section id="about" class="py-20 md:py-32 px-6 lg:px-8 bg-gray-50 dark:bg-zinc-950/20 border-y border-gray-200/30 dark:border-white/5">
+<section id="about" bind:this={element} class="py-20 md:py-32 px-6 lg:px-8 bg-gray-50 dark:bg-zinc-950/20 border-y border-gray-200/30 dark:border-white/5 overflow-hidden">
   <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-16">
-      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
+    <div class="text-center mb-16 transition-all duration-700 ease-out {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}">
+      <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 text-gray-900 dark:text-zinc-100">
         {t($locale, 'about.titlePrefix')} <span class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine">{t($locale, 'about.titleHighlight')}</span>
       </h2>
-      <p class="text-gray-500 dark:text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
+      <p class="text-gray-500 dark:text-gray-400 text-base sm:text-lg max-w-2xl mx-auto font-medium">
         {t($locale, 'about.tagline')}
       </p>
     </div>
     
-    <div class="grid md:grid-cols-2 gap-12 items-start">
+    <div class="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
       <!-- About Text -->
-      <div class="space-y-6">
-        <div class="prose dark:prose-invert max-w-none">
-          <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-           {t($locale, 'about.description')}
+      <div class="space-y-8">
+        <div class="space-y-5 text-base sm:text-lg text-gray-650 dark:text-zinc-350 leading-relaxed font-sans tracking-tight">
+          <p class="transition-all duration-700 ease-out delay-100 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}">
+            {t($locale, 'about.description1')}
+          </p>
+          <p class="transition-all duration-700 ease-out delay-200 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}">
+            {t($locale, 'about.description2')}
+          </p>
+          <p class="transition-all duration-700 ease-out delay-300 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}">
+            {t($locale, 'about.description3')}
           </p>
         </div>
         
-        <div class="flex flex-wrap gap-3 stagger-animation">
-          <span class="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">Web Development</span>
-          <span class="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">VIBE</span>
-          <span class="px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">Responsive Design</span>
-          <span class="px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 rounded-full text-sm font-medium hover:scale-105 transition-transform cursor-default">API Development</span>
+        <div class="flex flex-wrap gap-3 pt-2">
+          {#each [
+            { label: t($locale, 'about.badges.fullstack'), color: 'bg-blue-500', bg: 'bg-blue-50/50 dark:bg-blue-500/5', text: 'text-blue-600 dark:text-blue-400', border: 'border-blue-500/20 dark:border-blue-500/10 hover:border-blue-500/50 dark:hover:border-blue-500/30' },
+            { label: t($locale, 'about.badges.responsive'), color: 'bg-emerald-500', bg: 'bg-emerald-50/50 dark:bg-emerald-500/5', text: 'text-emerald-600 dark:text-emerald-400', border: 'border-emerald-500/20 dark:border-emerald-500/10 hover:border-emerald-500/50 dark:hover:border-emerald-500/30' },
+            { label: t($locale, 'about.badges.api'), color: 'bg-violet-500', bg: 'bg-violet-50/50 dark:bg-violet-500/5', text: 'text-violet-600 dark:text-violet-400', border: 'border-violet-500/20 dark:border-violet-500/10 hover:border-violet-500/50 dark:hover:border-violet-500/30' }
+          ] as badge, i}
+            <span
+              class="px-3 py-1.5 rounded-full text-xs font-semibold border {badge.bg} {badge.text} {badge.border} shadow-2xs hover:shadow-xs transition-all duration-300 cursor-default flex items-center gap-2 hover:-translate-y-0.5
+                     transition-all duration-500 ease-out {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}"
+              style="transition-delay: {400 + i * 100}ms"
+            >
+              <span class="w-1.5 h-1.5 rounded-full {badge.color} animate-pulse"></span>
+              {badge.label}
+            </span>
+          {/each}
         </div>
       </div>
       
       <!-- Skills -->
       <div class="space-y-6">
-        <h3 class="text-2xl font-bold mb-8">{t($locale, 'about.tecnicalSkills')}</h3>
+        <h3 class="text-xl sm:text-2xl font-bold font-display text-gray-900 dark:text-zinc-100 flex items-center gap-2 mb-8
+                   transition-all duration-700 ease-out delay-200 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}">
+          <span class="w-1 h-6 rounded bg-blue-600 dark:bg-blue-500 inline-block"></span>
+          {t($locale, 'about.tecnicalSkills')}
+        </h3>
+        
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {#each skills as skill, i}
             <div 
-              class="group relative p-4 rounded-xl {skill.bg} border border-transparent hover:border-gray-200 dark:hover:border-gray-600 transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:shadow-lg cursor-default"
-              style="animation: fadeInUp 0.5s ease-out forwards; animation-delay: {i * 0.1}s; opacity: 0;"
+              class="tech-card group relative p-5 rounded-2xl border border-gray-200/50 dark:border-white/5 bg-white/60 dark:bg-zinc-900/40 backdrop-blur-md cursor-default flex flex-col items-center justify-center gap-4 text-center
+                     transition-all duration-500 ease-out {visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}"
+              style="--tech-color: {skill.color}; transition-delay: {300 + i * 50}ms"
             >
-              <div class="flex flex-col items-center gap-3">
-                <div class="w-12 h-12 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+              <div class="w-12 h-12 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                   {#if skill.name === 'JavaScript'}
                     <svg viewBox="0 0 128 128" class="w-10 h-10"><path fill="#F7DF1E" d="M1.408 1.408h125.184v125.184H1.408z"/><path d="M116.347 96.736c-.917-5.711-4.641-10.508-15.672-14.981-3.832-1.761-8.104-3.022-9.377-5.926-.452-1.69-.512-2.642-.226-3.665.821-3.32 4.784-4.355 7.925-3.403 2.023.678 3.938 2.237 5.093 4.724 5.402-3.498 5.391-3.475 9.163-5.879-1.381-2.141-2.118-3.129-3.022-4.045-3.249-3.629-7.676-5.498-14.756-5.355l-3.688.477c-3.534.893-6.902 2.748-8.877 5.235-5.926 6.724-4.236 18.492 2.975 23.335 7.104 5.332 17.54 6.545 18.873 11.531 1.297 6.104-4.486 8.08-10.234 7.378-4.236-.881-6.592-3.034-9.139-6.949-4.688 2.713-4.688 2.713-9.508 5.485 1.143 2.499 2.344 3.63 4.26 5.795 9.068 9.198 31.76 8.746 35.83-5.176.165-.478 1.261-3.666.38-8.581zM69.462 58.943H57.753l-.048 30.272c0 6.438.333 12.34-.714 14.149-1.713 3.558-6.152 3.117-8.175 2.427-2.059-1.012-3.106-2.451-4.319-4.485-.333-.584-.583-1.036-.667-1.071l-9.52 5.83c1.583 3.249 3.915 6.069 6.902 7.901 4.462 2.678 10.459 3.499 16.731 2.059 4.082-1.189 7.604-3.652 9.448-7.401 2.666-4.915 2.094-10.864 2.07-17.444.06-10.735.001-21.468.001-32.237z"/></svg>
                   {:else if skill.name === 'TypeScript'}
@@ -69,9 +106,8 @@
                   {:else if skill.name === 'Git'}
                     <svg viewBox="0 0 128 128" class="w-10 h-10"><path fill="#F05032" d="M124.737 58.378L69.621 3.264c-3.172-3.174-8.32-3.174-11.497 0L46.68 14.71l14.518 14.518c3.375-1.139 7.243-.375 9.932 2.314 2.703 2.706 3.461 6.607 2.294 9.993l13.992 13.993c3.385-1.167 7.292-.413 9.994 2.295 3.78 3.777 3.78 9.9 0 13.679a9.673 9.673 0 01-13.683 0 9.677 9.677 0 01-2.105-10.521L68.574 47.933l-.002 34.341a9.708 9.708 0 012.559 1.828c3.778 3.777 3.778 9.898 0 13.683-3.779 3.777-9.904 3.777-13.679 0-3.778-3.784-3.778-9.905 0-13.683a9.65 9.65 0 013.167-2.11V47.333a9.581 9.581 0 01-3.167-2.111c-2.862-2.86-3.551-7.06-2.083-10.576L41.056 20.333 3.264 58.123a8.133 8.133 0 000 11.5l55.117 55.114c3.174 3.174 8.32 3.174 11.499 0l54.858-54.858a8.135 8.135 0 00-.001-11.501z"/></svg>
                   {/if}
-                </div>
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors text-center">{skill.name}</span>
               </div>
+              <span class="text-xs sm:text-sm font-semibold text-gray-750 dark:text-zinc-350 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{skill.name}</span>
             </div>
           {/each}
         </div>
@@ -79,3 +115,17 @@
     </div>
   </div>
 </section>
+
+<style>
+  .tech-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .tech-card:hover {
+    border-color: var(--tech-color) !important;
+    box-shadow: 0 10px 25px -15px var(--tech-color);
+  }
+  :global(.dark) .tech-card:hover {
+    box-shadow: 0 12px 35px -20px var(--tech-color);
+    background-color: rgba(24, 24, 27, 0.6);
+  }
+</style>

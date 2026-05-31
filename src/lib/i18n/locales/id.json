@@ -24,7 +24,14 @@
         "titlePrefix": "Tentang",
         "titleHighlight": "Saya",
         "tagline": "Bersemangat menciptakan pengalaman digital yang luar biasa",
-        "description": "Saya seorang Pengembang Web Full-Stack dan mahasiswa Ilmu Komputer di Universitas Madura dengan pengalaman membangun aplikasi web dari front-end hingga back-end. Saat ini, saya juga menjabat sebagai Ketua Penyelenggara di MaduraDev dan DCN UNIRA, memimpin pengembangan fitur dan memastikan kualitas serta skalabilitas solusi yang dikembangkan. Berfokus pada kode yang bersih, pemecahan masalah, dan pembelajaran berkelanjutan, setiap kesalahan adalah bagian dari proses untuk menjadi pengembang yang lebih baik. Saya berkomitmen untuk memberikan solusi digital yang efektif, fungsional, dan andal.",
+        "description1": "Saya seorang Pengembang Web Full-Stack dan mahasiswa Ilmu Komputer di Universitas Madura, dengan spesialisasi membangun aplikasi web dari front-end hingga back-end.",
+        "description2": "Saat ini, saya juga menjabat sebagai Ketua  di MaduraDev dan DCN UNIRA, memimpin pengembangan fitur serta memastikan kualitas dan skalabilitas solusi yang dibangun.",
+        "description3": "Berfokus pada kode yang bersih, pemecahan masalah yang terstruktur, dan pembelajaran berkelanjutan, saya menganggap setiap kesalahan sebagai bagian dari proses. Saya berkomitmen untuk memberikan solusi digital yang efektif, fungsional, dan handal.",
+        "badges": {
+            "fullstack": "Fullstack Development",
+            "responsive": "Responsive Design",
+            "api": "API Development"
+        },
         "tecnicalSkills": "Keahlian Teknis"
     },
     "projects": {

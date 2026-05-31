@@ -118,7 +118,7 @@
         </div>
 
         <!-- Social Links -->
-        <div class="flex gap-3 sm:gap-4 fade-in-up delay-400">
+        <div class="flex gap-3 sm:gap-4 fade-in-up delay-400 pb-3">
           <a
             href="https://github.com/abrorilhuda"
             target="_blank"

@@ -24,7 +24,14 @@
         "titlePrefix": "About",
         "titleHighlight": "Me",
         "tagline": "Passionate about creating exceptional digital experiences",
-        "description": "I am a Full-Stack Web Developer and Computer Science student at Madura University with experience in building web applications from front-end to back-end. Currently, I also serve as Lead Organizer at MaduraDev and DCN UNIRA, leading feature development and ensuring the quality and scalability of the solutions developed. Focused on clean code, problem-solving, and continuous learning, every error is part of the process of becoming a better developer. I am committed to delivering effective, functional, and reliable digital solutions.",
+        "description1": "I am a Full-Stack Web Developer and Computer Science student at Madura University, specializing in building web applications from front-end to back-end.",
+        "description2": "Currently, I also serve as Lead Organizer at MaduraDev and DCN UNIRA, where I lead feature development and ensure the quality and scalability of the solutions we build.",
+        "description3": "Focused on clean code, structured problem-solving, and continuous learning, I treat every error as part of the process. I am committed to delivering effective, functional, and reliable digital solutions.",
+        "badges": {
+            "fullstack": "Fullstack Development",
+            "responsive": "Responsive Design",
+            "api": "API Development"
+        },
         "tecnicalSkills": "Technical Skills"
     },
     "projects": {
