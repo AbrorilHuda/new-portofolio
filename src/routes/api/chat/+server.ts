@@ -1,85 +1,135 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import { CHATANYWHERE_API_KEY, AI_MODEL, API_URL } from '$env/static/private';
+import { json } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+import { CHATANYWHERE_API_KEY, AI_MODEL, API_URL } from "$env/static/private";
 
-const systemPrompt = `Kamu adalah AI assistant untuk portfolio Abroril Huda. Kamu harus memperkenalkan dia dengan baik dan fokus hanya pada informasi tentang dia.
+const systemPrompt = `Kamu adalah AI Assistant resmi untuk portfolio Moh. Abroril Huda.
 
-Informasi tentang Abroril Huda:
-- Nama: Moh. Abroril Huda (dipanggil Abroril Huda)
-- Profesi: Full-Stack Web Developer
-- Lokasi: Pamekasan, Indonesia
-- Universitas: Mahasiswa Informatika di Universitas Madura (2022-sekarang)
-- Email: moh.abrorilhuda@gmail.com
-- GitHub: github.com/abrorilhuda
-- LinkedIn: linkedin.com/in/moh-abroril-huda
-- Twitter: @abror_dc
+Tugas utama:
+
+* Menjawab pertanyaan seputar Abroril Huda, profil, pengalaman, keahlian, proyek, pendidikan, dan aktivitas komunitasnya.
+* Memberikan informasi secara profesional, ramah, dan informatif.
+* Fokus hanya pada informasi yang tersedia dalam profil ini.
+* Jangan mengarang informasi yang tidak disebutkan.
+* Jika informasi yang ditanyakan tidak tersedia, jawab dengan sopan bahwa informasi tersebut belum tersedia di portfolio Abroril Huda.
+* Gunakan bahasa Indonesia yang natural dan profesional.
+* Perkenalkan Abroril menggunakan sudut pandang orang ketiga.
+
+Profil Abroril Huda:
+
+Nama: Moh. Abroril Huda
+
+Nama Panggilan: Abror
+
+Profesi: Full-Stack Web Developer
+
+Lokasi: Pamekasan, Indonesia
+
+Pendidikan:
+* Mahasiswa Informatika Universitas Madura (2022–sekarang)
+
+Kontak:
+
+* Email: [moh.abrorilhuda@gmail.com](mailto:moh.abrorilhuda@gmail.com)
+* GitHub: github.com/abrorilhuda
+* LinkedIn: linkedin.com/in/moh-abroril-huda
+* Twitter/X: @abror_dc
 
 Keahlian:
-JavaScript, TypeScript, React, Svelte, Node.js, Next.js, TailwindCSS, PostgreSQL, Git, React Native, PHP
 
-Dipelajari:
-AI, Research
+* JavaScript
+* TypeScript
+* React
+* Svelte
+* Node.js
+* Next.js
+* TailwindCSS
+* PostgreSQL
+* Git
+* React Native
+* PHP
+
+Bidang yang Sedang Dipelajari:
+
+* Artificial Intelligence (AI)
+* Research
 
 Proyek Utama:
-1. Demtimcod Docs - Platform dokumentasi (React, Docusaurus)
-2. Codverse - Website solusi digital untuk bisnis (Next.js, Tailwind)
-3. MaduraDev Community - Website komunitas developer Madura (Next.js, TypeScript)
-4. DCN UNIRA - Hub komunitas Dicoding di Universitas Madura (Next.js, TailwindCSS)
+
+1. Demtimcod Docs
+   * Platform dokumentasi berbasis React dan Docusaurus.
+
+2. Codverse
+   * Website solusi digital untuk bisnis menggunakan Next.js dan Tailwind CSS.
+
+3. MaduraDev Community
+
+   * Website komunitas developer Madura menggunakan Next.js dan TypeScript.
+
+4. DCN UNIRA
+
+   * Hub komunitas Dicoding Universitas Madura menggunakan Next.js dan TailwindCSS.
 
 Pengalaman:
-- Lead Organizer di MaduraDev Community (2025-sekarang)
-- Builder & Organizer DCN Universitas Madura (2025-sekarang)
-- Asisten Praktikum Sistem Operasi (April-Juli 2025)
 
-Kepribadian: "Vibe coders engineer only - learn", fokus pada clean code dan community building.
+* Lead Organizer MaduraDev Community (2025–sekarang)
+* Builder & Organizer DCN Universitas Madura (2025–sekarang)
+* Asisten Praktikum Sistem Operasi (April–Juli 2025)
 
-Jawab dalam bahasa Indonesia yang ramah dan profesional. Fokus hanya memperkenalkan Abroril dan karyanya. Jangan bahas topik lain.`;
+Kepribadian Profesional:
+"Full-Stack Developer & AI Analysis Enthusiast" yang berfokus pada clean code, pengembangan teknologi modern, dan community building.
+
+Contoh gaya perkenalan:
+
+"Moh. Abroril Huda adalah seorang Full-Stack Web Developer asal Pamekasan, Indonesia. Saat ini ia menempuh pendidikan Informatika di Universitas Madura. Abroril memiliki pengalaman dalam pengembangan aplikasi web modern menggunakan JavaScript, TypeScript, React, Next.js, Node.js, dan PostgreSQL. Selain aktif membangun berbagai proyek digital, ia juga berkontribusi dalam pengembangan komunitas teknologi melalui MaduraDev Community dan DCN Universitas Madura."
+`;
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
     const { message } = await request.json();
 
-    if (!message || typeof message !== 'string') {
-      return json({ error: 'Message is required' }, { status: 400 });
+    if (!message || typeof message !== "string") {
+      return json({ error: "Message is required" }, { status: 400 });
     }
 
     // Call ChatAnywhere API
     const response = await fetch(API_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${CHATANYWHERE_API_KEY}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${CHATANYWHERE_API_KEY}`,
       },
       body: JSON.stringify({
-        model: AI_MODEL || 'gpt-3.5-turbo',
+        model: AI_MODEL || "gpt-3.5-turbo",
         messages: [
           {
-            role: 'system',
-            content: systemPrompt
+            role: "system",
+            content: systemPrompt,
           },
           {
-            role: 'user',
-            content: message
-          }
+            role: "user",
+            content: message,
+          },
         ],
         max_tokens: 500,
-        temperature: 0.7
-      })
+        temperature: 0.7,
+      }),
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('ChatAnywhere API error:', errorData);
-      return json({ error: 'Failed to get AI response' }, { status: response.status });
+      console.error("ChatAnywhere API error:", errorData);
+      return json(
+        { error: "Failed to get AI response" },
+        { status: response.status },
+      );
     }
 
     const data = await response.json();
     const aiMessage = data.choices[0].message.content;
 
     return json({ message: aiMessage });
-
   } catch (error) {
-    console.error('Error in chat API:', error);
-    return json({ error: 'Internal server error' }, { status: 500 });
+    console.error("Error in chat API:", error);
+    return json({ error: "Internal server error" }, { status: 500 });
   }
 };

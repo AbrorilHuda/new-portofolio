@@ -273,28 +273,72 @@
                             on:click={() => scrollToSection("about")}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
                         >
-                            <span class="text-base leading-none">👤</span>
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                /></svg
+                            >
                             {t($locale, "nav.about")}
                         </button>
                         <button
                             on:click={() => scrollToSection("projects")}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
                         >
-                            <span class="text-base leading-none">💼</span>
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                /></svg
+                            >
                             {t($locale, "nav.projects")}
                         </button>
                         <button
                             on:click={() => scrollToSection("experience")}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
                         >
-                            <span class="text-base leading-none">📊</span>
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                /></svg
+                            >
                             {t($locale, "nav.experience")}
                         </button>
                         <button
                             on:click={() => scrollToSection("contact")}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
                         >
-                            <span class="text-base leading-none">📧</span>
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                /></svg
+                            >
                             {t($locale, "nav.contact")}
                         </button>
                     </div>
@@ -318,7 +362,18 @@
                                 ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
                                 : ''}"
                         >
-                            <span class="text-base leading-none">📝</span>
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"
+                                /></svg
+                            >
                             {t($locale, "nav.blog")}
                         </button>
                         <button
@@ -332,7 +387,18 @@
                                 ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
                                 : ''}"
                         >
-                            <span class="text-base leading-none">🔥</span> Celoteh
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                                /></svg
+                            > Celoteh
                         </button>
                         <button
                             on:click={() => {
@@ -345,7 +411,18 @@
                                 ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
                                 : ''}"
                         >
-                            <span class="text-base leading-none">💬</span> Lounge
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                /></svg
+                            > Lounge
                         </button>
                         <button
                             on:click={() => {
@@ -358,7 +435,23 @@
                                 ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
                                 : ''}"
                         >
-                            <span class="text-base leading-none">📍</span>
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                /><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                /></svg
+                            >
                             {t($locale, "nav.now")}
                         </button>
                     </div>
@@ -411,7 +504,7 @@
                     >
                     <button
                         on:click={toggleDarkMode}
-                        class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {darkMode
+                        class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {darkMode
                             ? 'bg-blue-600'
                             : 'bg-gray-300 dark:bg-zinc-700'}"
                         aria-label="Toggle dark mode"
