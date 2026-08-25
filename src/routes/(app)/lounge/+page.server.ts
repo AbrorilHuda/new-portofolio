@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { supabase } from '$lib/supabase/supabase';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ locals }) => {
   // Fetch the latest 100 messages from the database
   const { data: messages, error } = await supabase
     .from('messages')
@@ -12,14 +12,18 @@ export const load: PageServerLoad = async () => {
   if (error) {
     console.error('Error fetching initial lounge messages:', error);
     return {
-      messages: []
+      messages: [],
+      isAdmin: !!locals.user,
+      user: locals.user ? { email: locals.user.email } : null
     };
   }
 
-  // Reverse them to be in chronological order (oldest at the top, newest at the bottom)
+  // Reverse to chronological order (oldest at top, newest at bottom)
   const sortedMessages = (messages || []).reverse();
 
   return {
-    messages: sortedMessages
+    messages: sortedMessages,
+    isAdmin: !!locals.user,
+    user: locals.user ? { email: locals.user.email } : null
   };
 };

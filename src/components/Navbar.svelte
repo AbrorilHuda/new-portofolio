@@ -553,10 +553,10 @@
 
                 <!-- Language Selector Segment -->
                 <div
-                    class="p-3 bg-gray-50 dark:bg-zinc-900/40 border border-gray-200/50 dark:border-white/5 rounded-xl flex flex-col gap-2 shadow-xs"
+                    class="p-3 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl flex flex-col gap-2 shadow-xs"
                 >
                     <span
-                        class="text-xs font-semibold text-gray-500 uppercase tracking-wider pl-1"
+                        class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider pl-1"
                         >Language</span
                     >
                     <LanguageSwitcher />

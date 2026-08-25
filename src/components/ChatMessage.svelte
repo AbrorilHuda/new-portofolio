@@ -214,14 +214,27 @@
         );
     }
 
+    let isScrolling: boolean = false;
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    function handleWindowScroll(): void {
+        if (isOpen) return;
+        isScrolling = true;
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            isScrolling = false;
+        }, 350);
+    }
+
     // Load voices saat component mount
     onMount(() => {
+        if (typeof window !== "undefined") {
+            window.addEventListener("scroll", handleWindowScroll, { passive: true });
+        }
+
         // Load voices
         if ("speechSynthesis" in window) {
-            // Load immediately
             loadVoices();
-
-            // Chrome loads voices asynchronously
             window.speechSynthesis.onvoiceschanged = () => {
                 loadVoices();
             };
@@ -236,6 +249,13 @@
                 created_at: new Date().toISOString(),
             },
         ];
+
+        return () => {
+            if (typeof window !== "undefined") {
+                window.removeEventListener("scroll", handleWindowScroll);
+            }
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+        };
     });
 
     // Stop speech function
@@ -322,32 +342,7 @@
         return `Saya senang bisa cerita lebih banyak tentang ${aiKnowledge.name}! Kamu bisa tanya tentang keahliannya, proyek-proyek, pengalaman, atau cara menghubunginya. Apa yang paling menarik buatmu? 😊`;
     }
 
-    onMount(() => {
-        // Load voices
-        if ("speechSynthesis" in window) {
-            // Chrome loads voices asynchronously
-            window.speechSynthesis.onvoiceschanged = () => {
-                const voices = window.speechSynthesis.getVoices();
-                console.log(
-                    "Available voices:",
-                    voices.filter((v) => v.lang.includes("id")),
-                );
-            };
 
-            // Trigger voice loading
-            window.speechSynthesis.getVoices();
-        }
-
-        // Welcome message from AI
-        messages = [
-            {
-                id: 1,
-                sender: "ai",
-                message: `Halo! 👋 Saya AI assistant Abroril. Saya di sini untuk menceritakan semua tentang ${aiKnowledge.name} - keahliannya, proyek-proyek, pengalaman, dan cara menghubunginya. Apa yang ingin kamu ketahui?`,
-                created_at: new Date().toISOString(),
-            },
-        ];
-    });
 
     async function handleSend(): Promise<void> {
         if (!newMessage.trim()) return;
@@ -425,7 +420,7 @@
     }
 </script>
 
-<div class="ai-assistant-widget">
+<div class="ai-assistant-widget {isScrolling ? 'is-scrolling' : ''}">
     {#if !isOpen && !$mobileMenuOpenStore}
         <button
             class="ai-button hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl cursor-pointer"
@@ -794,9 +789,10 @@
     /* Widget Wrapper Container */
     .ai-assistant-widget {
         position: fixed;
-        bottom: 1.5rem;
-        right: 1.5rem;
+        bottom: 0.5rem;
+        right: 1rem;
         z-index: 2000;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
         font-family:
             system-ui,
             -apple-system,
@@ -809,6 +805,12 @@
             "Open Sans",
             "Helvetica Neue",
             sans-serif;
+    }
+
+    .ai-assistant-widget.is-scrolling {
+        transform: translateX(140%);
+        opacity: 0;
+        pointer-events: none;
     }
 
     /* Floating trigger button */

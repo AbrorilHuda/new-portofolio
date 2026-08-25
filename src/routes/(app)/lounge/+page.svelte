@@ -5,11 +5,14 @@
   import type { PageData } from "./$types";
 
   interface Props {
-    data: PageData;
+    data: PageData & {
+      isAdmin?: boolean;
+      user?: any;
+    };
   }
   let { data }: Props = $props();
 
-  // Local state for messages
+  // Local state for messages & UI
   let messages = $state<any[]>([]);
   let currentUsername = $state("");
   let inputMessage = $state("");
@@ -27,7 +30,7 @@
     type: "success",
   });
 
-  // Load messages from page load data
+  // Sync messages from server data
   $effect(() => {
     if (data.messages) {
       messages = [...data.messages];
@@ -35,23 +38,21 @@
     }
   });
 
-  // List of gorgeous colors for guest usernames
+  // Premium colors palette for guest usernames
   const premiumColors = [
-    "#6366f1", // Indigo
     "#3b82f6", // Blue
+    "#6366f1", // Indigo
+    "#8b5cf6", // Violet
     "#ec4899", // Pink
-    "#f43f5e", // Rose
     "#10b981", // Emerald
     "#f59e0b", // Amber
-    "#8b5cf6", // Violet
     "#06b6d4", // Cyan
     "#14b8a6", // Teal
     "#a855f7", // Purple
   ];
 
-  // Deterministically hash usernames to get a premium color
   function getUsernameColor(name: string): string {
-    if (name === "Abrorilhuda") return "#a855f7";
+    if (name === "Abrorilhuda") return "#3b82f6";
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -60,24 +61,33 @@
     return premiumColors[index];
   }
 
-  // Generate random cool guest names on first load
   function generateGuestName(): string {
+    const prefixes = [
+      "Cyber",
+      "Pixel",
+      "Code",
+      "Byte",
+      "Echo",
+      "Nova",
+      "Astro",
+      "Dev",
+    ];
     const nouns = [
       "Explorer",
       "Coder",
       "Builder",
-      "Tamu",
+      "Guest",
       "Creator",
       "Hacker",
-      "Designer",
+      "Maker",
       "Innovator",
     ];
-    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    return `${randomNoun}-${randomNum}`;
+    const p = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const n = nouns[Math.floor(Math.random() * nouns.length)];
+    const num = Math.floor(100 + Math.random() * 900);
+    return `${p}${n}-${num}`;
   }
 
-  // Handle toast notifications
   function showToast(text: string, type: "success" | "error" = "success") {
     notificationToast = { show: true, text, type };
     setTimeout(() => {
@@ -85,7 +95,6 @@
     }, 3000);
   }
 
-  // Scroll to bottom helper
   async function scrollToBottom(behavior: ScrollBehavior = "smooth") {
     await tick();
     if (chatContainer) {
@@ -96,19 +105,35 @@
     }
   }
 
+  const reservedUsernames = [
+    "abrorilhuda",
+    "abror",
+    "admin",
+    "owner",
+    "moderator",
+  ];
+
   onMount(() => {
-    // 1. Get or generate username from localStorage
-    const savedName = localStorage.getItem("lounge_username");
-    if (savedName) {
-      currentUsername = savedName;
+    // If logged in as admin, automatically use owner handle
+    if (data.isAdmin) {
+      currentUsername = "Abrorilhuda";
+      localStorage.setItem("lounge_username", "Abrorilhuda");
     } else {
-      const defaultName = generateGuestName();
-      currentUsername = defaultName;
-      localStorage.setItem("lounge_username", defaultName);
+      const savedName = localStorage.getItem("lounge_username");
+      if (
+        savedName &&
+        !reservedUsernames.includes(savedName.trim().toLowerCase())
+      ) {
+        currentUsername = savedName;
+      } else {
+        const defaultName = generateGuestName();
+        currentUsername = defaultName;
+        localStorage.setItem("lounge_username", defaultName);
+      }
     }
     tempUsername = currentUsername;
 
-    // 2. Subscribe to Supabase Postgres changes for the 'messages' table
+    // Subscribe to Supabase Postgres Realtime changes
     const channel = supabase
       .channel("lounge-realtime-messages")
       .on(
@@ -117,7 +142,6 @@
         (payload) => {
           if (payload.eventType === "INSERT") {
             const newMsg = payload.new;
-            // Check if message is already in state (e.g. from optimistic UI update)
             const exists = messages.find(
               (m) => m.id === newMsg.id || m.tempId === newMsg.id,
             );
@@ -126,12 +150,10 @@
               scrollToBottom();
             }
           } else if (payload.eventType === "DELETE") {
-            // Remove the deleted message from local state
             const oldId = payload.old?.id;
             if (oldId) {
               messages = messages.filter((m) => m.id !== oldId);
             } else {
-              // Fallback if bulk deleted without specific IDs
               messages = [];
             }
           }
@@ -146,7 +168,6 @@
     };
   });
 
-  // Submit message handler
   async function sendMessage(e: Event) {
     e.preventDefault();
     if (!inputMessage.trim() || isSending) return;
@@ -162,10 +183,9 @@
       username: currentUsername,
       message: messageText,
       created_at: new Date().toISOString(),
-      status: "sending", // Single Gray tick status
+      status: "sending",
     };
 
-    // Optimistically add to local feed
     messages = [...messages, optimisticMessage];
     scrollToBottom();
 
@@ -184,7 +204,6 @@
         throw new Error(result.error || "Gagal mengirim pesan");
       }
 
-      // Update optimistic message with real DB ID and change tick to double
       messages = messages.map((m) => {
         if (m.tempId === tempId) {
           return {
@@ -201,15 +220,12 @@
         err.message || "Gagal mengirim pesan. Silakan coba lagi.",
         "error",
       );
-
-      // Remove optimistic message on failure
       messages = messages.filter((m) => m.tempId !== tempId);
     } finally {
       isSending = false;
     }
   }
 
-  // Change username handler
   function saveUsername() {
     const cleanName = tempUsername.trim();
     if (!cleanName) {
@@ -220,13 +236,23 @@
       showToast("Nama maksimal 25 karakter!", "error");
       return;
     }
+    if (!data.isAdmin && reservedUsernames.includes(cleanName.toLowerCase())) {
+      showToast(
+        "Nama ini dilindungi dan khusus untuk pemilik website!",
+        "error",
+      );
+      return;
+    }
     currentUsername = cleanName;
     localStorage.setItem("lounge_username", cleanName);
     isEditingName = false;
     showToast("Nama berhasil diperbarui!");
   }
 
-  // Format message time (e.g. 14:32)
+  function randomizeUsername() {
+    tempUsername = generateGuestName();
+  }
+
   function formatTime(timestamp: string): string {
     if (!timestamp) return "";
     try {
@@ -240,21 +266,52 @@
       return "";
     }
   }
+
+  function formatDateDivider(timestamp: string): string {
+    if (!timestamp) return "";
+    try {
+      const d = new Date(timestamp);
+      const today = new Date();
+      if (d.toDateString() === today.toDateString()) {
+        return "Hari ini";
+      }
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      if (d.toDateString() === yesterday.toDateString()) {
+        return "Kemarin";
+      }
+      return d.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function shouldShowDateDivider(currMsg: any, prevMsg: any): boolean {
+    if (!prevMsg) return true;
+    if (!currMsg.created_at || !prevMsg.created_at) return false;
+    const d1 = new Date(currMsg.created_at).toDateString();
+    const d2 = new Date(prevMsg.created_at).toDateString();
+    return d1 !== d2;
+  }
 </script>
 
 <svelte:head>
   <title>Lounge - Moh. Abroril Huda</title>
   <meta
     name="description"
-    content="Halaman obrolan grup komunitas real-time dengan Abroril Huda."
+    content="Ruang obrolan komunitas real-time dengan Abroril Huda."
   />
 </svelte:head>
 
-<!-- Global Toast Notification -->
+<!-- Notification Toast -->
 {#if notificationToast.show}
   <div
-    transition:fade={{ duration: 200 }}
-    class="fixed top-24 right-6 z-[60] flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl border backdrop-blur-md transition-all
+    transition:fade={{ duration: 150 }}
+    class="fixed top-24 right-6 z-[60] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border backdrop-blur-md transition-all
     {notificationToast.type === 'error'
       ? 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400'
       : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'}"
@@ -284,7 +341,7 @@
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 0 0118 0z"
         />
       </svg>
     {/if}
@@ -292,35 +349,87 @@
   </div>
 {/if}
 
-<!-- Lounge Layout Container -->
+<!-- Lounge Container -->
 <div
-  class="pt-24 pb-6 min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col justify-center items-center px-4 relative overflow-hidden transition-colors duration-300"
+  class="pt-20 pb-12 min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-center items-center px-4 relative overflow-hidden transition-colors duration-300"
 >
-  <!-- Subtle Web Grid Wallpaper Pattern -->
+  <!-- Subtle Ambient Glow -->
   <div
-    class="absolute inset-0 opacity-100 pointer-events-none"
-    style="background-image: radial-gradient(var(--pattern-color, rgba(0, 0, 0, 0.05)) 1px, transparent 0); background-size: 24px 24px;"
-  ></div>
-
-  <style>
-    :global(.dark) .absolute {
-      --pattern-color: rgba(255, 255, 255, 0.02);
-    }
-  </style>
-
-  <div
-    class="w-full max-w-4xl bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800/80 rounded-2xl shadow-xl flex flex-col h-[78vh] relative overflow-hidden transition-all duration-300 z-10"
+    class="pointer-events-none absolute inset-0 z-0 opacity-40 dark:opacity-50"
   >
-    <!-- HEADER -->
+    <div
+      class="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-tr from-blue-600/20 via-indigo-600/15 to-purple-600/20 blur-[120px] rounded-full"
+    ></div>
+  </div>
+
+  <div class="w-full max-w-4xl relative z-10 flex flex-col space-y-6">
+    <!-- Hero Header -->
     <header
-      class="flex items-center justify-between px-6 py-4 border-b border-gray-150 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md z-20"
+      class="text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-4 px-2"
     >
-      <div class="flex items-center gap-3">
+      <div>
+        <h1
+          class="bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine text-4xl"
+        >
+          Community Lounge
+        </h1>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-1 max-w-xl">
+          Ruang obrolan santai publik. Bertukar pesan, gagasan, atau menyapa
+          Abroril Huda & kawan-kawan.
+        </p>
+      </div>
+
+      <!-- User Identity Quick Bar -->
+      <div
+        class="flex items-center gap-3 bg-white/80 dark:bg-zinc-900/80 border border-zinc-200/80 dark:border-zinc-800/80 p-2 pl-3 rounded-2xl shadow-xs backdrop-blur-md"
+      >
         <div
-          class="w-10 h-10 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-md relative"
+          class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs text-white shadow-xs"
+          style="background-color: {getUsernameColor(currentUsername)}"
+        >
+          {currentUsername ? currentUsername.charAt(0).toUpperCase() : "G"}
+        </div>
+        <div class="text-left pr-1">
+          <div class="flex items-center gap-1">
+            <p
+              class="text-xs font-bold text-zinc-900 dark:text-zinc-100 max-w-[120px] truncate"
+            >
+              {currentUsername}
+            </p>
+            {#if currentUsername === "Abrorilhuda"}
+              <span title="Verified Owner">
+                <svg
+                  class="w-3.5 h-3.5 text-blue-500 fill-current shrink-0"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.6 9.55.725 10.92.725 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238 1.05 1.273 2.42 2.148 4 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-1.05 2.148-2.42 2.148-4zM10.09 16.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  />
+                </svg>
+              </span>
+            {/if}
+          </div>
+          <p
+            class="text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 tracking-wider"
+          >
+            {#if data.isAdmin}
+              👑 Owner Admin Mode
+            {:else}
+              Identitas Kamu
+            {/if}
+          </p>
+        </div>
+        <button
+          type="button"
+          onclick={() => {
+            tempUsername = currentUsername;
+            isEditingName = true;
+          }}
+          class="p-2 text-xs font-semibold rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-all cursor-pointer border border-zinc-200/60 dark:border-zinc-700/60"
+          title="Ubah Nama Tampilan"
         >
           <svg
-            class="w-5.5 h-5.5 text-white"
+            class="w-4 h-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -329,337 +438,326 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
             />
           </svg>
-          <!-- Active Pulse Dot -->
-          <span
-            class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-gray-900 rounded-full"
-          ></span>
-        </div>
-
-        <div>
-          <h1
-            class="text-base font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2"
-          >
-            Live Lounge Chat
-            <span
-              class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold animate-pulse border border-emerald-500/15"
-            >
-              Online
-            </span>
-          </h1>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-            Komunitas Developer & Tamu Umum
-          </p>
-        </div>
-      </div>
-
-      <!-- Quick Action / Stats Badge -->
-      <div class="flex items-center gap-2">
-        <span
-          class="text-xs px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-semibold border border-gray-200 dark:border-gray-700/60 shadow-xs"
-        >
-          {messages.length} Pesan
-        </span>
+        </button>
       </div>
     </header>
 
-    <!-- CHAT CONTAINER -->
+    <!-- MAIN CHATROOM FRAME -->
     <div
-      bind:this={chatContainer}
-      class="flex-1 overflow-y-auto px-6 py-6 space-y-4 scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800"
-      style="scroll-behavior: smooth;"
+      class="w-full bg-white/80 dark:bg-zinc-900/70 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-2xl shadow-blue-500/5 flex flex-col h-[70vh] relative overflow-hidden backdrop-blur-xl"
     >
-      {#if messages.length === 0}
-        <div
-          class="flex flex-col items-center justify-center h-full text-center p-6"
-          transition:fade
-        >
+      <!-- Chat Header Bar -->
+      <div
+        class="px-6 py-3.5 border-b border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md flex items-center justify-between z-20"
+      >
+        <div class="flex items-center gap-3">
           <div
-            class="w-16 h-16 rounded-full bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center mb-4 text-indigo-500"
+            class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"
+          ></div>
+          <span
+            class="text-xs font-bold text-zinc-800 dark:text-zinc-200 tracking-wide uppercase"
           >
-            <svg
-              class="w-8 h-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-              />
-            </svg>
-          </div>
-          <h3 class="font-bold text-gray-800 dark:text-gray-200 text-base">
-            Belum ada obrolan
-          </h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
-            Jadilah yang pertama mengirimkan pesan di Lounge! Yuk kenalan atau
-            sekadar menyapa.
-          </p>
+            Obrolan Realtime
+          </span>
         </div>
-      {:else}
-        {#each messages as msg (msg.id)}
-          <div
-            class="flex flex-col {msg.username === currentUsername
-              ? 'items-end'
-              : 'items-start'} group"
-          >
-            <!-- Message Bubble -->
-            <div
-              class="max-w-[75%] rounded-2xl px-4 py-3 shadow-xs border transition-all duration-150 relative
-              {msg.username === currentUsername
-                ? 'bg-indigo-600 dark:bg-indigo-600 text-white border-indigo-600 dark:border-indigo-600 rounded-tr-none'
-                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-100 dark:border-gray-800/80 rounded-tl-none'}"
+
+        <div class="flex items-center gap-2">
+          {#if data.isAdmin}
+            <a
+              href="/admin"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white hover:bg-blue-500 transition-colors shadow-xs"
             >
-              <!-- Sender Username Label (Only for others) -->
-              {#if msg.username !== currentUsername}
-                <div
-                  class="flex items-center gap-1.5 mb-1 text-xs font-bold leading-none select-none"
+              Dashboard Admin →
+            </a>
+          {/if}
+          <span
+            class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200/60 dark:border-zinc-700/60"
+          >
+            {messages.length} Pesan
+          </span>
+        </div>
+      </div>
+
+      <!-- MESSAGES FEED CONTAINER -->
+      <div
+        bind:this={chatContainer}
+        class="flex-1 overflow-y-auto px-4 md:px-6 py-6 space-y-3.5 scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800"
+        style="scroll-behavior: smooth;"
+      >
+        {#if messages.length === 0}
+          <div
+            class="flex flex-col items-center justify-center h-full text-center p-8"
+            transition:fade
+          >
+            <div
+              class="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-800/60 flex items-center justify-center mb-4 text-blue-600 dark:text-blue-400"
+            >
+              <svg
+                class="w-8 h-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                />
+              </svg>
+            </div>
+            <h3 class="font-bold text-zinc-900 dark:text-zinc-100 text-lg">
+              Belum Ada Obrolan
+            </h3>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-sm">
+              Jadilah yang pertama mengirimkan pesan di Lounge! Kirim ide,
+              pertanyaan, atau sapaan santai.
+            </p>
+          </div>
+        {:else}
+          {#each messages as msg, idx (msg.id)}
+            <!-- Date Divider -->
+            {#if shouldShowDateDivider(msg, messages[idx - 1])}
+              <div class="flex items-center justify-center my-4">
+                <span
+                  class="px-3 py-1 rounded-full text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/60 dark:border-zinc-700/60"
                 >
-                  <span style="color: {getUsernameColor(msg.username)}">
-                    {msg.username}
+                  {formatDateDivider(msg.created_at)}
+                </span>
+              </div>
+            {/if}
+
+            <div
+              class="flex flex-col {msg.username === currentUsername
+                ? 'items-end'
+                : 'items-start'} group"
+            >
+              <!-- WhatsApp-Style Message Bubble -->
+              <div
+                class="max-w-[85%] sm:max-w-[75%] rounded-2xl px-3.5 py-2.5 shadow-xs border transition-all relative
+                {msg.username === currentUsername
+                  ? 'bg-blue-600 dark:bg-blue-600 text-white border-blue-600 dark:border-blue-600 rounded-tr-xs shadow-md shadow-blue-500/10'
+                  : 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 border-zinc-200/80 dark:border-zinc-700/80 rounded-tl-xs'}"
+              >
+                <!-- Sender Username Header (Only for others) -->
+                {#if msg.username !== currentUsername}
+                  <div
+                    class="flex items-center gap-1.5 mb-1 text-xs font-bold leading-none select-none"
+                  >
+                    <span style="color: {getUsernameColor(msg.username)}">
+                      {msg.username}
+                    </span>
+
+                    <!-- Owner Verified Badge with Blue Checkmark -->
+                    {#if msg.username === "Abrorilhuda"}
+                      <span
+                        class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-extrabold border border-blue-500/20"
+                      >
+                        <svg
+                          class="w-3 h-3 text-blue-500 fill-current shrink-0"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.6 9.55.725 10.92.725 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238 1.05 1.273 2.42 2.148 4 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-1.05 2.148-2.42 2.148-4zM10.09 16.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                          />
+                        </svg>
+                      </span>
+                    {/if}
+                  </div>
+                {/if}
+
+                <!-- WhatsApp Inline Flow: Message Text & Embedded Timestamp -->
+                <div class="relative">
+                  <span
+                    class="text-sm md:text-base leading-relaxed break-words whitespace-pre-wrap"
+                  >
+                    {msg.message}
                   </span>
 
-                  <!-- Developer Crown Badge -->
-                  {#if msg.username === "Abrorilhuda"}
-                    <span
-                      class="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[9px] font-extrabold tracking-wider border border-purple-500/15 uppercase"
-                    >
-                      <svg
-                        class="w-2.5 h-2.5"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path
-                          d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
-                        />
-                      </svg>
-                      Owner
-                    </span>
-                  {/if}
+                  <!-- Inline Right-aligned WhatsApp Timestamp & Double Ticks -->
+                  <span
+                    class="float-right ml-3 mt-1.5 inline-flex items-center gap-1 text-[10px] font-medium leading-none select-none opacity-80 translate-y-0.5
+                    {msg.username === currentUsername
+                      ? 'text-blue-100'
+                      : 'text-zinc-400 dark:text-zinc-500'}"
+                  >
+                    <span>{formatTime(msg.created_at)}</span>
+
+                    <!-- Delivery Status for own messages -->
+                    {#if msg.username === currentUsername}
+                      {#if msg.status === "sending"}
+                        <svg
+                          class="w-3 h-3 text-blue-200 animate-pulse"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      {:else}
+                        <!-- Blue double checkmarks like WhatsApp -->
+                        <svg
+                          class="w-3.5 h-3.5 text-sky-200"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path
+                            d="M1.75 12a.75.75 0 011.28-.53l5.47 5.47L19.97 5.47a.75.75 0 111.06 1.06l-12.5 12.5a.75.75 0 01-1.06 0L1.75 13.06A.75.75 0 011.75 12z"
+                          />
+                          <path
+                            d="M8.25 12a.75.75 0 011.28-.53l5.47 5.47L26.47 5.47a.75.75 0 111.06 1.06l-12.5 12.5a.75.75 0 01-1.06 0L8.25 13.06A.75.75 0 018.25 12z"
+                          />
+                        </svg>
+                      {/if}
+                    {/if}
+                  </span>
                 </div>
-              {/if}
+              </div>
+            </div>
+          {/each}
+        {/if}
+      </div>
 
-              <!-- Message Text -->
-              <p
-                class="text-sm md:text-base leading-relaxed break-words whitespace-pre-wrap"
+      <!-- INPUT BAR DOCK -->
+      <form
+        onsubmit={sendMessage}
+        class="px-4 md:px-6 py-4 bg-white/90 dark:bg-zinc-900/90 border-t border-zinc-200/80 dark:border-zinc-800/80 flex items-center gap-3 z-20 backdrop-blur-md"
+      >
+        <input
+          type="text"
+          bind:value={inputMessage}
+          placeholder={data.isAdmin
+            ? "Balas obrolan sebagai Abrorilhuda..."
+            : "Tulis pesan obrolan..."}
+          maxlength="500"
+          class="flex-1 bg-zinc-100 dark:bg-zinc-800/80 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-2xl px-4 py-3 text-sm border border-zinc-200/80 dark:border-zinc-700/80 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-150 shadow-xs"
+        />
+
+        <button
+          type="submit"
+          disabled={!inputMessage.trim() || isSending}
+          class="w-11 h-11 rounded-2xl bg-blue-600 text-white hover:bg-blue-500 hover:scale-105 active:scale-95 flex items-center justify-center shadow-lg shadow-blue-500/20 cursor-pointer disabled:opacity-40 disabled:hover:scale-100 disabled:active:scale-100 disabled:cursor-not-allowed transition-all"
+          aria-label="Kirim Pesan"
+        >
+          <svg
+            class="w-5 h-5 ml-0.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+            />
+          </svg>
+        </button>
+      </form>
+
+      <!-- USERNAME EDIT MODAL -->
+      {#if isEditingName}
+        <div
+          transition:fade={{ duration: 150 }}
+          class="absolute inset-0 bg-zinc-950/60 backdrop-blur-sm flex items-center justify-center p-6 z-50"
+        >
+          <div
+            transition:slide={{ duration: 200 }}
+            class="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl border border-zinc-200 dark:border-zinc-800 p-6 flex flex-col relative"
+          >
+            <!-- Close Button -->
+            <button
+              type="button"
+              onclick={() => (isEditingName = false)}
+              class="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1"
+              aria-label="Tutup"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
               >
-                {msg.message}
-              </p>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
 
-              <!-- Timestamp & Delivery Centang Status -->
-              <div
-                class="flex items-center justify-end gap-1.5 mt-1.5 text-[10px] leading-none select-none opacity-85
-                {msg.username === currentUsername
-                  ? 'text-indigo-200'
-                  : 'text-gray-400 dark:text-gray-500'}"
+            <h2
+              class="text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2"
+            >
+              <svg
+                class="w-5 h-5 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
               >
-                <span>{formatTime(msg.created_at)}</span>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+              Ubah Nama Tampilan
+            </h2>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+              Nama ini akan terlihat oleh semua pengguna lain di Lounge Chat.
+            </p>
 
-                <!-- Double Tick marks for own messages -->
-                {#if msg.username === currentUsername}
-                  {#if msg.status === "sending"}
-                    <!-- Single Tick (Gray) -->
-                    <svg
-                      class="w-3.5 h-3.5 text-indigo-300 animate-pulse"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  {:else}
-                    <!-- Double Ticks (Zinc/Neutral colored centang) -->
-                    <svg
-                      class="w-4 h-4 text-zinc-300"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M1.75 12a.75.75 0 011.28-.53l5.47 5.47L19.97 5.47a.75.75 0 111.06 1.06l-12.5 12.5a.75.75 0 01-1.06 0L1.75 13.06A.75.75 0 011.75 12z"
-                      />
-                      <path
-                        d="M8.25 12a.75.75 0 011.28-.53l5.47 5.47L26.47 5.47a.75.75 0 111.06 1.06l-12.5 12.5a.75.75 0 01-1.06 0L8.25 13.06A.75.75 0 018.25 12z"
-                      />
-                    </svg>
-                  {/if}
-                {/if}
+            <div class="mt-4 flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <input
+                  type="text"
+                  bind:value={tempUsername}
+                  placeholder="Masukkan nama tampilan..."
+                  maxlength="25"
+                  class="flex-1 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 rounded-xl px-4 py-2.5 text-sm border border-zinc-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all"
+                />
+
+                <button
+                  type="button"
+                  onclick={randomizeUsername}
+                  class="px-3 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 text-xs font-semibold transition-all border border-zinc-200/60 dark:border-zinc-700/60 cursor-pointer"
+                  title="Generate Nama Acak"
+                >
+                  🎲 Acak
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2 mt-2">
+                <button
+                  type="button"
+                  onclick={() => (isEditingName = false)}
+                  class="flex-1 py-2.5 px-4 rounded-xl border border-zinc-200 dark:border-zinc-700 text-xs font-semibold text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all cursor-pointer"
+                >
+                  Batal
+                </button>
+
+                <button
+                  type="button"
+                  onclick={saveUsername}
+                  class="flex-1 py-2.5 px-4 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-500 transition-all cursor-pointer shadow-md shadow-blue-500/15"
+                >
+                  Simpan
+                </button>
               </div>
             </div>
           </div>
-        {/each}
+        </div>
       {/if}
     </div>
-
-    <!-- USERNAME EDITOR INLINE BANNER -->
-    <div
-      class="px-6 py-2 bg-gray-50 dark:bg-gray-900/60 border-t border-gray-150 dark:border-gray-800 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400"
-    >
-      <div class="flex items-center gap-1.5">
-        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-        <span>Mengirim sebagai:</span>
-        <strong class="text-gray-800 dark:text-gray-200 font-bold"
-          >{currentUsername}</strong
-        >
-        {#if currentUsername === "Abrorilhuda"}
-          <span
-            class="text-[9px] px-1 rounded-sm bg-purple-500/10 text-purple-500 font-extrabold uppercase border border-purple-500/10"
-            >Admin</span
-          >
-        {/if}
-      </div>
-      <button
-        type="button"
-        onclick={() => {
-          tempUsername = currentUsername;
-          isEditingName = true;
-        }}
-        class="text-indigo-600 dark:text-indigo-400 font-bold hover:underline cursor-pointer flex items-center gap-1"
-      >
-        <svg
-          class="w-3.5 h-3.5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-          />
-        </svg>
-        Ubah Nama
-      </button>
-    </div>
-
-    <!-- INPUT BAR -->
-    <form
-      onsubmit={sendMessage}
-      class="px-6 py-4 bg-white dark:bg-gray-900 border-t border-gray-150 dark:border-gray-800 flex items-center gap-3 z-20"
-    >
-      <input
-        type="text"
-        bind:value={inputMessage}
-        placeholder="Tulis pesan..."
-        maxlength="500"
-        class="flex-1 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-xl px-4 py-3 text-sm border border-gray-200 dark:border-gray-700/80 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/25 focus:border-indigo-500 transition-all duration-150"
-      />
-
-      <button
-        type="submit"
-        disabled={!inputMessage.trim() || isSending}
-        class="w-11 h-11 rounded-xl bg-indigo-600 dark:bg-indigo-600 text-white hover:bg-indigo-500 dark:hover:bg-indigo-500 hover:scale-105 active:scale-95 flex items-center justify-center shadow-md shadow-indigo-600/10 cursor-pointer disabled:opacity-40 disabled:hover:scale-100 disabled:active:scale-100 disabled:cursor-not-allowed transition-all"
-        aria-label="Kirim"
-      >
-        <svg
-          class="w-5 h-5 ml-0.5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-          />
-        </svg>
-      </button>
-    </form>
-
-    <!-- USERNAME POPUP MODAL DRAWER -->
-    {#if isEditingName}
-      <div
-        transition:fade={{ duration: 150 }}
-        class="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-xs flex items-center justify-center p-6 z-40"
-      >
-        <div
-          transition:slide={{ duration: 200 }}
-          class="w-full max-w-sm bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-750 p-6 flex flex-col relative"
-        >
-          <!-- Close Button -->
-          <button
-            type="button"
-            onclick={() => (isEditingName = false)}
-            class="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-            aria-label="Tutup"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-
-          <h2
-            class="text-base font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2"
-          >
-            <svg
-              class="w-5 h-5 text-indigo-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
-            </svg>
-            Ubah Nama Tampilan
-          </h2>
-          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            Nama ini akan tampil di gelembung obrolan saat Anda mengirim pesan.
-          </p>
-
-          <div class="mt-4 flex flex-col gap-3">
-            <input
-              type="text"
-              bind:value={tempUsername}
-              placeholder="Masukkan nama tampilan..."
-              maxlength="25"
-              class="w-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 rounded-xl px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/25 focus:border-indigo-500 transition-all"
-            />
-
-            <div class="flex items-center gap-2 mt-1">
-              <button
-                type="button"
-                onclick={() => (isEditingName = false)}
-                class="flex-1 py-3 px-4 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-750 transition-all cursor-pointer"
-              >
-                Batal
-              </button>
-
-              <button
-                type="button"
-                onclick={saveUsername}
-                class="flex-1 py-3 px-4 rounded-xl bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-500 hover:scale-102 active:scale-98 transition-all cursor-pointer shadow-md shadow-indigo-600/10"
-              >
-                Simpan Nama
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    {/if}
   </div>
 </div>

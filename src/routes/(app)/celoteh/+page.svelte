@@ -32,14 +32,14 @@
         loadingMore = true;
 
         const { data: newThoughts, error } = await supabase
-            .from('thoughts')
-            .select('*')
-            .eq('is_public', true)
-            .order('created_at', { ascending: false })
+            .from("thoughts")
+            .select("*")
+            .eq("is_public", true)
+            .order("created_at", { ascending: false })
             .range(offset, offset + 9);
 
         if (error) {
-            console.error('Error fetching more thoughts:', error);
+            console.error("Error fetching more thoughts:", error);
         } else if (newThoughts) {
             thoughts = [...thoughts, ...newThoughts];
             offset += newThoughts.length;
@@ -51,11 +51,14 @@
     }
 
     onMount(() => {
-        observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                loadMore();
-            }
-        }, { rootMargin: "100px" });
+        observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMore();
+                }
+            },
+            { rootMargin: "100px" },
+        );
 
         if (bottomElement) observer.observe(bottomElement);
     });
@@ -76,7 +79,7 @@
 <div class="container mx-auto px-4 pt-32 pb-12 max-w-2xl">
     <div class="text-center mb-12">
         <h1
-            class="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+            class="text-4xl font-bold mb-4 bg-linear-to-r from-blue-600 via-purple-500 to-blue-600 bg-[length:200%_100%] bg-clip-text text-transparent animate-shine"
         >
             Celoteh
         </h1>
@@ -297,9 +300,14 @@
 
         <!-- Infinite Scroll Bottom Trigger Element -->
         {#if hasMore}
-            <div bind:this={bottomElement} class="h-16 flex items-center justify-center">
+            <div
+                bind:this={bottomElement}
+                class="h-16 flex items-center justify-center"
+            >
                 {#if loadingMore}
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <div
+                        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+                    ></div>
                 {/if}
             </div>
         {/if}

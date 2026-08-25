@@ -65,8 +65,15 @@
 	}
 </script>
 
-<div class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
-	<Navbar {darkMode} {toggleDarkMode} />
-	{@render children()}
-	<Footer />
+<div class="min-h-screen bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-100 transition-colors duration-300 relative overflow-x-hidden">
+	<!-- Subtle ambient mesh gradient background -->
+	<div class="pointer-events-none fixed inset-0 z-0 opacity-40 dark:opacity-60">
+		<div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-tr from-blue-600/20 via-purple-600/15 to-emerald-500/10 blur-[120px] rounded-full"></div>
+	</div>
+
+	<div class="relative z-10">
+		<Navbar {darkMode} {toggleDarkMode} />
+		{@render children()}
+		<Footer />
+	</div>
 </div>

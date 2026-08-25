@@ -206,12 +206,12 @@
 
                     <!-- Profile Image with glow -->
                     <div
-                        class="relative z-10 w-full h-full rounded-2xl overflow-hidden shadow-2xl animate-glow"
+                        class="relative z-10 w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 group"
                     >
                         <img
                             src="https://avatars.githubusercontent.com/u/114936122?v=4"
-                            alt="Moh. Abroril Huda - Full Stack Developer specializing in React, Svelte, and Node.js"
-                            class="w-full h-full object-cover"
+                            alt="Moh. Abroril Huda - Full Stack Developer"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             loading="eager"
                             fetchpriority="high"
                             decoding="sync"
@@ -220,15 +220,19 @@
 
                     <!-- Floating badge with animation -->
                     <div
-                        class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-lg border border-gray-200 dark:border-gray-700 z-50 animate-float"
-                        style="animation-delay: 0.5s;"
+                        class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl px-5 py-2.5 rounded-full shadow-xl border border-gray-200/80 dark:border-white/10 z-30 flex items-center gap-2.5 whitespace-nowrap"
                     >
-                        <p
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
-                        >
+                        <span class="relative flex h-2.5 w-2.5">
                             <span
-                                class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
                             ></span>
+                            <span
+                                class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"
+                            ></span>
+                        </span>
+                        <p
+                            class="text-xs font-semibold text-gray-800 dark:text-gray-200"
+                        >
                             {t($locale, "hero.availableForWork")}
                         </p>
                     </div>
