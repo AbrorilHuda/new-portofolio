@@ -1,17 +1,21 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { supabase, type FeedbackMessage } from "$lib/supabase/supabase";
+    import { invalidateAll } from "$app/navigation";
+    import type { FeedbackMessage } from "$lib/supabase/supabase";
     import { goto } from "$app/navigation";
     import type { PageData } from "./$types";
-
-    import { invalidateAll } from "$app/navigation";
 
     export let data: PageData;
 
     let messages: FeedbackMessage[] = [];
-    let loading = false;
     let error = data.error || "";
-    let filter: "all" | "unread" | "contact_form" | "quick_feedback" = "all";
+    type Filter = "all" | "unread" | "contact_form" | "quick_feedback";
+    let filter: Filter = "all";
+    const filters: [Filter, string][] = [
+        ["all", "Semua"],
+        ["unread", "Belum dibaca"],
+        ["contact_form", "Contact Form"],
+        ["quick_feedback", "Quick Feedback"]
+    ];
     let searchQuery = "";
     let selectedMessage: FeedbackMessage | null = null;
     let showDeleteConfirm = false;
@@ -37,6 +41,7 @@
             await invalidateAll();
         } catch (err: any) {
             console.error("Error marking as read:", err);
+            error = err.message || "Gagal menandai pesan sebagai dibaca";
         }
     }
 
@@ -61,6 +66,7 @@
             await invalidateAll();
         } catch (err: any) {
             console.error("Error toggling replied:", err);
+            error = err.message || "Gagal mengubah status replied";
         }
     }
 
@@ -153,109 +159,52 @@
     ).length;
 </script>
 
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <h1
-                        class="text-3xl font-bold text-gray-900 dark:text-white"
-                    >
-                        Messages & Feedback
-                    </h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">
-                        {messages.length} total messages
-                        {#if unreadCount > 0}
-                            <span
-                                class="ml-2 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium"
-                            >
-                                {unreadCount} unread
-                            </span>
-                        {/if}
-                    </p>
-                </div>
-                <button
-                    on:click={() => goto("/admin")}
-                    class="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-                >
-                    Back
-                </button>
-            </div>
-
-            <!-- Filters -->
-            <div class="flex flex-wrap gap-3 mb-4">
-                <button
-                    on:click={() => (filter = "all")}
-                    class="px-4 py-2 rounded-lg font-medium transition-colors {filter ===
-                    'all'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
-                >
-                    All
-                </button>
-                <button
-                    on:click={() => (filter = "unread")}
-                    class="px-4 py-2 rounded-lg font-medium transition-colors {filter ===
-                    'unread'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
-                >
-                    Unread
-                </button>
-                <button
-                    on:click={() => (filter = "contact_form")}
-                    class="px-4 py-2 rounded-lg font-medium transition-colors {filter ===
-                    'contact_form'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
-                >
-                    Contact Form
-                </button>
-                <button
-                    on:click={() => (filter = "quick_feedback")}
-                    class="px-4 py-2 rounded-lg font-medium transition-colors {filter ===
-                    'quick_feedback'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}"
-                >
-                    Quick Feedback
-                </button>
-            </div>
-
-            <!-- Search -->
-            <input
-                type="text"
-                bind:value={searchQuery}
-                placeholder="Search messages..."
-                class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none text-gray-900 dark:text-white"
-            />
+<div class="max-w-5xl space-y-6">
+    <!-- Header -->
+    <div>
+        <div class="flex items-center justify-between mb-1">
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                Pesan & Feedback
+            </h1>
+            <button
+                on:click={() => goto("/admin")}
+                class="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+            >
+                ← Kembali
+            </button>
         </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            {messages.length} pesan
+            {#if unreadCount > 0}
+                · <span class="text-blue-600 dark:text-blue-400 font-medium">{unreadCount} belum dibaca</span>
+            {/if}
+        </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-2">
+        {#each filters as [value, label]}
+            <button
+                on:click={() => (filter = value)}
+                class="px-3 py-1.5 rounded-md text-sm transition-colors {filter === value
+                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium'
+                    : 'border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}"
+            >
+                {label}
+            </button>
+        {/each}
+    </div>
+
+    <!-- Search -->
+    <input
+        type="text"
+        bind:value={searchQuery}
+        placeholder="Cari pesan..."
+        class="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md text-sm focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 focus:border-transparent outline-none text-gray-900 dark:text-white"
+    />
 
         <!-- Messages List -->
-        {#if loading}
-            <div class="flex items-center justify-center py-12">
-                <svg
-                    class="animate-spin h-8 w-8 text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                >
-                    <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                    ></circle>
-                    <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                </svg>
-            </div>
-        {:else if error}
+        {#if error}
             <div
                 class="p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg text-red-600 dark:text-red-400"
             >
@@ -281,7 +230,7 @@
                 </p>
             </div>
         {:else}
-            <div class="grid md:grid-cols-2 gap-4">
+            <div class="grid md:grid-cols-2 gap-3">
                 {#each filteredMessages as message (message.id)}
                     <button
                         on:click={() => openMessage(message)}
@@ -339,7 +288,6 @@
                 {/each}
             </div>
         {/if}
-    </div>
 </div>
 
 <!-- Message Detail Modal -->
@@ -347,7 +295,7 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
-        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center sm:p-4"
         on:click={() => (selectedMessage = null)}
         role="button"
         tabindex="-1"
@@ -355,7 +303,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
-            class="bg-white dark:bg-gray-800 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            class="bg-white dark:bg-gray-900 rounded-t-xl sm:rounded-xl max-w-2xl w-full max-h-[85vh] overflow-y-auto border border-gray-200 dark:border-gray-800"
             on:click|stopPropagation
             role="dialog"
             aria-modal="true"
@@ -481,7 +429,7 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
-        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center sm:p-4"
         on:click={() => {
             showDeleteConfirm = false;
             messageToDelete = null;
@@ -492,7 +440,7 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
-            class="bg-white dark:bg-gray-800 rounded-xl max-w-md w-full p-6"
+            class="bg-white dark:bg-gray-900 rounded-t-xl sm:rounded-xl max-w-md w-full p-6 border border-gray-200 dark:border-gray-800"
             on:click|stopPropagation
             role="dialog"
             aria-modal="true"

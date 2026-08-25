@@ -1,10 +1,9 @@
 import { fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import type { RequestEvent } from '@sveltejs/kit';
-import { supabase } from '$lib/supabase/supabase';
 
-export const load: PageServerLoad = async () => {
-    const { data: nowItems, error } = await supabase
+export const load: PageServerLoad = async ({ locals }) => {
+    const { data: nowItems, error } = await locals.supabase
         .from('now_items')
         .select('*')
         .order('sort_order', { ascending: true });
@@ -18,7 +17,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-    create: async ({ request }: RequestEvent) => {
+    create: async ({ request, locals }: RequestEvent) => {
         const formData = await request.formData();
         const project_name = formData.get('project_name') as string;
         const github_url = formData.get('github_url') as string;
@@ -35,7 +34,7 @@ export const actions: Actions = {
             .map((t) => t.trim())
             .filter(Boolean);
 
-        const { error } = await supabase.from('now_items').insert({
+        const { error } = await locals.supabase.from('now_items').insert({
             project_name,
             github_url,
             tasks,
@@ -51,7 +50,7 @@ export const actions: Actions = {
         return { success: true };
     },
 
-    update: async ({ request }: RequestEvent) => {
+    update: async ({ request, locals }: RequestEvent) => {
         const formData = await request.formData();
         const id = formData.get('id') as string;
         const project_name = formData.get('project_name') as string;
@@ -70,7 +69,7 @@ export const actions: Actions = {
             .map((t) => t.trim())
             .filter(Boolean);
 
-        const { error } = await supabase
+        const { error } = await locals.supabase
             .from('now_items')
             .update({ project_name, github_url, tasks, sort_order, priority, status, updated_at: new Date().toISOString() })
             .eq('id', id);
@@ -82,7 +81,7 @@ export const actions: Actions = {
         return { success: true };
     },
 
-    delete: async ({ request }: RequestEvent) => {
+    delete: async ({ request, locals }: RequestEvent) => {
         const formData = await request.formData();
         const id = formData.get('id') as string;
 
@@ -90,7 +89,7 @@ export const actions: Actions = {
             return fail(400, { error: 'ID is required' });
         }
 
-        const { error } = await supabase.from('now_items').delete().eq('id', id);
+        const { error } = await locals.supabase.from('now_items').delete().eq('id', id);
 
         if (error) {
             return fail(500, { error: 'Failed to delete item: ' + error.message });

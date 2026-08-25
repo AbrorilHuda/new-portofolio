@@ -130,11 +130,11 @@
     }
 </script>
 
-<div class="max-w-4xl mx-auto space-y-8">
+<div class="max-w-4xl space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold mb-2">Celoteh (Thoughts)</h1>
-            <p class="text-gray-600 dark:text-gray-400">
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Celoteh</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                 Bagikan pemikiran singkat Anda
             </p>
         </div>
@@ -142,14 +142,14 @@
 
     {#if form?.error}
         <div
-            class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-md text-sm"
         >
             {form.error}
         </div>
     {/if}
 
     <!-- Create Form -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+    <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
         <form
             method="POST"
             action="?/create"
@@ -171,7 +171,7 @@
                     name="content"
                     required
                     rows="3"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 resize-none"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm"
                     placeholder="Tulis sesuatu..."
                 ></textarea>
             </div>
@@ -184,12 +184,12 @@
                     id="image_url"
                     name="image_url"
                     type="url"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                     placeholder="https://example.com/image.jpg"
                 />
             </div>
 
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
                 <div class="flex items-center">
                     <input
                         id="is_public"
@@ -206,7 +206,7 @@
                 <button
                     type="submit"
                     disabled={loading}
-                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-50 transition-colors"
+                    class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium disabled:opacity-50 transition-colors text-sm"
                 >
                     {loading ? "Memposting..." : "Post"}
                 </button>
@@ -216,16 +216,16 @@
 
     <!-- List of Thoughts -->
     <div class="space-y-4">
-        <h2 class="text-xl font-bold">Riwayat Celoteh</h2>
+        <h2 class="text-sm font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Riwayat Celoteh</h2>
 
         {#if data.thoughts.length === 0}
-            <div class="text-center py-8 text-gray-500">
+            <div class="text-center py-8 text-sm text-gray-500 dark:text-gray-400">
                 Belum ada celoteh. Mulai tulis sekarang!
             </div>
         {:else}
             {#each data.thoughts as thought (thought.id)}
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-all hover:shadow-md"
+                    class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6"
                 >
                     <div class="flex justify-between items-start mb-4">
                         <div class="text-sm text-gray-500">
@@ -354,7 +354,7 @@
                     <!-- Comments Section -->
                     <div
                         id="comments-{thought.id}"
-                        class="hidden mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 -mx-6 -mb-6 p-6 rounded-b-lg"
+                        class="hidden mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/60 -mx-4 sm:-mx-6 -mb-4 sm:-mb-6 p-4 sm:p-6 rounded-b-lg"
                     >
                         <div class="space-y-4 mb-4">
                             {#if thought.thought_comments && thought.thought_comments.length > 0}
@@ -443,7 +443,7 @@
                                     name="content"
                                     placeholder="Balas komentar... (@user untuk tag)"
                                     required
-                                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                                    class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-950 text-gray-900 dark:text-white"
                                     on:input={(e) =>
                                         handleReplyInput(
                                             e,

@@ -41,8 +41,9 @@ export const PATCH: RequestHandler = async ({ request, locals }) => {
     try {
         const { messageId, field, value } = await request.json();
 
-        if (!messageId || !field) {
-            return new Response(JSON.stringify({ error: 'Message ID and field are required' }), {
+        // ponytail: whitelist, jangan biarkan field bebas (mass-assignment)
+        if (!messageId || !field || !["read", "replied"].includes(field)) {
+            return new Response(JSON.stringify({ error: 'Invalid message ID or field' }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
             });

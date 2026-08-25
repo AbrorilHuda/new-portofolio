@@ -2,7 +2,9 @@
   import ProjectCard from './ProjectCard.svelte';
   import { locale } from '$lib/stores/locale';
   import { t } from '$lib/i18n';
-  import { projects } from '$lib/data/projects';
+  import { projects as fallbackProjects } from '$lib/data/projects';
+
+  export let projects = fallbackProjects;
 </script>
 
 <section id="projects" class="py-20 md:py-32 px-6 lg:px-8 bg-transparent">

@@ -1,50 +1,58 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { supabase, type Blog } from "$lib/supabase/supabase";
+  import { invalidateAll } from "$app/navigation";
+  import type { Blog } from "$lib/supabase/supabase";
   import ViewCounter from "../../../components/ViewCounter.svelte";
   import ConfirmDialog from "../../../components/ConfirmDialog.svelte";
+  import type { PageData } from "./$types";
 
-  let blogs: Blog[] = [];
-  let loading = true;
+  export let data: PageData;
+
+  $: blogs = data.blogs as Blog[];
+
   let deleteConfirm: string | null = null;
   let togglingId: string | null = null;
   let deletingId: string | null = null;
-
-  async function loadBlogs() {
-    loading = true;
-    const { data } = await supabase
-      .from("blogs")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (data) {
-      blogs = data;
-    }
-    loading = false;
-  }
-
-  onMount(loadBlogs);
+  let actionError = "";
 
   async function togglePublish(blog: Blog) {
     togglingId = blog.id;
-    const { error } = await supabase
-      .from("blogs")
-      .update({ published: !blog.published })
-      .eq("id", blog.id);
-
-    if (!error) {
-      await loadBlogs();
+    actionError = "";
+    try {
+      const res = await fetch("?/toggle", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ id: blog.id, published: String(!blog.published) })
+      });
+      if (!res.ok) {
+        const form = await res.json().catch(() => null);
+        actionError = form?.message ?? "Gagal mengubah status publikasi";
+      } else {
+        await invalidateAll();
+      }
+    } catch {
+      actionError = "Gagal mengubah status publikasi";
     }
     togglingId = null;
   }
 
   async function deleteBlog(id: string) {
     deletingId = id;
-    const { error } = await supabase.from("blogs").delete().eq("id", id);
-
-    if (!error) {
-      deleteConfirm = null;
-      await loadBlogs();
+    actionError = "";
+    try {
+      const res = await fetch("?/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ id })
+      });
+      if (!res.ok) {
+        const form = await res.json().catch(() => null);
+        actionError = form?.message ?? "Gagal menghapus artikel";
+      } else {
+        deleteConfirm = null;
+        await invalidateAll();
+      }
+    } catch {
+      actionError = "Gagal menghapus artikel";
     }
     deletingId = null;
   }
@@ -61,17 +69,17 @@
 <div class="space-y-6">
   <!-- Header -->
   <div
-    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
   >
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+      <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
         Kelola Blog
       </h1>
-      <p class="text-gray-600 dark:text-gray-400">Manage semua artikel blog</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{blogs.length} artikel</p>
     </div>
     <a
       href="/admin/blogs/new"
-      class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-sm hover:shadow-md transition-all"
+      class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +87,7 @@
         viewBox="0 0 24 24"
         stroke-width="2"
         stroke="currentColor"
-        class="w-5 h-5"
+        class="w-4 h-4"
       >
         <path
           stroke-linecap="round"
@@ -92,44 +100,20 @@
   </div>
 
   <!-- Content -->
-  {#if loading}
-    <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
-    >
-      <div class="p-8 space-y-4">
-        {#each Array(5) as _}
-          <div
-            class="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"
-          ></div>
-        {/each}
-      </div>
+  {#if actionError}
+    <div class="p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg text-red-600 dark:text-red-400">
+      {actionError}
     </div>
-  {:else if blogs.length === 0}
+  {/if}
+
+  {#if blogs.length === 0}
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-12 text-center"
+      class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-12 text-center"
     >
-      <div
-        class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full mb-4"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-8 h-8 text-gray-400"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-          />
-        </svg>
-      </div>
-      <p class="text-xl font-medium text-gray-900 dark:text-white mb-2">
+      <p class="font-medium text-gray-900 dark:text-white mb-1">
         Belum ada artikel
       </p>
-      <p class="text-gray-600 dark:text-gray-400 mb-4">
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
         Mulai dengan membuat artikel pertama Anda
       </p>
       <a
@@ -155,36 +139,36 @@
     </div>
   {:else}
     <div
-      class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+      class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden"
     >
       <div class="overflow-x-auto">
-        <table class="w-full">
+        <table class="w-full min-w-[640px]">
           <thead
-            class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-600"
+            class="bg-gray-50 dark:bg-gray-900/60 border-b border-gray-200 dark:border-gray-800"
           >
             <tr>
               <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
+                class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 Judul
               </th>
               <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
+                class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 Status
               </th>
               <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
+                class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 Tanggal
               </th>
               <th
-                class="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
+                class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 Views
               </th>
               <th
-                class="px-6 py-4 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
+                class="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 Actions
               </th>
@@ -193,9 +177,9 @@
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
             {#each blogs as blog}
               <tr
-                class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                class="hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors"
               >
-                <td class="px-6 py-4">
+                <td class="px-4 py-3">
                   <div
                     class="text-sm font-medium text-gray-900 dark:text-white"
                   >
@@ -205,7 +189,7 @@
                     /blog/{blog.slug}
                   </div>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-4 py-3">
                   {#if blog.published}
                     <span
                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
@@ -226,13 +210,13 @@
                     </span>
                   {/if}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
                   {formatDate(blog.created_at)}
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
                   <ViewCounter slug={blog.slug} />
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-4 py-3">
                   <div class="flex items-center justify-end gap-2">
                     <!-- View -->
                     <a

@@ -1,49 +1,25 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import { supabase, type Blog } from '$lib/supabase/supabase';
+  import type { Blog } from '$lib/supabase/supabase';
   import { marked } from 'marked';
   import DOMPurify from 'dompurify';
+  import type { PageData } from './$types';
 
-  let blog: Blog | null = null;
-  let title = '';
-  let slug = '';
-  let content = '';
-  let excerpt = '';
-  let coverImage = '';
-  let author = '';
-  let published = false;
-  let loading = false;
+  export let data: PageData;
+
+  $: blog = data.blog as Blog;
+
+  let title = blog?.title ?? '';
+  let slug = blog?.slug ?? '';
+  let content = blog?.content ?? '';
+  let excerpt = blog?.excerpt ?? '';
+  let coverImage = blog?.cover_image ?? '';
+  let author = blog?.author ?? '';
+  let published = blog?.published ?? false;
   let saving = false;
   let error = '';
   let previewMode = false;
   let previewHtml = '';
-
-  onMount(async () => {
-    const id = $page.params.id;
-    
-    const { data, error: fetchError } = await supabase
-      .from('blogs')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (data) {
-      blog = data;
-      title = data.title;
-      slug = data.slug;
-      content = data.content;
-      excerpt = data.excerpt || '';
-      coverImage = data.cover_image || '';
-      author = data.author;
-      published = data.published;
-    } else {
-      error = 'Artikel tidak ditemukan';
-    }
-    
-    loading = false;
-  });
 
   async function updatePreview() {
     if (content) {
@@ -54,7 +30,7 @@
 
   async function handleSubmit() {
     error = '';
-    
+
     if (!title || !slug || !content) {
       error = 'Judul, slug, dan konten wajib diisi';
       return;
@@ -62,31 +38,33 @@
 
     saving = true;
 
-    const { error: updateError } = await supabase
-      .from('blogs')
-      .update({
-        title,
-        slug,
-        content,
-        excerpt,
-        cover_image: coverImage || null,
-        author,
-        published,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', blog!.id);
+    try {
+      const res = await fetch('?/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          title,
+          slug,
+          content,
+          excerpt,
+          cover_image: coverImage,
+          author,
+          published: String(published)
+        })
+      });
 
-    if (updateError) {
-      if (updateError.code === '23505') {
-        error = 'Slug sudah digunakan, gunakan slug yang berbeda';
-      } else {
-        error = 'Gagal menyimpan artikel';
+      if (!res.ok) {
+        const form = await res.json().catch(() => null);
+        error = form?.message ?? 'Gagal menyimpan artikel';
+        saving = false;
+        return;
       }
-      saving = false;
-      return;
-    }
 
-    goto('/admin/blogs');
+      goto('/admin/blogs');
+    } catch {
+      error = 'Gagal menyimpan artikel';
+      saving = false;
+    }
   }
 </script>
 
@@ -107,13 +85,7 @@
     </div>
   {/if}
 
-  {#if loading}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-8 animate-pulse space-y-4">
-      {#each Array(8) as _}
-        <div class="h-10 bg-gray-300 dark:bg-gray-700 rounded"></div>
-      {/each}
-    </div>
-  {:else if blog}
+  {#if blog}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
       <div class="border-b border-gray-200 dark:border-gray-700">
         <div class="flex">

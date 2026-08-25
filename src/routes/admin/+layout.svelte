@@ -4,6 +4,18 @@
   import { enhance } from "$app/forms";
 
   export let data: LayoutData;
+
+  let loggingOut = false;
+
+  const nav = [
+    { href: "/admin", label: "Dashboard", match: (p: string) => p === "/admin" },
+    { href: "/admin/blogs", label: "Blogs", match: (p: string) => p.startsWith("/admin/blogs") },
+    { href: "/admin/thoughts", label: "Celoteh", match: (p: string) => p.startsWith("/admin/thoughts") },
+    { href: "/admin/now", label: "Now", match: (p: string) => p.startsWith("/admin/now") },
+    { href: "/admin/projects", label: "Projects", match: (p: string) => p.startsWith("/admin/projects") }
+  ];
+
+  $: isActive = (item: (typeof nav)[number]) => item.match($page.url.pathname);
 </script>
 
 <svelte:head>
@@ -13,91 +25,72 @@
 {#if $page.url.pathname === "/admin/login"}
   <slot />
 {:else}
-  <div
-    class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-200 dark:from-slate-900 dark:to-slate-800"
-  >
-    <!-- Professional Navbar -->
-    <nav
-      class="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm"
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <header
+      class="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800"
     >
-      <div class="container mx-auto px-4">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center space-x-8">
-            <a
-              href="/admin"
-              class="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            >
-              Admin Dashboard
-            </a>
-            <div class="hidden md:flex space-x-1">
-              <a
-                href="/admin"
-                class="px-4 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 transition-all {$page
-                  .url.pathname === '/admin'
-                  ? 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/20'
-                  : ''}"
-              >
-                Dashboard
-              </a>
-              <a
-                href="/admin/blogs"
-                class="px-4 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 transition-all {$page.url.pathname.startsWith(
-                  '/admin/blogs',
-                )
-                  ? 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/20'
-                  : ''}"
-              >
-                Blogs
-              </a>
-              <a
-                href="/admin/thoughts"
-                class="px-4 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 transition-all {$page.url.pathname.startsWith(
-                  '/admin/thoughts',
-                )
-                  ? 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/20'
-                  : ''}"
-              >
-                Celoteh
-              </a>
-              <a
-                href="/admin/now"
-                class="px-4 py-2 rounded-lg font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-400 dark:hover:bg-blue-900/20 transition-all {$page.url.pathname.startsWith(
-                  '/admin/now',
-                )
-                  ? 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/20'
-                  : ''}"
-              >
-                Now
-              </a>
-            </div>
-          </div>
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <!-- Baris atas: brand + aksi -->
+        <div class="flex items-center justify-between h-14">
+          <a
+            href="/admin"
+            class="font-semibold text-gray-900 dark:text-white tracking-tight"
+          >
+            Admin<span class="text-gray-400 font-normal"> / Moh.AbrorilHuda</span>
+          </a>
 
-          <div class="flex items-center space-x-4">
+          <div class="flex items-center gap-3 sm:gap-5">
             <a
               href="/"
-              class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >View Site</a
+              class="hidden sm:inline text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
             >
+              Lihat situs ↗
+            </a>
             {#if data.session}
-              <span
-                class="text-sm text-gray-600 dark:text-gray-400 hidden sm:inline"
-                >{data.session.email}</span
-              >
+              <span class="hidden md:inline text-sm text-gray-400 truncate max-w-[180px]">
+                {data.session.email}
+              </span>
             {/if}
-            <form method="POST" action="/admin/logout" use:enhance>
+            <form
+              method="POST"
+              action="/admin/logout"
+              use:enhance={() => {
+                loggingOut = true;
+                return async ({ update }) => {
+                  await update();
+                  loggingOut = false;
+                };
+              }}
+            >
               <button
-                class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-all shadow-sm hover:shadow-md"
+                disabled={loggingOut}
+                class="text-sm px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
               >
-                Logout
+                {loggingOut ? "Keluar..." : "Keluar"}
               </button>
             </form>
           </div>
         </div>
-      </div>
-    </nav>
 
-    <!-- Content -->
-    <main class="container mx-auto px-4 py-8">
+        <!-- Nav: underline tabs, scrollable di mobile -->
+        <nav class="flex gap-1 -mb-px overflow-x-auto" aria-label="Navigasi admin">
+          {#each nav as item}
+            <a
+              href={item.href}
+              class="whitespace-nowrap px-3 py-2.5 text-sm border-b-2 transition-colors
+                {isActive(item)
+                  ? 'border-gray-900 dark:border-white text-gray-900 dark:text-white font-medium'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}"
+              aria-current={isActive(item) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          {/each}
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       <slot />
     </main>
   </div>

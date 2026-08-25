@@ -57,13 +57,13 @@
     };
 </script>
 
-<div class="space-y-8">
-    <div class="flex items-center justify-between">
+<div class="space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
                 Now — Focus Items
             </h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">
+            <p class="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
                 Manage what appears on the public <a
                     href="/now"
                     target="_blank"
@@ -76,7 +76,7 @@
                 showCreateForm = !showCreateForm;
                 editingItem = null;
             }}
-            class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors text-sm self-start sm:self-auto"
         >
             {showCreateForm ? "Cancel" : "+ Add Item"}
         </button>
@@ -85,14 +85,14 @@
     <!-- Form feedback -->
     {#if form?.error}
         <div
-            class="px-4 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800 text-sm"
+            class="px-4 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-md border border-red-200 dark:border-red-800 text-sm"
         >
             {form.error}
         </div>
     {/if}
     {#if form?.success}
         <div
-            class="px-4 py-3 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg border border-green-200 dark:border-green-800 text-sm"
+            class="px-4 py-3 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-md border border-green-200 dark:border-green-800 text-sm"
         >
             Saved successfully!
         </div>
@@ -101,7 +101,7 @@
     <!-- ── Create Form ── -->
     {#if showCreateForm}
         <div
-            class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6"
+            class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6"
         >
             <h2
                 class="text-lg font-semibold text-gray-900 dark:text-white mb-5"
@@ -133,7 +133,7 @@
                             type="text"
                             required
                             placeholder="Mobile Apps"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
                     <div>
@@ -148,7 +148,7 @@
                             required
                             value="https://"
                             placeholder="https://github.com/abrorilhuda/..."
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                         <select
                             id="create_priority"
                             name="priority"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         >
                             <option value="high">🔴 High</option>
                             <option value="medium" selected>🟡 Medium</option>
@@ -178,7 +178,7 @@
                         <select
                             id="create_status"
                             name="status"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         >
                             <option value="active" selected>Active</option>
                             <option value="completed">Completed</option>
@@ -195,7 +195,7 @@
                             type="number"
                             value="0"
                             min="0"
-                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                         />
                     </div>
                 </div>
@@ -214,15 +214,15 @@
                         name="tasks"
                         rows="4"
                         placeholder="Redesign navigation UI&#10;Implement dark mode&#10;Fix performance issues"
-                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y font-mono"
+                        class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y font-mono"
                     ></textarea>
                 </div>
 
-                <div class="flex gap-3 pt-2">
+                <div class="flex gap-3 pt-2 flex-wrap">
                     <button
                         type="submit"
                         disabled={saving}
-                        class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all text-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+                        class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
                     >
                         {#if saving}
                             <svg
@@ -254,7 +254,7 @@
                         type="button"
                         disabled={saving}
                         on:click={() => (showCreateForm = false)}
-                        class="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-medium transition-all text-sm disabled:opacity-60"
+                        class="px-5 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-medium transition-colors text-sm disabled:opacity-60"
                     >
                         Cancel
                     </button>
@@ -273,7 +273,7 @@
         <div class="space-y-4">
             {#each nowItems as item}
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 {item.status ===
+                    class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6 {item.status ===
                     'completed'
                         ? 'opacity-70'
                         : ''}"
@@ -307,7 +307,7 @@
                                         type="text"
                                         required
                                         bind:value={editingItem.project_name}
-                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                        class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                     />
                                 </div>
                                 <div>
@@ -322,7 +322,7 @@
                                         type="url"
                                         required
                                         bind:value={editingItem.github_url}
-                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                        class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                     />
                                 </div>
                             </div>
@@ -339,7 +339,7 @@
                                         id="edit_priority_{item.id}"
                                         name="priority"
                                         bind:value={editingItem.priority}
-                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                        class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                     >
                                         <option value="high">🔴 High</option>
                                         <option value="medium">🟡 Medium</option
@@ -357,7 +357,7 @@
                                         id="edit_status_{item.id}"
                                         name="status"
                                         bind:value={editingItem.status}
-                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                        class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                     >
                                         <option value="active">Active</option>
                                         <option value="completed"
@@ -377,7 +377,7 @@
                                         type="number"
                                         bind:value={editingItem.sort_order}
                                         min="0"
-                                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                        class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"
                                     />
                                 </div>
                             </div>
@@ -397,15 +397,15 @@
                                     name="tasks"
                                     rows="4"
                                     value={tasksToText(editingItem.tasks)}
-                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y font-mono"
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y font-mono"
                                 ></textarea>
                             </div>
 
-                            <div class="flex gap-3 pt-2">
+                            <div class="flex gap-3 pt-2 flex-wrap">
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all text-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
+                                    class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
                                 >
                                     {#if updating}
                                         <svg
@@ -437,7 +437,7 @@
                                     type="button"
                                     disabled={updating}
                                     on:click={cancelEdit}
-                                    class="px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-medium transition-all text-sm disabled:opacity-60"
+                                    class="px-5 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md font-medium transition-colors text-sm disabled:opacity-60"
                                 >
                                     Cancel
                                 </button>
@@ -445,7 +445,7 @@
                         </form>
                     {:else}
                         <!-- Display mode -->
-                        <div class="flex items-start justify-between gap-4">
+                        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
                             <div class="flex-1 min-w-0">
                                 <div
                                     class="flex items-center gap-2 flex-wrap mb-2"
@@ -510,7 +510,7 @@
                             <div class="flex gap-2 shrink-0">
                                 <button
                                     on:click={() => startEdit(item)}
-                                    class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-all"
+                                    class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md transition-colors"
                                 >
                                     Edit
                                 </button>

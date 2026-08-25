@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { supabase } from '$lib/supabase/supabase';
+
 
 export const load: PageServerLoad = async ({ locals }) => {
     // Check if session exists (standard admin check)
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     //   throw redirect(303, '/admin/login');
     // }
 
-    const { data: thoughts, error } = await supabase
+    const { data: thoughts, error } = await locals.supabase
         .from('thoughts')
         .select('*, thought_comments(*)')
         .order('created_at', { ascending: false });
@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-    create: async ({ request }) => {
+    create: async ({ request, locals }) => {
         const formData = await request.formData();
         const content = formData.get('content') as string;
         const imageUrl = formData.get('image_url') as string;
@@ -38,7 +38,7 @@ export const actions: Actions = {
 
         const images = imageUrl ? [imageUrl] : [];
 
-        const { error } = await supabase
+        const { error } = await locals.supabase
             .from('thoughts')
             .insert({
                 content,
@@ -53,7 +53,7 @@ export const actions: Actions = {
         return { success: true };
     },
 
-    delete: async ({ request }) => {
+    delete: async ({ request, locals }) => {
         const formData = await request.formData();
         const id = formData.get('id') as string;
 
@@ -61,7 +61,7 @@ export const actions: Actions = {
             return fail(400, { error: 'ID is required' });
         }
 
-        const { error } = await supabase
+        const { error } = await locals.supabase
             .from('thoughts')
             .delete()
             .eq('id', id);
@@ -73,7 +73,7 @@ export const actions: Actions = {
         return { success: true };
     },
 
-    reply: async ({ request }) => {
+    reply: async ({ request, locals }) => {
         const formData = await request.formData();
         const id = formData.get('id') as string;
         const content = formData.get('content') as string;
@@ -83,7 +83,7 @@ export const actions: Actions = {
         }
 
         // Insert Admin Reply
-        const { error: insertError } = await supabase
+        const { error: insertError } = await locals.supabase
             .from('thought_comments')
             .insert({
                 thought_id: id,
@@ -96,7 +96,7 @@ export const actions: Actions = {
         }
 
         // Increment Comment Count
-        await supabase.rpc('increment_comments', { row_id: id });
+        await locals.supabase.rpc('increment_comments', { row_id: id });
 
         return { success: true };
     }
