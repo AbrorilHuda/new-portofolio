@@ -22,6 +22,11 @@
     }
 
     function scrollToSection(sectionId: string) {
+        if (typeof window !== "undefined" && currentPath !== "/") {
+            window.location.href = `/#${sectionId}`;
+            mobileMenuOpen = false;
+            return;
+        }
         const element = document.getElementById(sectionId);
         if (element) {
             element.scrollIntoView({ behavior: "smooth" });

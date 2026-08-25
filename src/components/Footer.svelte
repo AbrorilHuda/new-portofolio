@@ -259,15 +259,12 @@
             </button>
           </li>
           <li>
-            <button
-              on:click={() =>
-                document
-                  .getElementById("projects")
-                  ?.scrollIntoView({ behavior: "smooth" })}
+            <a
+              href="/projects"
               class="hover:text-blue-400 transition-colors"
             >
               Projects
-            </button>
+            </a>
           </li>
           <li>
             <button
