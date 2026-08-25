@@ -33,15 +33,24 @@
     loading = false;
   });
 
-  // Client-side search filtering
+  $: getLocalizedTitle = (blog: Blog): string => {
+    if ($locale === "en" && blog.title_en) return blog.title_en;
+    return blog.title;
+  };
+
+  $: getLocalizedExcerpt = (blog: Blog): string => {
+    if ($locale === "en" && blog.excerpt_en) return blog.excerpt_en;
+    return blog.excerpt || "";
+  };
+
+  // Client-side search filtering across both languages
   $: filteredBlogs = blogs.filter((blog) => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase().trim();
-    return (
-      blog.title.toLowerCase().includes(query) ||
-      (blog.excerpt && blog.excerpt.toLowerCase().includes(query)) ||
-      (blog.author && blog.author.toLowerCase().includes(query))
-    );
+    const titleMatch = (blog.title && blog.title.toLowerCase().includes(query)) || (blog.title_en && blog.title_en.toLowerCase().includes(query));
+    const excerptMatch = (blog.excerpt && blog.excerpt.toLowerCase().includes(query)) || (blog.excerpt_en && blog.excerpt_en.toLowerCase().includes(query));
+    const authorMatch = blog.author && blog.author.toLowerCase().includes(query);
+    return titleMatch || excerptMatch || authorMatch;
   });
 
   // Featured post logic (only on page 1 with no search query)
@@ -243,7 +252,7 @@
                 {#if featuredBlog.cover_image}
                   <img
                     src={featuredBlog.cover_image}
-                    alt={featuredBlog.title}
+                    alt={getLocalizedTitle(featuredBlog)}
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                     loading="eager"
                   />
@@ -264,7 +273,7 @@
                       <p
                         class="text-3xl font-extrabold text-zinc-400/40 dark:text-zinc-600/40 line-clamp-2 leading-tight"
                       >
-                        {featuredBlog.title}
+                        {getLocalizedTitle(featuredBlog)}
                       </p>
                     </div>
                     <div
@@ -317,14 +326,14 @@
                 <h2
                   class="text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight"
                 >
-                  {featuredBlog.title}
+                  {getLocalizedTitle(featuredBlog)}
                 </h2>
 
-                {#if featuredBlog.excerpt}
+                {#if getLocalizedExcerpt(featuredBlog)}
                   <p
                     class="text-zinc-600 dark:text-zinc-400 text-sm md:text-base leading-relaxed line-clamp-3"
                   >
-                    {featuredBlog.excerpt}
+                    {getLocalizedExcerpt(featuredBlog)}
                   </p>
                 {/if}
 
@@ -392,7 +401,7 @@
                   {#if blog.cover_image}
                     <img
                       src={blog.cover_image}
-                      alt={blog.title}
+                      alt={getLocalizedTitle(blog)}
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                       loading="lazy"
                     />
@@ -412,7 +421,7 @@
                       <p
                         class="text-base font-bold text-zinc-500/60 dark:text-zinc-400/50 line-clamp-2 leading-snug"
                       >
-                        {blog.title}
+                        {getLocalizedTitle(blog)}
                       </p>
                     </div>
                   {/if}
@@ -443,14 +452,14 @@
                     <h3
                       class="text-lg font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug"
                     >
-                      {blog.title}
+                      {getLocalizedTitle(blog)}
                     </h3>
 
-                    {#if blog.excerpt}
+                    {#if getLocalizedExcerpt(blog)}
                       <p
                         class="text-zinc-600 dark:text-zinc-400 text-sm line-clamp-3 leading-relaxed"
                       >
-                        {blog.excerpt}
+                        {getLocalizedExcerpt(blog)}
                       </p>
                     {/if}
                   </div>

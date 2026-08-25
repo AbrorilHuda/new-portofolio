@@ -193,7 +193,7 @@
             </div>
 
             <!-- Right Content - Profile Image -->
-            <div class="relative fade-in-up delay-200">
+            <div class="relative fade-in-up delay-200 pb-6 sm:pb-0">
                 <div class="relative w-full aspect-square max-w-md mx-auto">
                     <!-- Decorative elements with animation -->
                     <div
@@ -220,7 +220,7 @@
 
                     <!-- Floating badge with animation -->
                     <div
-                        class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl px-5 py-2.5 rounded-full shadow-xl border border-gray-200/80 dark:border-white/10 z-30 flex items-center gap-2.5 whitespace-nowrap"
+                        class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-2xl border border-gray-200/80 dark:border-white/10 z-30 flex items-center gap-2 sm:gap-2.5 whitespace-nowrap"
                     >
                         <span class="relative flex h-2.5 w-2.5">
                             <span

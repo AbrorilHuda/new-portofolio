@@ -12,9 +12,12 @@ export const supabase = createClient(
 export type Blog = {
   id: string;
   title: string;
+  title_en?: string;
   slug: string;
   content: string;
+  content_en?: string;
   excerpt?: string;
+  excerpt_en?: string;
   cover_image?: string;
   author: string;
   published: boolean;

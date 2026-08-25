@@ -791,7 +791,7 @@
         position: fixed;
         bottom: 0.5rem;
         right: 1rem;
-        z-index: 2000;
+        z-index: 10000;
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
         font-family:
             system-ui,
@@ -1619,7 +1619,7 @@
             pointer-events: auto;
             display: flex;
             flex-direction: column;
-            z-index: 100;
+            z-index: 10001; /* Higher than Navbar z-[1000] */
             animation: slideInMobile 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -1632,10 +1632,14 @@
             }
         }
 
-        /* Taller, beautiful mobile header with bigger tap targets */
+        /* Taller, beautiful mobile header with bigger tap targets & safe-area inset */
         .ai-header {
-            padding: 0.95rem 1rem;
-            height: 64px;
+            padding-top: max(0.85rem, env(safe-area-inset-top));
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-bottom: 0.85rem;
+            height: auto;
+            min-height: 64px;
             box-sizing: border-box;
         }
 
@@ -1665,9 +1669,11 @@
             background: #27272a;
         }
 
-        /* Hide desktop close button on mobile */
+        /* Display close button on mobile top right as well */
         .desktop-close-button {
-            display: none !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
         }
 
         .ai-avatar {

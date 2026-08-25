@@ -2,6 +2,7 @@
 	import { tick } from 'svelte';
 	import Navbar from '../../components/Navbar.svelte';
 	import Footer from '../../components/Footer.svelte';
+	import ChatMessage from '../../components/ChatMessage.svelte';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -75,5 +76,6 @@
 		<Navbar {darkMode} {toggleDarkMode} />
 		{@render children()}
 		<Footer />
+		<ChatMessage />
 	</div>
 </div>

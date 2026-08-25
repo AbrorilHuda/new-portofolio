@@ -58,7 +58,9 @@ export const load: PageServerLoad = async ({ params }: any) => {
 
   marked.setOptions({ renderer });
 
-  const htmlContent = await marked(blog.content);
+  const htmlContent = await marked(blog.content || "");
+  const htmlContentEn = blog.content_en ? await marked(blog.content_en) : "";
+
   const pageTags = definePageMetaTags({
     title: `${blog.title}`,
     description: blog.excerpt || "",
@@ -73,8 +75,7 @@ export const load: PageServerLoad = async ({ params }: any) => {
       article: {
         publishedTime: formatDateISO(blog.created_at),
         modifiedTime: formatDateISO(blog.updated_at),
-        authors: [blog.authors || "Moh.AbrorilHuda"],
-        // tags: blog.tags || [],
+        authors: [blog.author || "Moh.AbrorilHuda"],
       },
       images: [
         {
@@ -100,6 +101,7 @@ export const load: PageServerLoad = async ({ params }: any) => {
   return {
     blog: blog as Blog,
     htmlContent: htmlContent,
+    htmlContentEn: htmlContentEn,
     siteurl,
     defaultImage,
     ...pageTags.pageMetaTags,

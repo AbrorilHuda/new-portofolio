@@ -13,10 +13,15 @@
   export let data: PageData & {
     blog: Blog;
     htmlContent: string;
+    htmlContentEn?: string;
   };
 
   const slug = data.blog.slug;
   $: canonicalUrl = `${data.siteurl}/blog/${data.blog.slug}`;
+
+  $: displayTitle = ($locale === "en" && data.blog.title_en) ? data.blog.title_en : data.blog.title;
+  $: displayExcerpt = ($locale === "en" && data.blog.excerpt_en) ? data.blog.excerpt_en : (data.blog.excerpt || "");
+  $: activeHtmlContent = ($locale === "en" && data.htmlContentEn) ? data.htmlContentEn : data.htmlContent;
 
   let linkCopied = false;
   let scrollProgress = 0;
@@ -236,15 +241,15 @@
         itemprop="headline" 
         class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 leading-tight"
       >
-        {data.blog.title}
+        {displayTitle}
       </h1>
 
-      {#if data.blog.excerpt}
+      {#if displayExcerpt}
         <p
           itemprop="description"
           class="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal border-l-2 border-blue-500 pl-4 py-1"
         >
-          {data.blog.excerpt}
+          {displayExcerpt}
         </p>
       {/if}
 
@@ -326,7 +331,7 @@
       itemprop="articleBody"
       class="prose prose-zinc lg:prose-lg dark:prose-invert max-w-none py-4 leading-relaxed"
     >
-      {@html data.htmlContent}
+      {@html activeHtmlContent}
     </div>
 
     <!-- Redesigned Modern Share Box -->

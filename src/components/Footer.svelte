@@ -3,7 +3,6 @@
   import { t } from "$lib/i18n";
   import { supabase } from "$lib/supabase/supabase";
   import { fly, fade } from "svelte/transition";
-  import ChatMessage from "./ChatMessage.svelte";
 
   const currentYear = new Date().getFullYear();
 
@@ -66,8 +65,6 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
     <!-- Main Grid -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12">
-      <!-- Floating Chat Widget Slot -->
-      <ChatMessage />
 
       <!-- Brand & Quick Feedback -->
       <div class="md:col-span-6 space-y-6">
