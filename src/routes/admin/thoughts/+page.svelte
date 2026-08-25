@@ -1,8 +1,6 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
     import type { PageData, ActionData } from "./$types";
-    import { t } from "$lib/i18n";
-    import { locale } from "$lib/stores/locale";
     import ConfirmDialog from "$lib/../components/ConfirmDialog.svelte";
 
     export let data: PageData;
@@ -133,7 +131,9 @@
 <div class="max-w-4xl space-y-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Celoteh</h1>
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                Celoteh
+            </h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                 Bagikan pemikiran singkat Anda
             </p>
@@ -149,7 +149,9 @@
     {/if}
 
     <!-- Create Form -->
-    <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
+    <div
+        class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-4 sm:p-6"
+    >
         <form
             method="POST"
             action="?/create"
@@ -206,9 +208,32 @@
                 <button
                     type="submit"
                     disabled={loading}
-                    class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium disabled:opacity-50 transition-colors text-sm"
+                    class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2"
                 >
-                    {loading ? "Memposting..." : "Post"}
+                    {#if loading}
+                        <svg
+                            class="w-4 h-4 animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            ></circle>
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        <span>Memposting...</span>
+                    {:else}
+                        <span>Post</span>
+                    {/if}
                 </button>
             </div>
         </form>
@@ -216,10 +241,16 @@
 
     <!-- List of Thoughts -->
     <div class="space-y-4">
-        <h2 class="text-sm font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Riwayat Celoteh</h2>
+        <h2
+            class="text-sm font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400"
+        >
+            Riwayat Celoteh
+        </h2>
 
         {#if data.thoughts.length === 0}
-            <div class="text-center py-8 text-sm text-gray-500 dark:text-gray-400">
+            <div
+                class="text-center py-8 text-sm text-gray-500 dark:text-gray-400"
+            >
                 Belum ada celoteh. Mulai tulis sekarang!
             </div>
         {:else}

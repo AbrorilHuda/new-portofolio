@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import { projects as fallbackProjects } from '$lib/data/projects';
 
 export const load: PageServerLoad = async ({ locals }) => {
     // Load blog stats
@@ -22,8 +23,24 @@ export const load: PageServerLoad = async ({ locals }) => {
         unread: messages?.filter((m: any) => !m.read).length || 0
     };
 
+    // Load project stats
+    const { data: projects } = await locals.supabase
+        .from('projects')
+        .select('*');
+
+    const projectList = projects && projects.length > 0 ? projects : fallbackProjects;
+    const projectStats = {
+        total: projectList.length,
+        published: projects && projects.length > 0
+            ? projects.filter((p: any) => p.published !== false).length
+            : fallbackProjects.length
+    };
+
     return {
         blogStats,
-        messageStats
+        messageStats,
+        projectStats
     };
 };
+
+

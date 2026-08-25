@@ -16,7 +16,7 @@ export const projects: Project[] = [
     image: 'https://32ily8ib82.ucarecd.net/80bddb32-e19f-453c-a1a9-a0c30a1f52ec/demtimcod.png',
     technologies: ['React', 'docusaurus', 'tailwindcss'],
     link: 'https://demtimcod.github.io/',
-    icon: '📚'
+    icon: 'docs'
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ export const projects: Project[] = [
     image: 'https://32ily8ib82.ucarecd.net/40e78aef-543f-4bc6-8b46-402cdaefe117/codverse.png',
     technologies: ['Next.js', 'Tailwind'],
     link: 'https://codverse.site',
-    icon: '🌐'
+    icon: 'globe'
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ export const projects: Project[] = [
     image: 'https://32ily8ib82.ucarecd.net/edf30a1d-c76b-46b2-8582-45edee790a5b/reunira.png',
     technologies: ['React Native'],
     link: '',
-    icon: '📱'
+    icon: 'mobile'
   },
   {
     id: 4,
@@ -43,7 +43,7 @@ export const projects: Project[] = [
     image: 'https://32ily8ib82.ucarecd.net/519fe07d-e17b-4b57-b2ef-d6f2948955a9/maduradev.png',
     technologies: ['Next.js', 'TypeScript', 'TailwindCSS'],
     link: 'https://madura.dev',
-    icon: '👥'
+    icon: 'users'
   },
   {
     id: 5,
@@ -52,7 +52,7 @@ export const projects: Project[] = [
     image: 'https://32ily8ib82.ucarecd.net/68fcd631-d4c4-4f53-becf-2b602286e771/dcnuniradev.png',
     technologies: ['Next.js', 'TailwindCSS', 'Framer Motion', 'etc'],
     link: 'https://dcnunira.dev',
-    icon: '🎓'
+    icon: 'academic'
   },
   {
     id: 6,
@@ -61,6 +61,6 @@ export const projects: Project[] = [
     image: 'https://32ily8ib82.ucarecd.net/4abf756f-b6ac-4ba6-8a10-bf1d29ed688e/presentasionapp.png',
     technologies: ['Next.js', 'gemini', 'markdown', 'etc'],
     link: 'https://slide.dcnunira.dev',
-    icon: '🎨'
+    icon: 'presentation'
   }
 ];

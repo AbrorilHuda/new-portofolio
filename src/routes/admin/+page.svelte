@@ -5,15 +5,16 @@
 
   $: stats = data.blogStats;
   $: messageStats = data.messageStats;
+  $: projectStats = data.projectStats;
 </script>
 
 <div class="space-y-8">
   <div>
     <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Ringkasan konten & pesan</p>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Ringkasan konten, pesan & proyek</p>
   </div>
 
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800">
     <a href="/admin/blogs" class="bg-white dark:bg-gray-900 p-5 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors">
       <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Artikel</p>
       <p class="text-3xl font-semibold text-gray-900 dark:text-white mt-2">{stats.total}</p>
@@ -29,6 +30,12 @@
         {/if}
       </div>
     </a>
+
+    <a href="/admin/projects" class="bg-white dark:bg-gray-900 p-5 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors">
+      <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Proyek Terpublish</p>
+      <p class="text-3xl font-semibold text-gray-900 dark:text-white mt-2">{projectStats.published}</p>
+      <p class="text-xs text-gray-400 mt-1">{projectStats.total} proyek aktif</p>
+    </a>
   </div>
 
   <section>
@@ -39,6 +46,12 @@
         class="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-md text-sm font-medium hover:opacity-90 transition-opacity"
       >
         Tulis artikel
+      </a>
+      <a
+        href="/admin/projects"
+        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+      >
+        Kelola Proyek
       </a>
       <a
         href="/admin/thoughts"
@@ -55,3 +68,5 @@
     </div>
   </section>
 </div>
+
+

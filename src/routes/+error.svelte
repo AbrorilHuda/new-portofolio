@@ -111,8 +111,11 @@
 
     <!-- Fun fact -->
     <div class="mt-12 {visible ? 'fade-in-up delay-400' : 'opacity-0'}">
-      <p class="text-sm text-gray-500 dark:text-gray-500 italic">
-        "Tersesat itu wajar, yang penting tahu jalan pulang 🏠"
+      <p class="text-sm text-gray-500 dark:text-gray-500 italic inline-flex items-center gap-1.5 justify-center">
+        "Tersesat itu wajar, yang penting tahu jalan pulang"
+        <svg class="w-4 h-4 text-blue-500 inline shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
       </p>
     </div>
   </div>

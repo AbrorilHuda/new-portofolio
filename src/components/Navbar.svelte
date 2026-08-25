@@ -59,7 +59,7 @@
             </button>
 
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center space-x-8">
+            <div class="hidden md:flex items-center space-x-3 lg:space-x-6 xl:space-x-8">
                 <button
                     on:click={() => scrollToSection("about")}
                     class="nav-link">{t($locale, "nav.about")}</button
