@@ -1,12 +1,14 @@
 // Server-only helper untuk cleanup file Uploadcare
 import { env } from "$env/dynamic/private";
+import { PUBLIC_UPLOADCARE_PUBLIC_KEY } from "$env/static/public";
 
-const PUB_KEY = "32ily8ib82";
+const PUB_KEY = PUBLIC_UPLOADCARE_PUBLIC_KEY || "4eebe9a6584c59c4e50a";
 
-// ponytail: tangkap uuid dari semua varian URL Uploadcare
-// (ucarecd.net/<uuid>, <pub>.ucarecd.net/<uuid>, ucrcare.com/<uuid>)
+// tangkap uuid dari semua varian URL Uploadcare
+// (ucarecdn.com/<uuid>, <pub>.ucarecdn.net/<uuid>, ucrcare.com/<uuid>)
 export function extractUuid(url: string): string | null {
-    const match = url.match(/https:\/\/(?:[a-z0-9]+\.)?u(?:carecd|crcare)\.(?:net|com)\/([a-f0-9-]{36})/i);
+    if (!url) return null;
+    const match = url.match(/https?:\/\/(?:[a-z0-9]+\.)?(?:ucarecdn|ucarecd|ucrcare)\.(?:net|com)\/([a-f0-9-]{36})/i);
     return match ? match[1] : null;
 }
 

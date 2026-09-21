@@ -1,14 +1,15 @@
 import { error as svelteError, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
+import { supabaseAdmin } from '$lib/supabase/supabase.server';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
-    const { data: blog } = await locals.supabase
+export const load: PageServerLoad = async ({ params }) => {
+    const { data: blog, error } = await supabaseAdmin
         .from('blogs')
         .select('*')
         .eq('id', params.id)
         .single();
 
-    if (!blog) {
+    if (error || !blog) {
         throw svelteError(404, 'Artikel tidak ditemukan');
     }
 
@@ -16,7 +17,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-    update: async ({ request, params, locals }) => {
+    update: async ({ request, params }) => {
         const formData = await request.formData();
         const title = formData.get('title') as string;
         const title_en = (formData.get('title_en') as string) || null;
@@ -44,7 +45,7 @@ export const actions: Actions = {
             });
         }
 
-        const { error } = await locals.supabase
+        const { error } = await supabaseAdmin
             .from('blogs')
             .update({
                 title,

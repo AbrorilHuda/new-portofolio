@@ -47,8 +47,21 @@
 
   function handleUploadSuccess(e: Event) {
     const detail = (e as CustomEvent).detail;
-    if (!detail?.uuid) return;
-    coverImage = detail.cdnUrl || `https://${PUBLIC_UPLOADCARE_PUBLIC_KEY}.ucarecdn.net/${detail.uuid}/`;
+    if (!detail) return;
+    const cdnUrl = detail.cdnUrl || (detail.uuid ? `https://ucarecdn.com/${detail.uuid}/` : '');
+    if (cdnUrl) {
+      coverImage = cdnUrl;
+    }
+  }
+
+  function uploadListener(node: HTMLElement) {
+    const handler = (e: Event) => handleUploadSuccess(e);
+    node.addEventListener('file-upload-success', handler);
+    return {
+      destroy() {
+        node.removeEventListener('file-upload-success', handler);
+      }
+    };
   }
 
   function generateSlug() {
@@ -332,6 +345,7 @@
                     <button type="button" on:click={() => insertMarkdown('*', '*')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-blue-500 hover:text-white transition-colors" title="Italic">*I*</button>
                     <button type="button" on:click={() => insertMarkdown('\n```javascript\n', '\n```\n')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-blue-500 hover:text-white transition-colors" title="Code Block">``` Code</button>
                     <button type="button" on:click={() => insertMarkdown('\n- ')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-blue-500 hover:text-white transition-colors" title="List">- List</button>
+                    <button type="button" on:click={() => insertMarkdown('![deskripsi gambar](', ')')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-blue-500 hover:text-white transition-colors" title="Sisipkan Gambar">🖼 Gambar</button>
                   </div>
                 </div>
 
@@ -405,6 +419,8 @@
                     <button type="button" on:click={() => insertMarkdown('**', '**')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-purple-500 hover:text-white transition-colors">**B**</button>
                     <button type="button" on:click={() => insertMarkdown('*', '*')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-purple-500 hover:text-white transition-colors">*I*</button>
                     <button type="button" on:click={() => insertMarkdown('\n```javascript\n', '\n```\n')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-purple-500 hover:text-white transition-colors">``` Code</button>
+                    <button type="button" on:click={() => insertMarkdown('\n- ')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-purple-500 hover:text-white transition-colors" title="List">- List</button>
+                    <button type="button" on:click={() => insertMarkdown('![image description](', ')')} class="px-2 py-1 rounded-md text-[11px] font-mono bg-zinc-100 dark:bg-zinc-800 hover:bg-purple-500 hover:text-white transition-colors" title="Insert Image">🖼 Image</button>
                   </div>
                 </div>
 
@@ -488,10 +504,15 @@
                       source-list="local, camera, gdrive, url"
                       multiple="false"
                     ></uc-config>
+                    <!-- Provider context untuk mendengarkan event upload success -->
+                    <uc-upload-ctx-provider
+                      ctx-name="edit-blog-cover"
+                      use:uploadListener
+                      on:file-upload-success={handleUploadSuccess}
+                    ></uc-upload-ctx-provider>
                     <uc-file-uploader-regular
                       ctx-name="edit-blog-cover"
                       class="uc-light dark:uc-dark"
-                      on:file-upload-success={handleUploadSuccess}
                     ></uc-file-uploader-regular>
                   </div>
                 {:else}
