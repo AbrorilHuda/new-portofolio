@@ -36,10 +36,46 @@ export const load: PageServerLoad = async ({ locals }) => {
             : fallbackProjects.length
     };
 
+    // Load thought (celoteh) stats
+    let thoughtStats = { total: 0, public: 0, private: 0 };
+    try {
+        const { data: thoughts } = await locals.supabase
+            .from('thoughts')
+            .select('is_public');
+        if (thoughts) {
+            thoughtStats = {
+                total: thoughts.length,
+                public: thoughts.filter((t: any) => t.is_public !== false).length,
+                private: thoughts.filter((t: any) => t.is_public === false).length
+            };
+        }
+    } catch {
+        // ignore
+    }
+
+    // Load now items stats
+    let nowStats = { total: 0, active: 0, completed: 0 };
+    try {
+        const { data: nowItems } = await locals.supabase
+            .from('now_items')
+            .select('status');
+        if (nowItems) {
+            nowStats = {
+                total: nowItems.length,
+                active: nowItems.filter((n: any) => n.status !== 'completed').length,
+                completed: nowItems.filter((n: any) => n.status === 'completed').length
+            };
+        }
+    } catch {
+        // ignore
+    }
+
     return {
         blogStats,
         messageStats,
-        projectStats
+        projectStats,
+        thoughtStats,
+        nowStats
     };
 };
 

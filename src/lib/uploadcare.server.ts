@@ -2,7 +2,7 @@
 import { env } from "$env/dynamic/private";
 import { PUBLIC_UPLOADCARE_PUBLIC_KEY } from "$env/static/public";
 
-const PUB_KEY = PUBLIC_UPLOADCARE_PUBLIC_KEY || "4eebe9a6584c59c4e50a";
+const PUB_KEY = PUBLIC_UPLOADCARE_PUBLIC_KEY || "testing";
 
 // tangkap uuid dari semua varian URL Uploadcare
 // (ucarecdn.com/<uuid>, <pub>.ucarecdn.net/<uuid>, ucrcare.com/<uuid>)

@@ -10,7 +10,19 @@ export const load: LayoutServerLoad = async ({ locals, url }) => {
   if (!locals.user) {
     throw redirect(303, "/admin/login");
   }
+  let unreadMessages = 0;
+  try {
+    const { count } = await locals.supabase
+      .from('feedback_messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('read', false);
+    unreadMessages = count ?? 0;
+  } catch {
+    // fallback if error
+  }
+
   return {
     session: locals.user,
+    unreadMessages,
   };
 };
