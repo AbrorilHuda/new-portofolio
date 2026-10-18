@@ -13,6 +13,7 @@
     { href: "/admin/thoughts", label: "Celoteh", match: (p: string) => p.startsWith("/admin/thoughts") },
     { href: "/admin/now", label: "Now", match: (p: string) => p.startsWith("/admin/now") },
     { href: "/admin/projects", label: "Projects", match: (p: string) => p.startsWith("/admin/projects") },
+    { href: "/admin/cv", label: "CV", match: (p: string) => p.startsWith("/admin/cv") },
     { href: "/admin/messages", label: "Pesan", match: (p: string) => p.startsWith("/admin/messages"), badge: true }
   ];
 

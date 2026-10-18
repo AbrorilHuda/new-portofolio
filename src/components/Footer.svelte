@@ -314,6 +314,18 @@
           </li>
           <li>
             <a
+              href="/cv"
+              class="hover:text-white transition-colors flex items-center gap-1.5"
+            >
+              <span>CV / Resume</span>
+              <span
+                class="px-1.5 py-0.5 text-[9px] font-bold rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                >ATS</span
+              >
+            </a>
+          </li>
+          <li>
+            <a
               href="/privacy-policy"
               class="hover:text-white transition-colors flex items-center gap-1.5"
             >

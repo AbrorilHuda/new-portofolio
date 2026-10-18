@@ -66,6 +66,13 @@
             iconType: "blog",
             category: "Navigation",
         },
+        {
+            title: "CV / Resume",
+            description: "Curriculum Vitae (ATS-Friendly)",
+            url: "/cv",
+            iconType: "blog",
+            category: "Navigation",
+        },
     ];
 
     // Load recent blogs

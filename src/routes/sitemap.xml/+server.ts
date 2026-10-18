@@ -13,6 +13,7 @@ export const GET: RequestHandler = async () => {
   // Static pages
   const staticPages = [
     { url: "/", changefreq: "daily", priority: "1.0" },
+    { url: "/cv", changefreq: "weekly", priority: "0.9" },
     { url: "/blog", changefreq: "daily", priority: "0.9" },
     { url: "/celoteh", changefreq: "daily", priority: "0.9" },
     { url: "/privacy-policy", changefreq: "monthly", priority: "0.5" },

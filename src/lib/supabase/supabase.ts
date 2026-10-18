@@ -80,3 +80,14 @@ export type NowItem = {
   created_at: string;
   updated_at: string;
 };
+
+export type {
+  CVData,
+  CVContact,
+  CVExperience,
+  CVProject,
+  CVEducation,
+  CVSkillCategory,
+  CVCertification
+} from "$lib/data/cv";
+
