@@ -60,7 +60,7 @@ export const GET: RequestHandler = async ({ url }) => {
                 </div>
                 <div style="display: flex; flex-direction: column;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="font-size: 26px; font-weight: 700; color: #111827;">Abroril Huda</div>
+                        <div style="font-size: 26px; font-weight: 700; color: #111827;">Moh. Abroril Huda</div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#1d9bf0">
                             <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91C1.88 9.33 1 10.57 1 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91s2.52 1.27 3.91.81c.66 1.31 1.91 2.19 3.34 2.19s2.67-.88 3.33-2.19c1.4.46 2.91.2 3.92-.81s1.26-2.52.8-3.91C21.37 14.67 22.25 13.43 22.25 12zm-6.31-2.39l-4.5 6a.75.75 0 0 1-1.19.03l-1.95-2.6a.75.75 0 1 1 1.2-.9l1.33 1.77 3.93-5.24a.75.75 0 0 1 1.18.94z"/>
                         </svg>
@@ -88,7 +88,7 @@ export const GET: RequestHandler = async ({ url }) => {
                     <span style="font-size: 22px; font-weight: 600; margin-left: 8px; color: #374151;">${commentsCount || 0}</span>
                 </div>
              </div>
-             <div style="font-size: 20px; color: #9ca3af; font-weight: 500;">abrorilhuda.me</div>
+             <div style="font-size: 20px; color: #9ca3af; font-weight: 500;">abror.madura.dev</div>
         </div>
     </div>`;
 

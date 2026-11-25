@@ -1,64 +1,148 @@
 <script lang="ts">
   import { locale } from "$lib/stores/locale";
   import { t } from "$lib/i18n";
-  const experiences = [
+
+  interface ExperienceItem {
+    id: number;
+    title_id: string;
+    title_en: string;
+    company_id: string;
+    company_en: string;
+    period_id: string;
+    period_en: string;
+    badge_id?: string;
+    badge_en?: string;
+    description_id: string;
+    description_en: string;
+    highlights_id: string[];
+    highlights_en: string[];
+    type: "work" | "education";
+  }
+
+  const experiences: ExperienceItem[] = [
     {
       id: 1,
-      title_id: "Builder & Organizer",
-      title_en: "Builder & Organizer",
-      company_id: "Dicoding Community Network Universitas Madura",
-      company_en: "Dicoding Community Network Madura University",
-      period: "2025 - 2026",
+      title_id: "Fullstack Developer (Proyek Klien & Freelance)",
+      title_en: "Fullstack Developer (Client & Freelance Projects)",
+      company_id: "Proyek Independen & Klien UMKM",
+      company_en: "Independent & SME Client Projects",
+      period_id: "2023 - 2026",
+      period_en: "2023 - 2026",
       description_id:
-        "Sebagai salah satu inisiator dan builder Dicoding Community Network (DCN) Universitas Madura, saya terlibat dari fase perencanaan hingga eksekusi pembentukan komunitas resmi yang diakui oleh Dicoding Indonesia. Tanggung jawab saya mencakup penyusunan proposal pengajuan, rekrutmen anggota inti, perancangan program kerja, serta koordinasi dengan pihak kampus dan Dicoding untuk mendapatkan endorsement. Keberhasilan dalam membangun DCN Universitas Madura tidak hanya menciptakan ekosistem belajar yang lebih terstruktur, tetapi juga secara resmi menghubungkan kampus dengan sumber belajar dan peluang karir berskala nasional melalui platform Dicoding.",
+        "Merancang, membangun, dan men-deploy aplikasi web end-to-end untuk kebutuhan bisnis, katalog layanan, dan sistem internal klien menggunakan Laravel, React, Next.js, dan PostgreSQL.",
       description_en:
-        "As one of the initiators and builders of the Dicoding Community Network (DCN) at Madura University, I was involved from the planning phase to the execution of establishing an official community recognized by Dicoding Indonesia. My responsibilities included drafting the application proposal, recruiting core members, designing work programs, and coordinating with the university and Dicoding to obtain endorsement. The success in building DCN Madura University not only created a more structured learning ecosystem but also officially connected the campus with national-scale learning resources and career opportunities through the Dicoding platform.",
+        "Designed, built, and deployed end-to-end web applications for business operations, service catalogs, and internal client systems using Laravel, React, Next.js, and PostgreSQL.",
+      highlights_id: [
+        "Mengembangkan 5+ aplikasi web live dari tahap perancangan database, API backend, antarmuka responsif, hingga deployment di VPS Linux dengan Docker dan Nginx.",
+        "Membangun platform studio fotografi Margasera (portofolio, booking, dashboard admin, galeri seleksi foto) serta Presentation Deck berbasis Next.js dan Gemini API.",
+        "Mengotomatiskan alur rilis dengan GitHub Actions (CI/CD) dan Cloudflare untuk menjaga stabilitas dan kecepatan akses produksi.",
+      ],
+      highlights_en: [
+        "Delivered 5+ live web applications from database design, backend APIs, and responsive front-ends to Linux VPS deployments with Docker and Nginx.",
+        "Built the Margasera photography studio platform (portfolio, booking, admin dashboard, client photo selection gallery) and an AI-assisted Presentation Deck app with Next.js and Gemini API.",
+        "Automated production deployments using GitHub Actions (CI/CD) and Cloudflare for reliable uptime and performance.",
+      ],
       type: "work",
     },
     {
       id: 2,
-      title_id: "Asisten Praktikum",
-      title_en: "Assistant Practicum",
-      company_id: "Jurusan Informatika Universitas Madura",
-      company_en: "Informatics Department Madura University",
-      period: "April 2025 - July 2025",
-      description_id:
-        "Sebagai Asisten Praktikum Sistem Operasi, saya bertugas mendampingi dan membimbing mahasiswa dalam memahami konsep-konsep fundamental sistem operasi melalui sesi praktik di laboratorium. Tanggung jawab saya meliputi persiapan materi dan modul praktikum, memberikan demonstrasi langsung penggunaan command line interface (CLI), manajemen proses, memori, dan file system, serta membantu mahasiswa dalam mendiagnosis dan menyelesaikan masalah teknis yang mereka hadapi. Peran ini tidak hanya memperdalam expertise teknis saya di bidang sistem operasi, tetapi juga melatih kemampuan komunikasi, penyampaian materi yang kompleks dengan sederhana, kesabaran, dan kepemimpinan dalam setting edukatif.",
-      description_en:
-        "As an Operating Systems Practicum Assistant, I was responsible for accompanying and guiding students in understanding fundamental operating system concepts through practical laboratory sessions. My responsibilities included preparing materials and practicum modules, providing live demonstrations of command line interface (CLI) usage, process management, memory, and file systems, as well as helping students diagnose and solve technical problems they encountered. This role not only deepened my technical expertise in operating systems but also trained my communication skills, ability to present complex material simply, patience, and leadership in an educational setting.",
-      type: "work",
-    },
-    {
-      id: 3,
       title_id: "Lead Organizer",
       title_en: "Lead Organizer",
       company_id: "Komunitas MaduraDev",
       company_en: "MaduraDev Community",
-      period: "2025 - now",
+      period_id: "Jan 2024 - 2026",
+      period_en: "Jan 2024 - 2026",
       description_id:
-        "Sebagai Lead Organizer MaduraDev, saya memimpin komunitas developer di Pulau Madura dengan visi untuk menumbuhkan ekosistem teknologi lokal. Tugas saya mencakup penyusunan strategi komunitas, perekrutan dan koordinasi tim inti, serta pengorganisasian berbagai event seperti workshop, seminar teknis, dan networking meetup baik secara daring maupun luring. Dan juga berkontribusi dalam pembuatan web komunitas dan lain-lain.",
+        "Memimpin komunitas developer di Pulau Madura untuk menumbuhkan ekosistem teknologi lokal melalui kegiatan kolaboratif dan pengembangan platform komunitas.",
       description_en:
-        "As Lead Organizer of MaduraDev, I lead the developer community on Madura Island with a vision to grow the local technology ecosystem. My duties include developing community strategy, recruiting and coordinating the core team, and organizing various events such as workshops, technical seminars, and networking meetups both online and offline. I also contribute to building the community website and other initiatives.",
+        "Leading the developer community on Madura Island to grow the local tech ecosystem through collaborative events and community web platforms.",
+      highlights_id: [
+        "Mengelola komunitas dengan 200+ anggota aktif serta mengorganisir 5+ workshop teknis, tech talk, dan networking meetup daring maupun luring.",
+        "Membangun dan memelihara portal madura.dev menggunakan Next.js, TypeScript, dan Tailwind CSS.",
+      ],
+      highlights_en: [
+        "Grew and coordinated a community of 200+ active members, organizing 5+ technical workshops, tech talks, and networking meetups.",
+        "Built and maintained the madura.dev community portal using Next.js, TypeScript, and Tailwind CSS.",
+      ],
+      type: "work",
+    },
+    {
+      id: 3,
+      title_id: "Builder & Organizer",
+      title_en: "Builder & Organizer",
+      company_id: "Dicoding Community Network (DCN) Universitas Madura",
+      company_en: "Dicoding Community Network (DCN) Universitas Madura",
+      period_id: "Agu 2024 - 2026",
+      period_en: "Aug 2024 - 2026",
+      description_id:
+        "Menginisiasi dan membangun komunitas belajar resmi Dicoding di lingkungan Universitas Madura dari penyusunan program hingga eksekusi kegiatan.",
+      description_en:
+        "Initiated and built the official Dicoding learning community chapter at Universitas Madura from program planning to event execution.",
+      highlights_id: [
+        "Memfasilitasi program belajar bersertifikat dan sesi workshop pemrograman bagi 100+ peserta di lingkungan kampus.",
+        "Membangun hub aktivitas komunitas dcnunira.dev berbasis Next.js dan Tailwind CSS.",
+      ],
+      highlights_en: [
+        "Facilitated certified learning programs and coding workshops for 100+ campus participants.",
+        "Built the dcnunira.dev community activity hub with Next.js and Tailwind CSS.",
+      ],
       type: "work",
     },
     {
       id: 4,
-      title_id: "Sarjana Ilmu Komputer",
-      title_en: "Bachelor of Computer Science",
-      company_id: "Universitas Madura",
-      company_en: "Madura University",
-      period: "2022 - now",
+      title_id: "Asisten Praktikum Sistem Operasi",
+      title_en: "Operating Systems Practicum Assistant",
+      company_id: "Laboratorium Informatika, Universitas Madura",
+      company_en: "Informatics Laboratory, Universitas Madura",
+      period_id: "Apr 2025 - Jul 2025",
+      period_en: "Apr 2025 - Jul 2025",
       description_id:
-        "Saya mahasiswa Universitas Madura yang aktif belajar melalui kontribusi langsung, seperti mengelola komunitas developer (MaduraDev), membangun komunitas belajar bersama Dicoding (DCN UNIRA), dan membantu sesama sebagai asisten praktikum. Saya senang terlibat dalam proyek kolaboratif yang bermanfaat.",
+        "Mendampingi sesi praktikum laboratorium Sistem Operasi dan membantu peserta memahami konsep fundamental Linux secara praktis.",
       description_en:
-        "I am a Madura University student who actively learns through direct contributions, such as managing a developer community (MaduraDev), building a learning community with Dicoding (DCN UNIRA), and helping peers as a practicum assistant. I enjoy being involved in beneficial collaborative projects.",
+        "Guided Operating Systems laboratory sessions and helped students master fundamental Linux concepts through hands-on practice.",
+      highlights_id: [
+        "Membimbing 60+ peserta praktikum dalam penggunaan Linux CLI, manajemen proses, memori, file system, dan Bash scripting.",
+        "Menyusun modul evaluasi teknis dan mendampingi troubleshooting langsung selama sesi laboratorium.",
+      ],
+      highlights_en: [
+        "Mentored 60+ students in Linux CLI usage, process management, memory, file systems, and Bash scripting.",
+        "Prepared technical evaluation modules and led hands-on troubleshooting during lab sessions.",
+      ],
+      type: "work",
+    },
+    {
+      id: 5,
+      title_id: "S1 Informatika (Lulus)",
+      title_en: "B.Sc. in Informatics (Graduated)",
+      company_id: "Universitas Madura",
+      company_en: "Universitas Madura",
+      period_id: "2022 - 2026",
+      period_en: "2022 - 2026",
+      badge_id: "IPK 3.59 / 4.00",
+      badge_en: "GPA 3.59 / 4.00",
+      description_id:
+        "Lulusan S1 Informatika Universitas Madura dengan peminatan Business Intelligence dan IPK 3.59 / 4.00. Aktif mengembangkan aplikasi web fullstack serta memimpin komunitas developer kampus dan lokal.",
+      description_en:
+        "B.Sc. in Informatics graduate from Universitas Madura with a Business Intelligence concentration and a 3.59 / 4.00 GPA. Actively built fullstack web applications while leading campus and local developer communities.",
+      highlights_id: [
+        "Peminatan Business Intelligence dengan IPK akhir 3.59 / 4.00.",
+        "Aktif menginisiasi komunitas DCN UNIRA, memimpin MaduraDev, dan bertugas sebagai asisten praktikum Sistem Operasi.",
+      ],
+      highlights_en: [
+        "Business Intelligence concentration with a 3.59 / 4.00 GPA.",
+        "Co-founded DCN UNIRA, led MaduraDev, and served as an Operating Systems practicum assistant.",
+      ],
       type: "education",
     },
   ];
 
-  // Helper function to get localized text
-  function getLocalizedText(item: any, field: string) {
-    return $locale === "en" ? item[`${field}_en`] : item[`${field}_id`];
+  function getLocalizedText(item: ExperienceItem, field: "title" | "company" | "period" | "description" | "badge") {
+    const key = ($locale === "en" ? `${field}_en` : `${field}_id`) as keyof ExperienceItem;
+    return item[key] as string | undefined;
+  }
+
+  function getLocalizedHighlights(item: ExperienceItem): string[] {
+    return $locale === "en" ? item.highlights_en : item.highlights_id;
   }
 </script>
 
@@ -93,7 +177,7 @@
 
       <!-- Timeline Items -->
       <div class="space-y-12">
-        {#each experiences as exp, i}
+        {#each experiences as exp, i (exp.id)}
           <div
             class="relative flex flex-col md:flex-row gap-8 {i % 2 === 0
               ? 'md:flex-row'
@@ -111,62 +195,76 @@
             <!-- Content Card -->
             <div
               class="md:w-1/2 {i % 2 === 0
-                ? 'md:pr-12 md:text-right'
+                ? 'md:pr-12'
                 : 'md:pl-12'}"
             >
               <div
-                class="ml-16 md:ml-0 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
+                class="ml-16 md:ml-0 bg-white dark:bg-gray-800/90 border border-gray-200/60 dark:border-white/5 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow text-left"
               >
-                <div
-                  class="flex items-center gap-2 mb-2 {i % 2 === 0
-                    ? 'md:justify-end'
-                    : ''}"
-                >
-                  {#if exp.type === "work"}
-                    <svg
-                      class="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <div class="flex items-center gap-2">
+                    {#if exp.type === "work"}
+                      <svg
+                        class="w-5 h-5 text-blue-600 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                    {:else}
+                      <svg
+                        class="w-5 h-5 text-purple-600 shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        />
+                      </svg>
+                    {/if}
+                    <span
+                      class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      >{getLocalizedText(exp, "period")}</span
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  {:else}
-                    <svg
-                      class="w-5 h-5 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  </div>
+                  {#if getLocalizedText(exp, "badge")}
+                    <span
+                      class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                      />
-                    </svg>
+                      {getLocalizedText(exp, "badge")}
+                    </span>
                   {/if}
-                  <span
-                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                    >{exp.period}</span
-                  >
                 </div>
+
                 <h3
-                  class="text-xl font-bold text-gray-900 dark:text-white mb-2"
+                  class="text-xl font-bold text-gray-900 dark:text-white mb-1"
                 >
                   {getLocalizedText(exp, "title")}
                 </h3>
-                <p class="text-blue-600 dark:text-blue-400 font-medium mb-3">
+                <p class="text-blue-600 dark:text-blue-400 font-medium text-sm mb-3">
                   {getLocalizedText(exp, "company")}
                 </p>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
                   {getLocalizedText(exp, "description")}
                 </p>
+
+                {#if getLocalizedHighlights(exp).length > 0}
+                  <ul class="space-y-1.5 text-xs sm:text-sm text-gray-600 dark:text-gray-300 list-disc pl-4 leading-relaxed">
+                    {#each getLocalizedHighlights(exp) as bullet}
+                      <li>{bullet}</li>
+                    {/each}
+                  </ul>
+                {/if}
               </div>
             </div>
 

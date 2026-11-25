@@ -3,17 +3,21 @@
     import { t } from "$lib/i18n";
     import LanguageSwitcher from "./LanguageSwitcher.svelte";
     import { openCommandPalette } from "$lib/stores/command-palette";
+    import { aiAssistantOpen } from "$lib/stores/ai-assistant";
     import { page } from "$app/stores";
     import { fade, fly } from "svelte/transition";
     import { mobileMenuOpenStore } from "$lib/stores/mobile-menu";
+    import { onMount } from "svelte";
 
     $: currentPath = $page.url.pathname;
 
     export let darkMode = false;
-    export let toggleDarkMode;
+    export let toggleDarkMode: () => void;
 
     let mobileMenuOpen = false;
+    let moreMenuOpen = false;
     let scrolled = false;
+    let moreDropdownRef: HTMLDivElement;
 
     $: mobileMenuOpenStore.set(mobileMenuOpen);
 
@@ -22,6 +26,7 @@
     }
 
     function scrollToSection(sectionId: string) {
+        moreMenuOpen = false;
         if (typeof window !== "undefined" && currentPath !== "/") {
             window.location.href = `/#${sectionId}`;
             mobileMenuOpen = false;
@@ -34,9 +39,30 @@
         }
     }
 
-    if (typeof window !== "undefined") {
-        window.addEventListener("scroll", handleScroll);
+    function openAskAi() {
+        moreMenuOpen = false;
+        mobileMenuOpen = false;
+        aiAssistantOpen.set(true);
     }
+
+    function handleClickOutside(event: MouseEvent) {
+        if (
+            moreMenuOpen &&
+            moreDropdownRef &&
+            !moreDropdownRef.contains(event.target as Node)
+        ) {
+            moreMenuOpen = false;
+        }
+    }
+
+    onMount(() => {
+        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("click", handleClickOutside);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("click", handleClickOutside);
+        };
+    });
 
     // Lock body scroll when drawer is open
     $: if (typeof document !== "undefined") {
@@ -46,6 +72,12 @@
             document.body.style.overflow = "";
         }
     }
+
+    $: isMoreActive =
+        currentPath.startsWith("/blog") ||
+        currentPath.startsWith("/celoteh") ||
+        currentPath.startsWith("/lounge") ||
+        currentPath.startsWith("/now");
 </script>
 
 <nav
@@ -56,61 +88,138 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
             <!-- Logo -->
-            <button
-                on:click={() => (window.location.href = "/")}
-                class="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer"
+            <a
+                href="/"
+                class="text-xl sm:text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
             >
-                Abrorilhuda.me
-            </button>
+                Moh. Abroril Huda
+            </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center space-x-3 lg:space-x-6 xl:space-x-8">
+            <div class="hidden md:flex items-center space-x-4 lg:space-x-7">
                 <button
-                    on:click={() => scrollToSection("about")}
-                    class="nav-link">{t($locale, "nav.about")}</button
-                >
-                <button
+                    type="button"
                     on:click={() => scrollToSection("projects")}
-                    class="nav-link">{t($locale, "nav.projects")}</button
+                    class="nav-link {currentPath.startsWith('/projects')
+                        ? 'nav-link--active'
+                        : ''}">{t($locale, "nav.projects")}</button
                 >
                 <button
+                    type="button"
                     on:click={() => scrollToSection("experience")}
                     class="nav-link">{t($locale, "nav.experience")}</button
                 >
+                <a
+                    href="/cv"
+                    class="nav-link {currentPath.startsWith('/cv')
+                        ? 'nav-link--active'
+                        : ''}">{t($locale, "nav.cv")}</a
+                >
                 <button
+                    type="button"
                     on:click={() => scrollToSection("contact")}
                     class="nav-link">{t($locale, "nav.contact")}</button
                 >
-                <button
-                    on:click={() => (window.location.href = "/blog")}
-                    class="nav-link {currentPath.startsWith('/blog')
-                        ? 'nav-link--active'
-                        : ''}">{t($locale, "nav.blog")}</button
-                >
 
-                <button
-                    on:click={() => (window.location.href = "/celoteh")}
-                    class="nav-link {currentPath.startsWith('/celoteh')
-                        ? 'nav-link--active'
-                        : ''}">Celoteh</button
-                >
+                <!-- "Lainnya" / "More" Dropdown -->
+                <div class="relative" bind:this={moreDropdownRef}>
+                    <button
+                        type="button"
+                        on:click|stopPropagation={() =>
+                            (moreMenuOpen = !moreMenuOpen)}
+                        class="nav-link inline-flex items-center gap-1 {isMoreActive
+                            ? 'nav-link--active'
+                            : ''}"
+                        aria-expanded={moreMenuOpen}
+                        aria-haspopup="menu"
+                    >
+                        <span>{t($locale, "nav.more")}</span>
+                        <svg
+                            class="w-3.5 h-3.5 transition-transform duration-200 {moreMenuOpen
+                                ? 'rotate-180'
+                                : ''}"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"
+                            />
+                        </svg>
+                    </button>
 
-                <button
-                    on:click={() => (window.location.href = "/lounge")}
-                    class="nav-link {currentPath.startsWith('/lounge')
-                        ? 'nav-link--active'
-                        : ''}">Lounge</button
-                >
-
-                <button
-                    on:click={() => (window.location.href = "/now")}
-                    class="nav-link {currentPath.startsWith('/now')
-                        ? 'nav-link--active'
-                        : ''}">{t($locale, "nav.now")}</button
-                >
+                    {#if moreMenuOpen}
+                        <div
+                            transition:fly={{ y: 8, duration: 150 }}
+                            role="menu"
+                            class="absolute right-0 mt-3 w-48 rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-gray-200/80 dark:border-white/10 shadow-xl py-2 z-50"
+                        >
+                            <a
+                                href="/blog"
+                                on:click={() => (moreMenuOpen = false)}
+                                role="menuitem"
+                                class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            >
+                                <span>{t($locale, "nav.blog")}</span>
+                            </a>
+                            <a
+                                href="/now"
+                                on:click={() => (moreMenuOpen = false)}
+                                role="menuitem"
+                                class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            >
+                                <span>{t($locale, "nav.now")}</span>
+                            </a>
+                            <a
+                                href="/celoteh"
+                                on:click={() => (moreMenuOpen = false)}
+                                role="menuitem"
+                                class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            >
+                                <span>Celoteh</span>
+                            </a>
+                            <a
+                                href="/lounge"
+                                on:click={() => (moreMenuOpen = false)}
+                                role="menuitem"
+                                class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            >
+                                <span>Lounge</span>
+                            </a>
+                            <div
+                                class="my-1 border-t border-gray-100 dark:border-white/10"
+                            ></div>
+                            <button
+                                type="button"
+                                on:click={openAskAi}
+                                role="menuitem"
+                                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 font-medium transition-colors cursor-pointer"
+                            >
+                                <svg
+                                    class="w-4 h-4 shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                                    />
+                                </svg>
+                                <span>{t($locale, "nav.askAi")}</span>
+                            </button>
+                        </div>
+                    {/if}
+                </div>
 
                 <!-- Command Palette Button -->
                 <button
+                    type="button"
                     on:click={openCommandPalette}
                     class="flex items-center gap-2 px-2 py-1 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group cursor-pointer"
                     title="Quick search (Ctrl+K)"
@@ -140,8 +249,9 @@
 
                 <!-- Dark Mode Toggle -->
                 <button
+                    type="button"
                     on:click={toggleDarkMode}
-                    class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
                     aria-label="Toggle dark mode"
                 >
                     {#if darkMode}
@@ -178,6 +288,7 @@
 
             <!-- Mobile Menu Button -->
             <button
+                type="button"
                 on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
                 class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Toggle menu"
@@ -216,7 +327,7 @@
     </div>
 </nav>
 
-<!-- Mobile Menu Drawer (outside <nav> to avoid backdrop-filter containing block issue) -->
+<!-- Mobile Menu Drawer -->
 {#if mobileMenuOpen}
     <!-- Backdrop Overlay -->
     <div
@@ -244,9 +355,10 @@
                     <span
                         class="text-lg font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
                     >
-                        Navigation
+                        Moh. Abroril Huda
                     </span>
                     <button
+                        type="button"
                         on:click={() => (mobileMenuOpen = false)}
                         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-900 border border-transparent hover:border-gray-200/50 dark:hover:border-white/5 transition-all text-gray-500 dark:text-gray-400"
                         aria-label="Close menu"
@@ -267,7 +379,7 @@
                     </button>
                 </div>
 
-                <!-- Section 1: Main Pages -->
+                <!-- Section 1: Main Navigation -->
                 <div class="space-y-3">
                     <span
                         class="block text-[11px] font-semibold text-gray-450 dark:text-gray-500 uppercase tracking-wider pl-2"
@@ -275,24 +387,7 @@
                     >
                     <div class="space-y-1">
                         <button
-                            on:click={() => scrollToSection("about")}
-                            class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
-                        >
-                            <svg
-                                class="w-5 h-5 opacity-70"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                ><path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                /></svg
-                            >
-                            {t($locale, "nav.about")}
-                        </button>
-                        <button
+                            type="button"
                             on:click={() => scrollToSection("projects")}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
                         >
@@ -311,6 +406,7 @@
                             {t($locale, "nav.projects")}
                         </button>
                         <button
+                            type="button"
                             on:click={() => scrollToSection("experience")}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
                         >
@@ -328,7 +424,27 @@
                             >
                             {t($locale, "nav.experience")}
                         </button>
+                        <a
+                            href="/cv"
+                            on:click={() => (mobileMenuOpen = false)}
+                            class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
+                        >
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                /></svg
+                            >
+                            {t($locale, "nav.cv")}
+                        </a>
                         <button
+                            type="button"
                             on:click={() => scrollToSection("contact")}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm"
                         >
@@ -349,18 +465,16 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Explore -->
+                <!-- Section 2: Lainnya / More -->
                 <div class="space-y-3">
                     <span
                         class="block text-[11px] font-semibold text-gray-450 dark:text-gray-500 uppercase tracking-wider pl-2"
-                        >Explore</span
+                        >{t($locale, "nav.more")}</span
                     >
                     <div class="space-y-1">
-                        <button
-                            on:click={() => {
-                                mobileMenuOpen = false;
-                                window.location.href = "/blog";
-                            }}
+                        <a
+                            href="/blog"
+                            on:click={() => (mobileMenuOpen = false)}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm {currentPath.startsWith(
                                 '/blog',
                             )
@@ -380,60 +494,10 @@
                                 /></svg
                             >
                             {t($locale, "nav.blog")}
-                        </button>
-                        <button
-                            on:click={() => {
-                                mobileMenuOpen = false;
-                                window.location.href = "/celoteh";
-                            }}
-                            class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm {currentPath.startsWith(
-                                '/celoteh',
-                            )
-                                ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
-                                : ''}"
-                        >
-                            <svg
-                                class="w-5 h-5 opacity-70"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                ><path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                                /></svg
-                            > Celoteh
-                        </button>
-                        <button
-                            on:click={() => {
-                                mobileMenuOpen = false;
-                                window.location.href = "/lounge";
-                            }}
-                            class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm {currentPath.startsWith(
-                                '/lounge',
-                            )
-                                ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
-                                : ''}"
-                        >
-                            <svg
-                                class="w-5 h-5 opacity-70"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                ><path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                /></svg
-                            > Lounge
-                        </button>
-                        <button
-                            on:click={() => {
-                                mobileMenuOpen = false;
-                                window.location.href = "/now";
-                            }}
+                        </a>
+                        <a
+                            href="/now"
+                            on:click={() => (mobileMenuOpen = false)}
                             class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm {currentPath.startsWith(
                                 '/now',
                             )
@@ -458,6 +522,71 @@
                                 /></svg
                             >
                             {t($locale, "nav.now")}
+                        </a>
+                        <a
+                            href="/celoteh"
+                            on:click={() => (mobileMenuOpen = false)}
+                            class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm {currentPath.startsWith(
+                                '/celoteh',
+                            )
+                                ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
+                                : ''}"
+                        >
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                                /></svg
+                            >
+                            Celoteh
+                        </a>
+                        <a
+                            href="/lounge"
+                            on:click={() => (mobileMenuOpen = false)}
+                            class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-all font-medium text-sm {currentPath.startsWith(
+                                '/lounge',
+                            )
+                                ? 'bg-blue-50/50 dark:bg-blue-900/10 text-blue-600 dark:text-blue-400 font-semibold'
+                                : ''}"
+                        >
+                            <svg
+                                class="w-5 h-5 opacity-70"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                /></svg
+                            >
+                            Lounge
+                        </a>
+                        <button
+                            type="button"
+                            on:click={openAskAi}
+                            class="flex items-center gap-3 w-full text-left px-3 py-2 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all font-medium text-sm"
+                        >
+                            <svg
+                                class="w-5 h-5 opacity-80"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                ><path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                                /></svg
+                            >
+                            {t($locale, "nav.askAi")}
                         </button>
                     </div>
                 </div>
@@ -469,6 +598,7 @@
             >
                 <!-- Command Palette -->
                 <button
+                    type="button"
                     on:click={() => {
                         mobileMenuOpen = false;
                         openCommandPalette();
@@ -508,6 +638,7 @@
                         >Theme Mode</span
                     >
                     <button
+                        type="button"
                         on:click={toggleDarkMode}
                         class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none {darkMode
                             ? 'bg-blue-600'
@@ -557,7 +688,7 @@
                 >
                     <span
                         class="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider pl-1"
-                        >Language</span
+                        >{t($locale, "common.language")}</span
                     >
                     <LanguageSwitcher />
                 </div>

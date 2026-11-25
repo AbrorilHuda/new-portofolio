@@ -46,7 +46,7 @@ export const actions = {
           excerpt: excerpt || null,
           excerpt_en: excerpt_en || null,
           cover_image: coverImage || null,
-          author: author || "Abrordc",
+          author: author || "Moh. Abroril Huda",
           published,
         },
       ])

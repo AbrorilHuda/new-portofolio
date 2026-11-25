@@ -1,23 +1,8 @@
-<script>
+<script lang="ts">
     import { locale } from "$lib/stores/locale";
     import { t } from "$lib/i18n";
-    import { onMount } from "svelte";
 
-    let totalRepos = "15+";
-
-    onMount(async () => {
-        try {
-            const res = await fetch("/api/github");
-            if (res.ok) {
-                const data = await res.json();
-                if (data.total_public_repos) {
-                    totalRepos = `${data.total_public_repos}+`;
-                }
-            }
-        } catch (e) {
-            console.error("Failed to load repo count", e);
-        }
-    });
+    export let liveProjectsCount = 5;
 </script>
 
 <section
@@ -70,7 +55,7 @@
 
                 <!-- Stats Row -->
                 <div
-                    class="grid grid-cols-3 gap-4 sm:gap-6 py-5 border-y border-gray-200/50 dark:border-white/5 fade-in-up delay-200 max-w-lg"
+                    class="grid grid-cols-3 gap-4 sm:gap-6 py-5 border-y border-gray-200/50 dark:border-white/5 fade-in-up delay-200 max-w-xl"
                 >
                     <div>
                         <p
@@ -81,31 +66,35 @@
                         <p
                             class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
                         >
-                            {$locale === "en" ? "Years Exp" : "Thn Pengalaman"}
+                            {$locale === "en"
+                                ? "Yrs Building Projects"
+                                : "Thn Membangun Proyek"}
                         </p>
                     </div>
                     <div>
                         <p
                             class="text-2xl sm:text-3xl font-display font-extrabold text-purple-600 dark:text-purple-400"
                         >
-                            {totalRepos}
+                            {liveProjectsCount}+
                         </p>
                         <p
                             class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
                         >
-                            {$locale === "en" ? "Public Repos" : "Repo Publik"}
+                            {$locale === "en" ? "Live Projects" : "Proyek Live"}
                         </p>
                     </div>
                     <div>
                         <p
                             class="text-2xl sm:text-3xl font-display font-extrabold text-emerald-600 dark:text-emerald-400"
                         >
-                            3+
+                            5+
                         </p>
                         <p
                             class="text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider"
                         >
-                            {$locale === "en" ? "Communities" : "Komunitas"}
+                            {$locale === "en"
+                                ? "Community Events"
+                                : "Event Komunitas"}
                         </p>
                     </div>
                 </div>
@@ -220,9 +209,9 @@
 
                     <!-- Floating badge with animation -->
                     <div
-                        class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-2xl border border-gray-200/80 dark:border-white/10 z-30 flex items-center gap-2 sm:gap-2.5 whitespace-nowrap"
+                        class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-2xl border border-gray-200/80 dark:border-white/10 z-30 flex items-center gap-2 sm:gap-2.5 max-w-[92vw] sm:max-w-none sm:whitespace-nowrap"
                     >
-                        <span class="relative flex h-2.5 w-2.5">
+                        <span class="relative flex h-2.5 w-2.5 shrink-0">
                             <span
                                 class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
                             ></span>
@@ -231,7 +220,7 @@
                             ></span>
                         </span>
                         <p
-                            class="text-xs font-semibold text-gray-800 dark:text-gray-200"
+                            class="text-xs font-semibold text-gray-800 dark:text-gray-200 text-center"
                         >
                             {t($locale, "hero.availableForWork")}
                         </p>

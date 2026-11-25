@@ -9,14 +9,14 @@ export const GET: RequestHandler = async () => {
         {
           headers: {
             Accept: "application/vnd.github.v3+json",
-            "User-Agent": "abrorilhuda.me",
+            "User-Agent": "abror.madura.dev",
           },
         },
       ),
       fetch("https://api.github.com/users/abrorilhuda", {
         headers: {
           Accept: "application/vnd.github.v3+json",
-          "User-Agent": "abrorilhuda.me",
+          "User-Agent": "abror.madura.dev",
         },
       }),
     ]);

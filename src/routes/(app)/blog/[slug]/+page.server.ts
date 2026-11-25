@@ -71,11 +71,11 @@ export const load: PageServerLoad = async ({ params }: any) => {
       locale: "id_ID",
       title: blog.title,
       description: blog.excerpt || "",
-      siteName: "Moh.AbrorilHuda",
+      siteName: "Moh. Abroril Huda",
       article: {
         publishedTime: formatDateISO(blog.created_at),
         modifiedTime: formatDateISO(blog.updated_at),
-        authors: [blog.author || "Moh.AbrorilHuda"],
+        authors: [blog.author || "Moh. Abroril Huda"],
       },
       images: [
         {

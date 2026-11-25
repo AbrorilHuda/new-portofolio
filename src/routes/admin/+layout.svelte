@@ -40,7 +40,7 @@
             class="flex items-center gap-2 font-semibold text-gray-900 dark:text-white tracking-tight shrink-0 group"
           >
             <span class="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-500 ring-4 ring-blue-500/20 group-hover:scale-110 transition-transform"></span>
-            <span class="text-base sm:text-lg">Admin<span class="text-gray-400 font-normal text-xs sm:text-sm"> / Moh.AbrorilHuda</span></span>
+            <span class="text-base sm:text-lg">Admin<span class="text-gray-400 font-normal text-xs sm:text-sm"> / Moh. Abroril Huda</span></span>
           </a>
 
           <div class="flex items-center gap-2 sm:gap-4">

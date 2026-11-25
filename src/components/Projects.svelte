@@ -1,11 +1,14 @@
-<script>
+<script lang="ts">
   import ProjectCard from './ProjectCard.svelte';
+  import ProjectCaseStudyModal from './ProjectCaseStudyModal.svelte';
   import { locale } from '$lib/stores/locale';
   import { t } from '$lib/i18n';
-  import { projects as fallbackProjects } from '$lib/data/projects';
+  import { projects as fallbackProjects, type Project } from '$lib/data/projects';
 
-  export let projects = fallbackProjects;
+  export let projects: Project[] = fallbackProjects;
   $: displayedProjects = projects.slice(0, 6);
+
+  let selectedProject: Project | null = null;
 </script>
 
 <section id="projects" class="py-20 md:py-32 px-6 lg:px-8 bg-transparent">
@@ -18,10 +21,10 @@
         {t($locale, 'projects.tagline')}
       </p>
     </div>
-    
+
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-animation">
-      {#each displayedProjects as project}
-        <ProjectCard {project} />
+      {#each displayedProjects as project (project.id)}
+        <ProjectCard {project} onOpenCaseStudy={(p) => (selectedProject = p)} />
       {/each}
     </div>
 
@@ -41,3 +44,4 @@
   </div>
 </section>
 
+<ProjectCaseStudyModal project={selectedProject} onClose={() => (selectedProject = null)} />

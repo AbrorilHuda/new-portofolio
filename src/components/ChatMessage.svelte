@@ -50,28 +50,31 @@
         );
     }
 
-    // AI Assistant Knowledge Base about Abroril Huda
+    // AI Assistant Knowledge Base about Moh. Abroril Huda
     const aiKnowledge = {
-        name: "Abroril Huda",
-        role: "Full-Stack Web Developer",
+        name: "Moh. Abroril Huda",
+        role: "Fullstack Developer",
         location: "Madura, Indonesia",
-        university: "Madura University - Computer Science Student",
+        university: "Lulusan S1 Informatika (Peminatan Business Intelligence), Universitas Madura (2022–2026, IPK 3.59 / 4.00)",
         email: "moh.abrorilhuda@gmail.com",
         github: "github.com/abrorilhuda",
         linkedin: "linkedin.com/in/moh-abroril-huda",
         twitter: "@abror_dc",
 
         skills: [
-            "JavaScript",
-            "TypeScript",
             "React",
-            "Svelte",
-            "Node.js",
             "Next.js",
-            "TailwindCSS",
+            "Svelte / SvelteKit",
+            "Inertia",
+            "Tailwind CSS",
+            "Node.js",
+            "Laravel (PHP)",
+            "FastAPI (Python)",
             "PostgreSQL",
-            "Git",
-            "React Native",
+            "Docker",
+            "Nginx",
+            "GitHub Actions (CI/CD)",
+            "Cloudflare",
         ],
 
         projects: [
@@ -421,35 +424,6 @@
 </script>
 
 <div class="ai-assistant-widget {isScrolling ? 'is-scrolling' : ''}">
-    {#if !isOpen && !$mobileMenuOpenStore}
-        <button
-            class="ai-button hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl cursor-pointer"
-            on:click={() => ($aiAssistantOpen = true)}
-            aria-label="Open AI Assistant"
-            transition:fade={{ duration: 150 }}
-        >
-            <div class="ai-icon">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <path
-                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
-                    />
-                </svg>
-                <span class="pulse-dot"></span>
-            </div>
-            <span class="ai-label">Tanya AI</span>
-        </button>
-    {/if}
-
     {#if isOpen}
         <div class="ai-window">
             <div class="ai-header">

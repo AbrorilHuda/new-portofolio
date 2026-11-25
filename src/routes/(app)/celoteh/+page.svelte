@@ -69,10 +69,10 @@
 </script>
 
 <svelte:head>
-    <title>Celoteh - Moh.AbrorilHuda</title>
+    <title>Celoteh — Moh. Abroril Huda</title>
     <meta
         name="description"
-        content="Kumpulan pemikiran singkat (Celoteh) dari Moh.AbrorilHuda."
+        content="Kumpulan pemikiran singkat (Celoteh) dari Moh. Abroril Huda."
     />
 </svelte:head>
 

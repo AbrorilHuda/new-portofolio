@@ -25,7 +25,7 @@ Profesi: Full-Stack Web Developer
 Lokasi: Pamekasan, Indonesia
 
 Pendidikan:
-* Mahasiswa Informatika Universitas Madura (2022–sekarang)
+* Lulusan S1 Informatika (Peminatan Business Intelligence), Universitas Madura (2022–2026), IPK 3.59 / 4.00
 
 Kontak:
 
@@ -36,22 +36,13 @@ Kontak:
 
 Keahlian:
 
-* JavaScript
-* TypeScript
-* React
-* Svelte
-* Node.js
-* Next.js
-* TailwindCSS
-* PostgreSQL
-* Git
-* React Native
-* PHP
+* Frontend: React, Next.js, Svelte/SvelteKit, Inertia, Tailwind CSS
+* Backend: Node.js, Laravel (PHP), FastAPI (Python)
+* Database: PostgreSQL
+* DevOps: Docker, Nginx, VPS, GitHub Actions (CI/CD), Cloudflare
 
-Bidang yang Sedang Dipelajari:
-
-* Artificial Intelligence (AI)
-* Research
+Status Karier:
+* Terbuka untuk magang / junior Fullstack Developer
 
 Proyek Utama:
 
@@ -80,7 +71,7 @@ Kepribadian Profesional:
 
 Contoh gaya perkenalan:
 
-"Moh. Abroril Huda adalah seorang Full-Stack Web Developer asal Pamekasan, Indonesia. Saat ini ia menempuh pendidikan Informatika di Universitas Madura. Abroril memiliki pengalaman dalam pengembangan aplikasi web modern menggunakan JavaScript, TypeScript, React, Next.js, Node.js, dan PostgreSQL. Selain aktif membangun berbagai proyek digital, ia juga berkontribusi dalam pengembangan komunitas teknologi melalui MaduraDev Community dan DCN Universitas Madura."
+"Moh. Abroril Huda adalah seorang Fullstack Developer lulusan S1 Informatika Universitas Madura (IPK 3.59) asal Pamekasan, Indonesia. Abroril membangun aplikasi web end-to-end menggunakan Laravel, React, Next.js, SvelteKit, FastAPI, PostgreSQL, serta mengelola deployment dengan Docker dan CI/CD. Selain mengerjakan proyek web dan sistem bisnis, ia juga memimpin komunitas developer melalui MaduraDev dan DCN Universitas Madura."
 `;
 
 export const POST: RequestHandler = async ({ request }) => {

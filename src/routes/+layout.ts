@@ -2,25 +2,26 @@ import { definePageMetaTags } from "svelte-meta-tags";
 
 const siteurl = "https://abror.madura.dev";
 const defaultimage = "https://abror.madura.dev/og-default-image.png";
+const title = "Moh. Abroril Huda — Fullstack Developer (Laravel, React, Next.js)";
 const description =
-  "Portofolio resmi Abrorilhuda. Profesional kreatif yang berdedikasi memberikan solusi inovatif dan hasil kerja berkualitas tinggi. Jelajahi proyek dan keahlian saya di sini.";
+  "Portofolio Moh. Abroril Huda, Fullstack Developer lulusan S1 Informatika (IPK 3.59). Lihat proyek web, sistem bisnis, dan komunitas yang saya bangun.";
 
 export const load = () => {
   const pageTags = definePageMetaTags({
-    title: "Moh.AbrorilHuda",
-    description: description,
+    title,
+    description,
     canonical: siteurl,
     openGraph: {
       type: "website",
       url: siteurl,
       locale: "id_ID",
-      title: "Moh.AbrorilHuda",
-      description: description,
-      siteName: "Moh.AbrorilHuda",
+      title,
+      description,
+      siteName: "Moh. Abroril Huda",
       images: [
         {
           url: defaultimage,
-          alt: "Moh.AbrorilHuda",
+          alt: "Portofolio Moh. Abroril Huda — Fullstack Developer",
           width: 1200,
           height: 630,
           type: "image/png",
@@ -31,15 +32,15 @@ export const load = () => {
       creator: "@abror_dc",
       site: "@abror_dc",
       cardType: "summary_large_image",
-      title: "Moh.AbrorilHuda",
-      description: description,
+      title,
+      description,
       image: defaultimage,
-      imageAlt: "Moh.AbrorilHuda",
+      imageAlt: "Portofolio Moh. Abroril Huda — Fullstack Developer",
     },
     additionalRobotsProps: {
-      maxSnippet: 320, // Allow snippet up to 320 characters
-      maxImagePreview: "large", // Allow large image previews in search results
-      maxVideoPreview: -1, // Allow unlimited video preview
+      maxSnippet: 320,
+      maxImagePreview: "large",
+      maxVideoPreview: -1,
     },
   });
 

@@ -7,7 +7,7 @@
     schema={{
         "@context": "https://schema.org",
         "@type": "WebPage",
-        name: "Kebijakan Privasi - abrorilhuda.me",
+        name: "Kebijakan Privasi - abror.madura.dev",
         description:
             "Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda saat mengunjungi dan menggunakan situs web ini.",
         url: `${$page.data.siteurl}/privacy-policy`,
@@ -18,7 +18,7 @@
     <title>Kebijakan Privasi</title>
     <meta
         name="description"
-        content="Kebijakan privasi menjelaskan bagaimana abrorilhuda.me mengumpulkan dan menggunakan informasi Anda."
+        content="Kebijakan privasi menjelaskan bagaimana abror.madura.dev mengumpulkan dan menggunakan informasi Anda."
     />
 </svelte:head>
 
@@ -40,7 +40,7 @@
         <section>
             <p class="mb-4">
                 Selamat datang di <strong class="text-gray-900 dark:text-white"
-                    >abrorilhuda.me</strong
+                    >abror.madura.dev</strong
                 >. Kebijakan Privasi ini menjelaskan bagaimana kami
                 mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda
                 saat mengunjungi dan menggunakan situs web ini.
@@ -304,7 +304,7 @@
                     <a
                         href="/#contact"
                         class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline transition-colors"
-                        >abrorilhuda.me/#contact</a
+                        >abror.madura.dev/#contact</a
                     >
                 </li>
             </ul>
@@ -316,7 +316,7 @@
             <p
                 class="text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700/50"
             >
-                Kebijakan Privasi ini berlaku untuk situs web abrorilhuda.me dan
+                Kebijakan Privasi ini berlaku untuk situs web abror.madura.dev dan
                 seluruh halaman yang terdapat di dalamnya.
             </p>
         </section>

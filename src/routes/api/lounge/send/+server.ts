@@ -51,7 +51,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       try {
         const escapedUsername = escapeHTML(cleanUsername);
         const escapedMessage = escapeHTML(message.trim());
-        const text = `💬 <b>Pesan Baru di abrorilhuda.me/lounge</b>\n👤 <b>${escapedUsername}</b>:\n${escapedMessage}`;
+        const text = `💬 <b>Pesan Baru di abror.madura.dev/lounge</b>\n👤 <b>${escapedUsername}</b>:\n${escapedMessage}`;
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
         fetch(telegramUrl, {

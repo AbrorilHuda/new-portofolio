@@ -49,7 +49,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
                     alt: 'Celoteh Content',
                 }
             ],
-            siteName: 'Moh.AbrorilHuda'
+            siteName: 'Moh. Abroril Huda'
         },
         twitter: {
             site: '@abror_dc',

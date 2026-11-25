@@ -2,7 +2,7 @@ import type { RequestHandler } from "./$types";
 import { supabase } from "$lib/supabase/supabase";
 
 const siteUrl = "https://abror.madura.dev";
-const siteName = "Moh.AbrorilHuda";
+const siteName = "Moh. Abroril Huda";
 const siteDescription = "Artikel dan tutorial seputar teknologi";
 
 export const GET: RequestHandler = async () => {

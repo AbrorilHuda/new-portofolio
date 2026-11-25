@@ -16,7 +16,7 @@
   let excerpt = form?.excerpt || '';
   let excerpt_en = form?.excerpt_en || '';
   let coverImage = form?.coverImage || '';
-  let author = form?.author || 'Abrordc';
+  let author = form?.author || 'Moh. Abroril Huda';
   let published = false;
   let previewMode = false;
   let previewHtml = '';

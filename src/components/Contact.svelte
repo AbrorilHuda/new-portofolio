@@ -42,7 +42,7 @@
       }, 5000);
     } catch (err) {
       console.error("Error submitting contact form:", err);
-      error = "Failed to send message. Please try again or email me directly.";
+      error = t($locale, "contact.error");
 
       setTimeout(() => {
         error = "";
@@ -112,33 +112,6 @@
           </a>
 
           <a
-            href="tel:+62"
-            class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
-          >
-            <div
-              class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg group-hover:scale-110 transition-transform"
-            >
-              <svg
-                class="w-6 h-6 text-purple-600 dark:text-purple-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Phone</p>
-              <p class="font-medium text-gray-900 dark:text-white">+62</p>
-            </div>
-          </a>
-
-          <a
             href="https://linkedin.com/in/moh-abroril-huda"
             target="_blank"
             rel="noopener noreferrer"
@@ -192,7 +165,7 @@
               {t($locale, "contact.success")}
             </h3>
             <p class="text-gray-600 dark:text-gray-400">
-              Thank you for reaching out. I'll get back to you soon.
+              {t($locale, "contact.successDesc")}
             </p>
           </div>
         {:else}
@@ -210,7 +183,7 @@
                 bind:value={formData.name}
                 required
                 class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white input-spotlight"
-                placeholder="Your name"
+                placeholder={t($locale, "contact.namePlaceholder")}
               />
             </div>
 
@@ -227,7 +200,7 @@
                 bind:value={formData.email}
                 required
                 class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all text-gray-900 dark:text-white input-spotlight"
-                placeholder="your.email@example.com"
+                placeholder={t($locale, "contact.emailPlaceholder")}
               />
             </div>
 
@@ -244,7 +217,7 @@
                 required
                 rows="5"
                 class="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent outline-none transition-all resize-none text-gray-900 dark:text-white input-spotlight"
-                placeholder="Tell me about your project..."
+                placeholder={t($locale, "contact.messagePlaceholder")}
               ></textarea>
             </div>
 
@@ -273,7 +246,7 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                <span class="relative z-10">Sending...</span>
+                <span class="relative z-10">{t($locale, "contact.sending")}</span>
               {:else}
                 <span class="relative z-10">{t($locale, "contact.send")}</span>
                 <svg

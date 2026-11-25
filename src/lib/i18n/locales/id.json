@@ -6,39 +6,42 @@
         "now": "Now",
         "projects": "Proyek",
         "experience": "Pengalaman",
-        "contact": "Kontak"
+        "cv": "CV",
+        "contact": "Kontak",
+        "more": "Lainnya",
+        "askAi": "Tanya AI"
     },
     "hero": {
-        "title": "Halo, Saya Abroril Huda",
+        "title": "Halo, Saya Moh. Abroril Huda",
         "titlePrefix": "Halo, Saya",
-        "titleHighlight": "Abroril Huda",
-        "subtitle": "Fullstack Developer & Community Builder",
-        "description": "Membangun produk digital dan ekosistem developer di Madura.",
+        "titleHighlight": "Moh. Abroril Huda",
+        "subtitle": "Fullstack Developer · Lulusan S1 Informatika (IPK 3.59)",
+        "description": "Saya membangun aplikasi web end-to-end, dari sistem bisnis sampai platform komunitas, dengan Laravel, React, dan Next.js. Saya juga memimpin komunitas developer di Madura.",
         "cta": "Lihat Proyek Saya",
         "viewProjects": "Lihat CV / Resume",
         "contactMe": "Hubungi Saya",
-        "availableForWork": "Tersedia untuk bekerja"
+        "availableForWork": "Terbuka untuk magang / junior Fullstack Developer"
     },
     "about": {
         "title": "Tentang Saya",
         "titlePrefix": "Tentang",
         "titleHighlight": "Saya",
-        "tagline": "Bersemangat menciptakan pengalaman digital yang luar biasa",
-        "description1": "Saya seorang Pengembang Web Full-Stack dan mahasiswa Ilmu Komputer di Universitas Madura, dengan spesialisasi membangun aplikasi web dari front-end hingga back-end.",
-        "description2": "Saat ini, saya juga menjabat sebagai Ketua  di MaduraDev dan DCN UNIRA, memimpin pengembangan fitur serta memastikan kualitas dan skalabilitas solusi yang dibangun.",
-        "description3": "Berfokus pada kode yang bersih, pemecahan masalah yang terstruktur, dan pembelajaran berkelanjutan, saya menganggap setiap kesalahan sebagai bagian dari proses. Saya berkomitmen untuk memberikan solusi digital yang efektif, fungsional, dan handal.",
+        "tagline": "Membangun aplikasi web yang rapi, cepat, dan mudah dirawat",
+        "description1": "Saya seorang Fullstack Developer dan lulusan S1 Informatika Universitas Madura (IPK 3.59 / 4.00), dengan fokus membangun aplikasi web end-to-end dari front-end, back-end, hingga deployment produksi.",
+        "description2": "Saya juga aktif memimpin komunitas developer MaduraDev dan menginisiasi DCN UNIRA untuk mendorong kolaborasi teknis serta pengembangan talenta lokal.",
+        "description3": "Berfokus pada kode yang bersih, pemecahan masalah yang terstruktur, dan pembelajaran berkelanjutan untuk menghadirkan solusi digital yang fungsional dan andal.",
         "badges": {
             "fullstack": "Fullstack Development",
             "responsive": "Responsive Design",
-            "api": "API Development"
+            "api": "API & Backend Development"
         },
         "tecnicalSkills": "Keahlian Teknis"
     },
     "projects": {
         "title": "Proyek Saya",
         "titlePrefix": "Proyek",
-        "titleHighlight": "Saya",
-        "tagline": "Beberapa hal yang telah saya bangun",
+        "titleHighlight": "Unggulan",
+        "tagline": "Studi kasus dan proyek web yang telah saya bangun",
         "viewAll": "Lihat Semua Proyek",
         "viewProject": "Lihat Proyek",
         "sourceCode": "Kode Sumber"
@@ -47,7 +50,7 @@
         "title": "Pengalaman",
         "titlePrefix": "Pengalaman",
         "titleHighlight": "Pendidikan",
-        "tagline": "Perjalanan profesional dan latar belakang akademis saya"
+        "tagline": "Rekam jejak proyek, kepemimpinan komunitas, dan pendidikan formal"
     },
     "blog": {
         "title": "Blog Saya",
@@ -76,25 +79,32 @@
         "title": "Hubungi Saya",
         "titlePrefix": "Hubungi",
         "titleHighlight": "Saya",
-        "tagline": "Mari terhubung dan bekerja sama",
-        "description": "Saya selalu tertarik mendengar tentang proyek dan peluang baru. Baik Anda memiliki pertanyaan atau hanya ingin menyapa, jangan ragu untuk menghubungi saya!",
-        "getInTouch": "Mari kita bicarakan proyek Anda.",
+        "tagline": "Mari terhubung untuk peluang kerja, magang, atau kolaborasi",
+        "description": "Saya terbuka untuk peluang magang, posisi junior Fullstack Developer, maupun kolaborasi proyek. Silakan hubungi saya melalui email, LinkedIn, atau formulir di samping.",
+        "getInTouch": "Mari berdiskusi.",
         "name": "Nama",
         "email": "Email",
         "message": "Pesan",
+        "namePlaceholder": "Nama Anda",
+        "emailPlaceholder": "nama@email.com",
+        "messagePlaceholder": "Tuliskan pesan atau peluang yang ingin didiskusikan...",
         "send": "Kirim Pesan",
         "sending": "Mengirim...",
         "success": "Pesan berhasil dikirim!",
-        "error": "Gagal mengirim pesan"
+        "successDesc": "Terima kasih sudah menghubungi. Saya akan segera membalas pesan Anda.",
+        "error": "Gagal mengirim pesan. Silakan coba lagi atau hubungi lewat email langsung."
     },
     "celoteh": {
-        "tagline": "Sekadar pemikiran, ide, dan catatan singkat sehari-hari."
+        "tagline": "Catatan singkat seputar teknologi, pengembangan web, dan aktivitas komunitas."
     },
     "footer": {
+        "tagline": "Portofolio Moh. Abroril Huda — Fullstack Developer lulusan S1 Informatika (IPK 3.59).",
+        "feedbackCta": "Punya masukan atau saran? Kirim catatan singkat →",
         "quickLinks": "Tautan Cepat",
-        "connect": "Hubungi",
-        "copyright": "© {year} Abrordc. Hak cipta dilindungi.",
-        "builtWith": "Dibuat dengan {heart} menggunakan Svelte & Tailwind CSS",
+        "connect": "Terhubung",
+        "connectDesc": "Ikuti pembaruan kode dan aktivitas saya:",
+        "copyright": "© {year} Moh. Abroril Huda. Hak cipta dilindungi.",
+        "builtWith": "Dibuat dengan SvelteKit & Tailwind CSS",
         "oldWebsite": "website lama"
     },
     "now": {
@@ -105,7 +115,7 @@
         "focusSection": "Fokus Saat Ini",
         "historySection": "Sudah Selesai",
         "githubSection": "Repo GitHub Aktif",
-        "noFocus": "Belum ada yang ditambahkan cek lagi nanti!",
+        "noFocus": "Belum ada yang ditambahkan — cek lagi nanti!",
         "viewOnGitHub": "Lihat di GitHub",
         "lastPushed": "Terakhir diperbarui",
         "stars": "bintang",

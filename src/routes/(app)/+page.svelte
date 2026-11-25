@@ -9,7 +9,7 @@
 </script>
 
 <div>
-  <Hero />
+  <Hero liveProjectsCount={data.projects.filter((p) => Boolean(p.link)).length} />
   <About />
   <Projects projects={data.projects} />
   <Experience />

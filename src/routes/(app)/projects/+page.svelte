@@ -1,7 +1,9 @@
 <script lang="ts">
   import ProjectCard from "$lib/../components/ProjectCard.svelte";
+  import ProjectCaseStudyModal from "$lib/../components/ProjectCaseStudyModal.svelte";
   import { locale } from "$lib/stores/locale";
   import { t } from "$lib/i18n";
+  import type { Project } from "$lib/data/projects";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -10,6 +12,7 @@
 
   let searchQuery = "";
   let selectedTech = "All";
+  let selectedProject: Project | null = null;
 
   // Extract unique technology tags across all projects
   $: availableTechs = [
@@ -36,11 +39,11 @@
 
 <svelte:head>
   <title
-    >{$locale === "en" ? "My Projects" : "Proyek Saya"} - Moh.AbrorilHuda</title
+    >{$locale === "en" ? "Projects" : "Proyek"} — Moh. Abroril Huda</title
   >
   <meta
     name="description"
-    content="Kumpulan proyek web, aplikasi mobile, dan solusi digital karya Moh.AbrorilHuda."
+    content="Kumpulan proyek web, sistem bisnis, dan platform komunitas karya Moh. Abroril Huda."
   />
 </svelte:head>
 
@@ -167,8 +170,10 @@
   {:else}
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       {#each filteredProjects as project (project.id)}
-        <ProjectCard {project} />
+        <ProjectCard {project} onOpenCaseStudy={(p) => (selectedProject = p)} />
       {/each}
     </div>
   {/if}
 </div>
+
+<ProjectCaseStudyModal project={selectedProject} onClose={() => (selectedProject = null)} />

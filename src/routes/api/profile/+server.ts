@@ -56,8 +56,8 @@ export const GET: RequestHandler = async ({ request, getClientAddress }) => {
         },
         identity: {
           display_name: "Moh. Abroril Huda",
-          handle: "@Abrordc",
-          tagline: "Full-stack Developer ☕️ | Code & Coffee Enthusiast",
+          handle: "@abror_dc",
+          tagline: "Fullstack Developer · Lulusan S1 Informatika (IPK 3.59)",
           pronouns: "he/him",
           avatar: {
             url: "https://ucarecdn.com/e07fe590-8b63-404b-a62a-e9540db1986a/WhatsAppImage20250602at225118.jpeg",

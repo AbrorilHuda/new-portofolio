@@ -279,7 +279,7 @@
                     <div
                       class="flex items-center gap-2 text-xs font-mono text-zinc-400"
                     >
-                      <span>AbrorilHuda.me</span>
+                      <span>abror.madura.dev</span>
                     </div>
                   </div>
                 {/if}

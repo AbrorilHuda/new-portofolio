@@ -5,7 +5,7 @@ const defaultimage = "https://abror.madura.dev/og-default-image.png";
 
 export const load = () => {
   const pageTags = definePageMetaTags({
-    title: "Now - Moh.AbrorilHuda",
+    title: "Now — Moh. Abroril Huda",
     description:
       "Apa yang sedang saya kerjakan sekarang — proyek aktif, fokus saat ini, dan repo GitHub terbaru.",
     canonical: `${siteurl}/now`,
@@ -13,14 +13,14 @@ export const load = () => {
       type: "website",
       url: `${siteurl}/now`,
       locale: "id_ID",
-      title: "Now - Moh.AbrorilHuda",
+      title: "Now — Moh. Abroril Huda",
       description:
         "Apa yang sedang saya kerjakan sekarang — proyek aktif, fokus saat ini, dan repo GitHub terbaru.",
-      siteName: "Moh.AbrorilHuda",
+      siteName: "Moh. Abroril Huda",
       images: [
         {
           url: defaultimage,
-          alt: "Now - Moh.AbrorilHuda",
+          alt: "Now — Moh. Abroril Huda",
           width: 1200,
           height: 630,
           type: "image/png",
@@ -31,11 +31,11 @@ export const load = () => {
       creator: "@abror_dc",
       site: "@abror_dc",
       cardType: "summary_large_image",
-      title: "Now - Moh.AbrorilHuda",
+      title: "Now — Moh. Abroril Huda",
       description:
         "Apa yang sedang saya kerjakan sekarang — proyek aktif dan repo GitHub terbaru.",
       image: defaultimage,
-      imageAlt: "Now - Moh.AbrorilHuda",
+      imageAlt: "Now — Moh. Abroril Huda",
     },
   });
 

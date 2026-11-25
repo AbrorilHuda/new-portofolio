@@ -1,4 +1,4 @@
-import { projects as fallbackProjects, type Project } from '$lib/data/projects';
+import { enrichProjects, type Project } from '$lib/data/projects';
 import { supabase } from '$lib/supabase/supabase';
 import type { PageServerLoad } from './$types';
 
@@ -13,6 +13,6 @@ export const load: PageServerLoad = async () => {
     }
 
     return {
-        projects: (data && data.length > 0 ? data : fallbackProjects) as Project[]
+        projects: enrichProjects(data as Project[] | null)
     };
 };

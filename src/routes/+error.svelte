@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head>
-  <title>{status} - Moh.AbrorilHuda</title>
+  <title>{status} — Moh. Abroril Huda</title>
 </svelte:head>
 
 <div class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 flex items-center justify-center px-6 relative overflow-hidden">

@@ -11,7 +11,7 @@ import { toggleCommandPalette } from '$lib/stores/command-palette';
   
   // Default values untuk avoid undefined
   const siteurl = data?.siteurl || 'https://abror.madura.dev';
-  const defaultimage = data?.defaultimage || 'https://abror.madura.dev/og-image.png';
+  const defaultimage = data?.defaultimage || 'https://abror.madura.dev/og-default-image.png';
   
   // Destructure dengan safe check
   $: metaTags = (() => {
@@ -52,18 +52,18 @@ import { toggleCommandPalette } from '$lib/stores/command-palette';
   schema={[
     {
       "@type": "Person",
-      name: "abrorilhuda",
+      name: "Moh. Abroril Huda",
       url: siteurl,
       image: defaultimage,
       sameAs: [
-        "https://www.linkedin.com/in/moh-abroril-huda",
         "https://github.com/abrorilhuda",
-        "https://twitter.com/abror_dc",
+        "https://www.linkedin.com/in/moh-abroril-huda",
+        "https://x.com/abror_dc",
       ],
-      jobTitle: "Full-Stack Developer",
-      worksFor: {
-        "@type": "Organization",
-        name: "Freelancer",
+      jobTitle: "Fullstack Developer",
+      alumniOf: {
+        "@type": "CollegeOrUniversity",
+        name: "Universitas Madura",
       },
     },
     {
@@ -75,17 +75,29 @@ import { toggleCommandPalette } from '$lib/stores/command-palette';
           name: "Home",
           item: siteurl,
         },
-         {
+        {
           "@type": "ListItem",
           position: 2,
-          name: "Blogs",
+          name: "Projects",
+          item: `${siteurl}/projects`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "CV",
+          item: `${siteurl}/cv`,
+        },
+        {
+          "@type": "ListItem",
+          position: 4,
+          name: "Blog",
           item: `${siteurl}/blog`,
         },
       ],
     },
     {
       "@type": "WebSite",
-      name: "Moh.AbrorilHuda",
+      name: "Moh. Abroril Huda",
       url: siteurl,
     },
   ]}

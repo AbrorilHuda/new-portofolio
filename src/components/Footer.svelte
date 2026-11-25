@@ -76,15 +76,14 @@
               <span
                 class="bg-linear-to-r from-blue-500 via-indigo-400 to-purple-500 bg-clip-text text-transparent"
               >
-                Abrorilhuda.me
+                Moh. Abroril Huda
               </span>
             </h3>
           </a>
           <p
             class="text-xs text-zinc-500 dark:text-zinc-400 mt-2 max-w-sm leading-relaxed"
           >
-            Personal website, portfolio, and digital garden of Moh. Abroril
-            Huda. Built for high performance & clean design.
+            {t($locale, "footer.tagline")}
           </p>
         </div>
 
@@ -113,7 +112,7 @@
                   />
                 </svg>
               </div>
-              <span>Have feedback or suggestions? Send a quick note →</span>
+              <span>{t($locale, "footer.feedbackCta")}</span>
             </button>
           {:else}
             <div
@@ -341,7 +340,7 @@
           {t($locale, "footer.connect")}
         </h4>
         <p class="text-xs text-zinc-400 leading-relaxed">
-          Follow my latest code updates & thoughts:
+          {t($locale, "footer.connectDesc")}
         </p>
         <div class="flex items-center gap-2.5">
           <a
@@ -398,9 +397,7 @@
         {t($locale, "footer.copyright", { year: currentYear })}
       </p>
       <p class="flex items-center gap-1">
-        <span>Designed & built with</span>
-        <span class="text-red-500">♥</span>
-        <span>using SvelteKit & Tailwind CSS</span>
+        <span>{t($locale, "footer.builtWith")}</span>
       </p>
     </div>
   </div>
