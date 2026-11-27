@@ -71,13 +71,13 @@ export function getDirectPdfDownloadUrl(url?: string): string {
   // Match https://drive.google.com/file/d/{FILE_ID}/...
   const fileMatch = trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (fileMatch?.[1]) {
-    return `https://drive.google.com/uc?export=download&id=${fileMatch[1]}`;
+    return `https://drive.usercontent.google.com/download?id=${fileMatch[1]}&export=download&confirm=t`;
   }
 
   // Match https://drive.google.com/open?id={FILE_ID} or uc?id={FILE_ID}
   const idMatch = trimmed.match(/drive\.google\.com\/(?:open|uc)\?.*[?&]?id=([a-zA-Z0-9_-]+)/);
   if (idMatch?.[1]) {
-    return `https://drive.google.com/uc?export=download&id=${idMatch[1]}`;
+    return `https://drive.usercontent.google.com/download?id=${idMatch[1]}&export=download&confirm=t`;
   }
 
   return trimmed;

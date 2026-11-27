@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import { getDirectPdfDownloadUrl } from "$lib/data/cv";
   import { locale } from "$lib/stores/locale";
   import type { PageData } from "./$types";
@@ -11,6 +12,18 @@
   $: rawPdfUrl = (cv.pdf_url || "").trim();
   $: pdfDownloadUrl = getDirectPdfDownloadUrl(rawPdfUrl);
 
+  let downloadBtnEl: (HTMLElement & { done?: () => void }) | null = null;
+  let progressEl:
+    | (HTMLElement & { set?: (n: number) => void; reset?: () => void })
+    | null = null;
+
+  let downloadState: "idle" | "downloading" | "done" | "error" = "idle";
+  let downloadProgress = 0; // 0 - 100
+  let hasTotalSize = false;
+  let downloadedKB = 0;
+  let totalKB = 0;
+  let downloadError = "";
+
   $: formattedDate = updatedAt
     ? new Date(updatedAt).toLocaleDateString($locale === "en" ? "en-US" : "id-ID", {
         day: "numeric",
@@ -18,6 +31,129 @@
         year: "numeric",
       })
     : null;
+
+  $: progressLabel =
+    downloadState === "done"
+      ? "CV-Moh-Abroril-Huda.pdf"
+      : downloadState === "downloading"
+        ? hasTotalSize
+          ? `${downloadedKB} KB / ${totalKB} KB`
+          : downloadedKB > 0
+            ? `${downloadedKB} KB`
+            : $locale === "en"
+              ? "Preparing PDF..."
+              : "Menyiapkan PDF..."
+        : $locale === "en"
+          ? "Ready to download"
+          : "Siap diunduh";
+
+  function openPreview() {
+    if (!rawPdfUrl) return;
+    window.open(rawPdfUrl, "_blank", "noopener,noreferrer");
+  }
+
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function handleDownload() {
+    if (downloadState === "downloading" || !pdfDownloadUrl) return;
+
+    downloadState = "downloading";
+    downloadProgress = 0;
+    hasTotalSize = false;
+    downloadedKB = 0;
+    totalKB = 0;
+    downloadError = "";
+
+    await tick();
+    progressEl?.reset?.();
+    progressEl?.set?.(0.08);
+
+    const startTime = performance.now();
+
+    try {
+      const response = await fetch("/api/cv/download");
+      if (!response.ok) {
+        const errText = await response.text().catch(() => "");
+        throw new Error(errText || `HTTP ${response.status}`);
+      }
+
+      const contentLengthHeader = response.headers.get("content-length");
+      const totalBytes = contentLengthHeader ? parseInt(contentLengthHeader, 10) : 0;
+      hasTotalSize = Number.isFinite(totalBytes) && totalBytes > 0;
+      totalKB = hasTotalSize ? Math.max(1, Math.round(totalBytes / 1024)) : 0;
+
+      const reader = response.body?.getReader();
+      let blob: Blob;
+
+      if (!reader) {
+        blob = await response.blob();
+        downloadProgress = 90;
+        progressEl?.set?.(0.9);
+      } else {
+        const chunks: BlobPart[] = [];
+        let receivedBytes = 0;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (value) {
+            chunks.push(value);
+            receivedBytes += value.length;
+            downloadedKB = Math.max(1, Math.round(receivedBytes / 1024));
+            const fraction = hasTotalSize
+              ? Math.min(0.95, receivedBytes / totalBytes)
+              : Math.min(0.9, (1 - Math.exp(-receivedBytes / 250000)) * 0.95);
+            downloadProgress = Math.round(fraction * 100);
+            progressEl?.set?.(Math.max(0.12, fraction));
+          }
+        }
+
+        blob = new Blob(chunks, { type: "application/pdf" });
+      }
+
+      // Ensure Sakuga progress VFX is clearly visible even on fast 70KB downloads
+      const elapsed = performance.now() - startTime;
+      if (elapsed < 550) {
+        progressEl?.set?.(0.65);
+        await sleep(220);
+        progressEl?.set?.(0.88);
+        await sleep(Math.max(120, 550 - elapsed - 220));
+      }
+
+      downloadProgress = 100;
+      progressEl?.set?.(1);
+      triggerBlobDownload(blob);
+      downloadState = "done";
+
+      setTimeout(() => {
+        if (downloadState === "done") {
+          downloadState = "idle";
+          downloadProgress = 0;
+        }
+      }, 3000);
+    } catch (err) {
+      console.error("CV download error:", err);
+      downloadState = "error";
+      progressEl?.reset?.();
+      downloadError =
+        $locale === "en"
+          ? "Failed to download directly. You can open the preview link instead."
+          : "Gagal mengunduh langsung. Silakan coba lagi atau buka pratinjau.";
+    }
+  }
+
+  function triggerBlobDownload(blob: Blob) {
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = "CV-Moh-Abroril-Huda.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+  }
 </script>
 
 <svelte:head>
@@ -26,9 +162,11 @@
     name="description"
     content="Unduh Curriculum Vitae (CV) terbaru Moh. Abroril Huda — Fullstack Developer lulusan S1 Informatika (IPK 3.59)."
   />
+  <script src="/sakuga-vfx/button.js"></script>
+  <script src="/sakuga-vfx/progress.js"></script>
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100 flex items-center justify-center px-4 py-16">
+<div class="sakuga-cv-theme min-h-screen bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100 flex items-center justify-center px-4 py-16">
   <div class="w-full max-w-xl">
     <!-- Top bar -->
     <div class="flex items-center justify-between mb-6">
@@ -82,40 +220,62 @@
         </p>
       </div>
 
-      <!-- Status Message & Actions -->
+      <!-- Status Message & Sakuga VFX Actions -->
       {#if pdfDownloadUrl}
-        <div class="space-y-5">
+        <div class="space-y-6">
           <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed max-w-md mx-auto">
             {$locale === "en"
               ? "Please download my latest ATS-friendly CV in PDF format using the button below."
               : "CV sedang diperbarui secara berkala. Silakan unduh versi terbaru dalam format PDF melalui tombol di bawah."}
           </p>
 
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href={pdfDownloadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-linear-to-r from-blue-600 to-purple-600 text-white font-semibold text-sm hover:opacity-95 hover:scale-[1.02] active:scale-98 transition-all shadow-lg shadow-blue-500/20"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-              <span>{$locale === "en" ? "Download CV (PDF)" : "Unduh CV (PDF)"}</span>
-            </a>
+          <!-- Sakuga Buttons -> replaced by Sakuga Progress while downloading -->
+          {#if downloadState === "downloading" || downloadState === "done"}
+            <div class="max-w-sm mx-auto text-left py-2">
+              <sakuga-progress
+                bind:this={progressEl}
+                label={progressLabel}
+              ></sakuga-progress>
+            </div>
+          {:else}
+            <div class="flex flex-wrap items-center justify-center gap-3">
+              <sakuga-button
+                bind:this={downloadBtnEl}
+                on:click={handleDownload}
+                role="button"
+                tabindex="0"
+                on:keydown={(e: KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleDownload();
+                  }
+                }}
+              >
+                {$locale === "en" ? "Download CV (PDF)" : "Unduh CV (PDF)"}
+              </sakuga-button>
 
-            <a
-              href={rawPdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-200 font-semibold text-sm hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
-            >
-              <span>{$locale === "en" ? "Open Preview" : "Buka Pratinjau"}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-              </svg>
-            </a>
-          </div>
+              <sakuga-button
+                variant="secondary"
+                on:click={openPreview}
+                role="button"
+                tabindex="0"
+                on:keydown={(e: KeyboardEvent) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openPreview();
+                  }
+                }}
+              >
+                {$locale === "en" ? "Open Preview ↗" : "Buka Pratinjau ↗"}
+              </sakuga-button>
+            </div>
+          {/if}
+
+          {#if downloadState === "error" && downloadError}
+            <p class="text-xs text-rose-600 dark:text-rose-400 max-w-sm mx-auto">
+              {downloadError}
+            </p>
+          {/if}
 
           {#if formattedDate}
             <p class="text-xs text-gray-400 dark:text-gray-500">
@@ -165,3 +325,24 @@
     </main>
   </div>
 </div>
+
+<style>
+  .sakuga-cv-theme {
+    --sk-pri: #2563eb;
+    --sk-acc: #9333ea;
+  }
+
+  :global(.dark) .sakuga-cv-theme {
+    --sk-card: #18181b;
+    --sk-ink: #f4f4f5;
+    --sk-muted: #a1a1aa;
+    --sk-line: #3f3f46;
+    --sk-pri: #3b82f6;
+    --sk-acc: #a855f7;
+  }
+
+  sakuga-progress {
+    display: block;
+    width: 100%;
+  }
+</style>
